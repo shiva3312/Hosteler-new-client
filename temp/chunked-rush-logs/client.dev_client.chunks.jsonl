@@ -1,0 +1,10 @@
+{"kind":"O","text":"Invoking: vite \n"}
+{"kind":"O","text":"Re-optimizing dependencies because lockfile has changed\n"}
+{"kind":"O","text":"\n"}
+{"kind":"O","text":"  VITE v5.4.18  ready in 2144 ms\n"}
+{"kind":"O","text":"\n"}
+{"kind":"O","text":"  ➜  Local:   http://localhost:3000/\n"}
+{"kind":"O","text":"  ➜  Network: use --host to expose\n"}
+{"kind":"E","text":"Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:\n"}
+{"kind":"E","text":"  npx update-browserslist-db@latest\n"}
+{"kind":"E","text":"  Why you should do it regularly: https://github.com/browserslist/update-db#readme\n"}

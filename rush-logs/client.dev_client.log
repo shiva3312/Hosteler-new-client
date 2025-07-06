@@ -1,0 +1,10 @@
+Invoking: vite 
+Re-optimizing dependencies because lockfile has changed
+
+  VITE v5.4.18  ready in 2144 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
