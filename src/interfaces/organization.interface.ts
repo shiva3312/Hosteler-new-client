@@ -1,58 +1,58 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
 
-import { dataZodSchema } from './common.interface';
+import { MetaZodSchema, UserActionResponseZodSchema } from './common.interface';
+import { Primitive } from './primitive.class';
 import { AddressZodSchema, ContactZodSchema } from './user.interface';
 
-export const OrganizationsRequestZodSchema = z.object({
-  name: z.string().min(3).max(30),
-  description: z.string().min(3).max(100).optional(),
+export const OrganizationRequestZodSchema = z.object({
+  name: Primitive.safeString('Organization name', [], 3, 20),
+  description: Primitive.safeString(),
   contacts: ContactZodSchema.nullish(),
   address: AddressZodSchema.nullish(),
 
   // reference fields
-  superAdminId: z.string().optional(), // super admin id
-  unitIds: z.array(z.string()).optional(), // array of unit ids
-  userIds: z.array(z.string()).optional(), // array of user ids
+  superAdminId: Primitive.safeID(),
+  units: z.array(Primitive.safeID()).optional(), // array of unit ids
+  users: z.array(Primitive.safeID()).optional(),
 });
 
-export const OrganizationsResponseZodSchema = z
+export const OrganizationResponseZodSchema = z
   .object({
-    _id: z.string(),
-    createdAt: dataZodSchema,
-    updatedAt: dataZodSchema,
+    _id: Primitive.safeID(),
+    createdAt: Primitive.safeDate(),
+    updatedAt: Primitive.safeDate(),
+    history: z.array(UserActionResponseZodSchema).optional(),
   })
   .extend({
-    permission: z.string().optional(),
-    superAdmin: z.lazy(() => {
-      const UserResponseZodSchema =
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require('./user.interface').UserResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
-      return UserResponseZodSchema.optional();
-    }),
-    units: z.lazy(() => {
-      const UnitResponseZodSchema =
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require('./unit.interface').UnitResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
-      return z.array(UnitResponseZodSchema).optional();
-    }),
-    users: z.lazy(() => {
-      const UserResponseZodSchema =
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require('./user.interface').UserResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
-      return z.array(UserResponseZodSchema).optional();
-    }),
+    meta: MetaZodSchema.optional(),
+    // permission: Primitive.safeString().optional(),
+    // superAdmin: z.lazy(() => {
+    //   const UserResponseZodSchema = require('./user.interface').UserResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
+    //   return UserResponseZodSchema.optional();
+    // }),
+    // units: z.lazy(() => {
+    //   const UnitResponseZodSchema = require('./unit.interface').UnitResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
+    //   return z.array(UnitResponseZodSchema).optional();
+    // }),
+    // users: z.lazy(() => {
+    //   const UserResponseZodSchema = require('./user.interface').UserResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
+    //   return z.array(UserResponseZodSchema).optional();
+    // }),
   })
-  .merge(OrganizationsRequestZodSchema)
-  .omit({ unitIds: true });
+  .merge(OrganizationRequestZodSchema);
 
-// const OrganizationsResponseZodSchema = OrganizationsResponseZodSchemaFn();
+export const UpdateOrganizationRequestZodSchema =
+  OrganizationRequestZodSchema.partial();
+
+// const OrganizationResponseZodSchema = OrganizationResponseZodSchemaFn();
 
 /* ---------- TypeScript Types ---------- */
 
-export type OrganizationsRequest = z.infer<
-  typeof OrganizationsRequestZodSchema
+export type OrganizationRequest = z.infer<typeof OrganizationRequestZodSchema>;
+export type OrganizationResponse = z.infer<
+  typeof OrganizationResponseZodSchema
 >;
-export type OrganizationsResponse = z.infer<
-  typeof OrganizationsResponseZodSchema
+export type UpdateOrganizationRequest = z.infer<
+  typeof UpdateOrganizationRequestZodSchema
 >;

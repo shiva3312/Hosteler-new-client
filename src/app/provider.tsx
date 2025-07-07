@@ -7,9 +7,9 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { MainErrorFallback } from '@/components/errors/main';
-import { Notifications } from '@/components/ui/notifications';
-import { Spinner } from '@/components/ui/spinner';
-import { queryConfig } from '@/lib/react-query';
+import { Notifications } from '@/components/ui/core/notifications';
+import { Spinner } from '@/components/ui/core/spinner';
+import { queryConfig } from '@/lib/api/react-query';
 
 import { theme } from '../styles/theme';
 import '@mantine/core/styles.css';

@@ -27,17 +27,21 @@ export const paths = {
       path: '/app',
       getHref: () => '/app',
     },
-    home: {
-      path: 'home',
-      getHref: () => '/app/home',
-    },
     dashboard: {
       path: 'dashboard',
       getHref: () => '/app/dashboard',
     },
-    analytics: {
-      path: 'analytics',
-      getHref: () => '/app/analytics',
+    organization: {
+      path: 'organization',
+      getHref: () => '/app/organization',
+    },
+    unit: {
+      path: 'unit',
+      getHref: () => '/app/unit',
+    },
+    member: {
+      path: 'member',
+      getHref: () => '/app/member',
     },
     settings: {
       path: 'settings',
@@ -61,6 +65,70 @@ export const paths = {
       system: {
         path: 'system-settings/system',
         getHref: () => '/app/system-settings/system',
+      },
+    },
+    mess: {
+      path: 'mess',
+      getHref: () => '/app/mess',
+      mess: {
+        path: 'mess',
+        getHref: () => '/app/mess',
+      },
+      mealItem: {
+        path: 'mess/meal-item',
+        getHref: () => '/app/mess/meal-item',
+      },
+      mealPreference: {
+        path: 'mess/meal-preference',
+        getHref: () => '/app/mess/meal-preference',
+      },
+      menu: {
+        path: 'mess/menu',
+        getHref: () => '/app/mess/menu',
+      },
+      menuCycle: {
+        path: 'mess/menu-cycle',
+        getHref: () => '/app/mess/menu-cycle',
+      },
+      mealChart: {
+        path: 'mess/meal-chart',
+        getHref: () => '/app/mess/meal-chart',
+      },
+    },
+    inventory: {
+      path: 'inventory',
+      getHref: () => '/app/inventory',
+      ingredient: {
+        path: 'inventory/ingredient',
+        getHref: () => '/app/inventory/ingredient',
+      },
+      supply: {
+        path: 'inventory/supply',
+        getHref: () => '/app/inventory/supply',
+      },
+    },
+    finance: {
+      path: 'finance',
+      getHref: () => '/app/finance',
+      supplier: {
+        path: 'finance/supplier',
+        getHref: () => '/app/finance/supplier',
+      },
+      billing: {
+        path: 'finance/billing',
+        getHref: () => '/app/finance/billing',
+      },
+      payment: {
+        path: 'finance/payment',
+        getHref: () => '/app/finance/payment',
+      },
+      purchase: {
+        path: 'finance/purchase',
+        getHref: () => '/app/finance/purchase',
+      },
+      sale: {
+        path: 'finance/sales',
+        getHref: () => '/app/finance/sale',
       },
     },
   },

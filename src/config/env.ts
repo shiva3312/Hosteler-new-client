@@ -1,6 +1,8 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import * as z from 'zod';
 
+import { Environment } from '@/data/feature';
+
 const createEnv = () => {
   const EnvSchema = z.object({
     API_URL: z.string(),
@@ -11,6 +13,8 @@ const createEnv = () => {
       .optional(),
     APP_URL: z.string().optional().default('http://localhost:3000'),
     APP_MOCK_API_PORT: z.string().optional().default('8080'),
+    SECRET_KEY: z.string().default('secret-key'),
+    ENVIRONMENT: z.nativeEnum(Environment).default(Environment.DEV),
   });
 
   const envVars = Object.entries(import.meta.env).reduce<

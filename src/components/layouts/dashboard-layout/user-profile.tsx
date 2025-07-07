@@ -21,7 +21,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 import { paths } from '@/config/paths';
-import { useLogout } from '@/lib/auth';
+import { useLogout } from '@/lib/api/auth/auth';
 
 function UserProfile() {
   const navigate = useNavigate();

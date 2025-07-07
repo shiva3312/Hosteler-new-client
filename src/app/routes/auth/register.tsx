@@ -2,8 +2,8 @@
 import { Box, Center, Text } from '@mantine/core';
 import { useNavigate, useSearchParams } from 'react-router';
 
+import { RegisterForm } from '@/components/ui/auth/register-form';
 import { paths } from '@/config/paths';
-import { RegisterForm } from '@/features/auth/components/register-form';
 
 const RegisterRoute = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Link } from '@/components/ui/link';
+import { Link } from '@/components/ui/core/link';
 import { paths } from '@/config/paths';
 
 const NotFoundRoute = () => {

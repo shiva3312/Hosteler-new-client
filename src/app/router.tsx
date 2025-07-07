@@ -5,7 +5,7 @@ import { createBrowserRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 
 import { paths } from '@/config/paths';
-import { ProtectedRoute } from '@/lib/auth';
+import { ProtectedRoute } from '@/lib/api/auth/auth';
 
 import {
   default as AppRoot,
@@ -57,15 +57,68 @@ export const createAppRouter = (queryClient: QueryClient) =>
             ),
         },
         {
-          path: paths.app.analytics.path,
+          path: paths.app.organization.path,
           lazy: () =>
-            import('./routes/analytics/analytics').then(convert(queryClient)),
+            import('./routes/app/organization/organization').then(
+              convert(queryClient),
+            ),
         },
-
         {
-          path: paths.app.home.path,
+          path: paths.app.unit.path,
           lazy: () =>
-            import('./routes/app/home/home').then(convert(queryClient)),
+            import('./routes/app/unit/unit').then(convert(queryClient)),
+        },
+        {
+          children: [
+            {
+              index: true,
+              lazy: () =>
+                import('./routes/app/mess/mess').then(convert(queryClient)),
+            },
+            {
+              path: paths.app.mess.mess.path, // 'user'
+              lazy: () =>
+                import('./routes/app/mess/mess').then(convert(queryClient)),
+            },
+            {
+              path: paths.app.mess.mealItem.path,
+              lazy: () =>
+                import('./routes/app/mess/meal-item').then(
+                  convert(queryClient),
+                ),
+            },
+            {
+              path: paths.app.mess.mealPreference.path,
+              lazy: () =>
+                import('./routes/app/mess/menu-preference').then(
+                  convert(queryClient),
+                ),
+            },
+            {
+              path: paths.app.mess.menu.path,
+              lazy: () =>
+                import('./routes/app/mess/menu').then(convert(queryClient)),
+            },
+            {
+              path: paths.app.mess.menuCycle.path,
+              lazy: () =>
+                import('./routes/app/mess/menu-cycle').then(
+                  convert(queryClient),
+                ),
+            },
+            {
+              path: paths.app.mess.mealChart.path,
+              lazy: () =>
+                import('./routes/app/mess/meal-chart').then(
+                  convert(queryClient),
+                ),
+            },
+          ],
+        },
+        {
+          path: paths.app.member.path,
+          lazy: () =>
+            import('./routes/app/member/member').then(convert(queryClient)),
         },
         {
           path: paths.app.settings.path,

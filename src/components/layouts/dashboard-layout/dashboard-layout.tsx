@@ -1,18 +1,21 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { AppShell, Box, Burger, Flex } from '@mantine/core';
 import {
-  IconHome2,
+  IconUsers,
   IconGauge,
-  IconDeviceDesktopAnalytics,
   IconSettings,
   IconUser,
   IconSettingsCog,
+  IconToolsKitchen3,
+  IconBed,
+  IconSitemap,
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
 import { paths } from '@/config/paths';
 import { useDisclosure } from '@/hooks/use-disclosure.js';
 
+import RoleBasedSelector from './rolebase-selector';
 import SidebarLinks, { Link } from './sidebar-links'; // Import the sidebar links component
 import UserProfile from './user-profile';
 import './layout.css';
@@ -28,14 +31,56 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       label: 'Dashboard',
     },
     {
-      link: paths.app.home.getHref(),
-      icon: IconHome2,
-      label: 'Home',
+      link: paths.app.organization.getHref(),
+      icon: IconSitemap,
+      label: 'Organization',
     },
     {
-      link: paths.app.analytics.getHref(),
-      icon: IconDeviceDesktopAnalytics,
-      label: 'Analytics',
+      link: paths.app.unit.getHref(),
+      icon: IconBed,
+      label: 'Hostel',
+    },
+    {
+      link: paths.app.member.getHref(),
+      icon: IconUsers,
+      label: 'Member',
+    },
+    {
+      link: paths.app.mess.getHref(),
+      icon: IconToolsKitchen3,
+      label: 'Mess',
+      subLinks: [
+        {
+          link: paths.app.mess.getHref(),
+          icon: IconToolsKitchen3,
+          label: 'Mess',
+        },
+        {
+          link: paths.app.mess.mealItem.getHref(),
+          icon: IconToolsKitchen3,
+          label: 'Meal Item',
+        },
+        {
+          link: paths.app.mess.menu.getHref(),
+          icon: IconToolsKitchen3,
+          label: 'Menu',
+        },
+        {
+          link: paths.app.mess.menuCycle.getHref(),
+          icon: IconToolsKitchen3,
+          label: 'Menu Cycle',
+        },
+        {
+          link: paths.app.mess.mealChart.getHref(),
+          icon: IconToolsKitchen3,
+          label: 'Meal Chart',
+        },
+        {
+          link: paths.app.mess.mealPreference.getHref(),
+          icon: IconToolsKitchen3,
+          label: 'Meal Preference',
+        },
+      ],
     },
     {
       link: paths.app.settings.getHref(),
@@ -83,7 +128,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       }}
       padding="md"
     >
-      <AppShell.Header zIndex={0}>
+      <AppShell.Header zIndex={4}>
         <Flex
           justify={'space-between'}
           align={'center'}
@@ -102,7 +147,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             />
             <span className="logo">Logo</span>
           </Box>
-          <UserProfile />
+          <Flex gap={'xl'} align={'center'}>
+            <RoleBasedSelector />
+            <UserProfile />
+          </Flex>
         </Flex>
       </AppShell.Header>
       <AppShell.Navbar>

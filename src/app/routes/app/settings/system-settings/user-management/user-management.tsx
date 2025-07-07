@@ -1,7 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import React from 'react';
 
-import { UsersList } from '@/features/users/components/users-list';
+import { UsersList } from '@/components/ui/user/users-list';
 
 function UserManagement() {
   return <UsersList />;

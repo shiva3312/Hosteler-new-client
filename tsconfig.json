@@ -18,7 +18,23 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@components/*": ["./src/components/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@hooks/*": ["./src/hooks/*"],
+
+      "@utils/*": ["./src/utils/*"],
+
+      "@routes/public/*": ["./src/app/routes/public/*"],
+      "@routes/auth/*": ["./src/app/routes/auth/*"],
+
+      "@routes/app/dashboard/*": ["./src/app/routes/app/dashboard/*"],
+      "@routes/app/unit/*": ["./src/app/routes/app/unit/*"],
+      "@routes/app/organization/*": ["./src/app/routes/app/organization/*"],
+      "@routes/app/mess/*": ["./src/app/routes/app/mess/*"],
+      "@routes/app/setting/*": ["./src/app/routes/app/setting/*"]
     }
   },
   "include": ["src"],
