@@ -5,25 +5,34 @@ import { UserResponse } from '@/interfaces/user.interface';
 import { api } from '@/lib/api/api-client';
 import { QueryConfig } from '@/lib/api/react-query';
 
-export const getUsers = (): Promise<{ data: UserResponse[] }> => {
-  return api.get(`/users`);
+export const getUsers = (
+  params?: Record<string, any>,
+): Promise<{ data: UserResponse[] }> => {
+  return api.get(`/users`, { params });
 };
 
-export const getUsersQueryOptions = () => {
+export const getUsersQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['users'],
-    queryFn: getUsers,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    queryKey: ['users', params], // include params in key for caching
+    queryFn: () => getUsers(params),
+    staleTime: 1000 * 60 * 5,
   });
 };
 
 type UseUsersOptions = {
   queryConfig?: QueryConfig<typeof getUsersQueryOptions>;
+  params?: Record<string, any>;
+  enabled?: boolean;
 };
 
-export const useUsers = ({ queryConfig }: UseUsersOptions = {}) => {
+export const useUsers = ({
+  queryConfig,
+  params,
+  enabled,
+}: UseUsersOptions = {}) => {
   return useQuery({
-    ...getUsersQueryOptions(),
+    ...getUsersQueryOptions(params),
     ...queryConfig,
+    enabled,
   });
 };

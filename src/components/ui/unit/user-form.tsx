@@ -72,6 +72,7 @@ const UserForm = ({ initialValues = {} }: Props) => {
   const { addNotification } = useNotifications();
 
   const updateProfileMutation = useUpdateProfile({
+    userId: initialValues._id || '', // Provide a valid userId
     mutationConfig: {
       onSuccess: () => {
         addNotification({
@@ -106,7 +107,7 @@ const UserForm = ({ initialValues = {} }: Props) => {
     } else {
       // Create new user
       console.log('Creating new user');
-      createProfileMutation.mutate({ data: values });
+      createProfileMutation.mutate({ data: values as UserRequest });
       form.reset();
     }
   };

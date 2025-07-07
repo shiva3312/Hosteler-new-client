@@ -1,28 +1,23 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Avatar, Group, Text } from '@mantine/core';
-import React from 'react';
+import { Group, Text } from '@mantine/core';
 
-import { GroupResponse } from '@/interfaces/group.interface';
-import { UserResponse } from '@/interfaces/user.interface';
+import { OrganizationResponse } from '@/interfaces/organization.interface';
 
-interface UserProfileImageProps {
-  user: UserResponse;
+interface OrganizationProfileImageProps {
+  organization: OrganizationResponse;
 }
 
-function UserProfileImage({ user }: UserProfileImageProps) {
-  const placeHolderImage = `https://api.dicebear.com/7.x/open-peeps/svg?seed=${user.username}&gender=${user.profile?.gender}`;
-
+function OrganizationProfileImage({
+  organization,
+}: OrganizationProfileImageProps) {
   return (
     <Group gap="sm">
-      <Avatar variant="gradient" size={40} src={placeHolderImage} radius={40} />
+      {/* <Avatar variant="gradient" size={40} src={placeHolderImage} radius={40} /> */}
       <Text fz="sm" fw={500}>
-        {user.username}
-        <Text fz="xs" c="dimmed" ml={5}>
-          {user.group?.name ?? 'No Group'}
-        </Text>
+        {organization.name}
       </Text>
     </Group>
   );
 }
 
-export default UserProfileImage;
+export default OrganizationProfileImage;

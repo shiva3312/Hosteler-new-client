@@ -13,15 +13,15 @@ if [[ "$1" != "--run" ]]; then
 fi
 
 
-FOLDER="./src/lib/api/group"
+FOLDER="./src/components/ui/organization"
 
 # 🔤 Words to replace inside file content
-SEARCH_WORDS_IN_FILE=("organization" "Organization")
-REPLACE_WORDS_IN_FILE=("group" "Group")
+SEARCH_WORDS_IN_FILE=("user" "User")
+REPLACE_WORDS_IN_FILE=("organization" "Organization")
 
 # 📄 Words to replace in file/folder names
-SEARCH_WORDS_IN_FILENAME=("organization" )
-REPLACE_WORDS_IN_FILENAME=("group" )
+SEARCH_WORDS_IN_FILENAME=("user" )
+REPLACE_WORDS_IN_FILENAME=("organization" )
 
 echo "✅ Script started running..."
 

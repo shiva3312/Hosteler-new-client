@@ -5,8 +5,13 @@ import { Outlet } from 'react-router';
 
 import { DashboardLayout } from '@/components/layouts';
 import { useUser } from '@/lib/api/auth/auth';
-import { setContext, setSelected } from '@/lib/store/slice/context-slice';
-
+import {
+  ContextState,
+  setContext,
+  setSelected,
+} from '@/lib/store/slice/context-slice';
+import { LocalStorage } from '@/utils/local-storage.class';
+const storedContext = LocalStorage.get<ContextState>(LocalStorage.KEY.CONTEXT);
 export const ErrorBoundary = () => {
   return <div>Something went wrong!</div>;
 };
@@ -16,18 +21,30 @@ const AppRoot = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userData) {
+    if (storedContext) {
+      console.log('Restoring context from local storage:', storedContext);
+      dispatch(setContext({ data: storedContext }));
+      dispatch(setSelected({ data: storedContext.selected }));
+    } else if (userData) {
       dispatch(
         setContext({
-          user: userData._id,
-          organization: userData.organization,
-          unit: userData.unit,
-          roles: userData.roles,
-          activeRoute: window.location.pathname,
+          data: {
+            user: userData._id,
+            organization: userData.organization,
+            unit: userData.unit,
+            roles: userData.roles,
+            activeRoute: window.location.pathname,
+          },
+          updateLocalStorage: true,
         }),
+      );
+      dispatch(
         setSelected({
-          organization: userData.organization,
-          unit: userData.unit,
+          data: {
+            organization: userData.organization,
+            unit: userData.unit,
+          },
+          updateLocalStorage: true,
         }),
       );
     }

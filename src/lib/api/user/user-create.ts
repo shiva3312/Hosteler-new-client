@@ -9,12 +9,12 @@ import { MutationConfig } from '@/lib/api/react-query';
 
 export type CreateUserInput = z.infer<typeof UserRequestZodSchema>;
 
-export const updateUser = ({ data }: { data: CreateUserInput }) => {
-  return api.post(`/users`, data);
+export const createUser = ({ data }: { data: CreateUserInput }) => {
+  return api.post(`/user`, data);
 };
 
 type UseCreateUserOptions = {
-  mutationConfig?: MutationConfig<typeof updateUser>;
+  mutationConfig?: MutationConfig<typeof createUser>;
 };
 
 export const useCreateUser = ({
@@ -30,6 +30,6 @@ export const useCreateUser = ({
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: updateUser,
+    mutationFn: createUser,
   });
 };

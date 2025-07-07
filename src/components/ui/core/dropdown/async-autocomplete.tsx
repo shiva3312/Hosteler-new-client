@@ -30,13 +30,18 @@ export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
   });
 
   const { data, loading, onSearch } = props;
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(props.selected || ''); // Initialize with selected value
   const [filteredData, setFilteredData] = useState<ComboboxOption[]>([]); // State to hold filtered data
 
   useEffect(() => {
     // Initialize filteredData with the provided data prop
     if (data.length !== 0) setFilteredData(data);
   }, [data]);
+
+  useEffect(() => {
+    // Update value when props.selected changes
+    setValue(props.selected || '');
+  }, [props.selected]);
 
   const options = (filteredData || []).map((item) => (
     <Combobox.Option value={item.value} key={item.label}>
@@ -74,12 +79,12 @@ export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
           size={props.size || 'xs'}
           placeholder={props.placeholder || 'Search...'}
           value={
-            data.find((item) => item.value === props.selected)?.label || value
+            data.find((item) => item.value === value)?.label || value // Show label if value matches, fallback to value
           }
           label={props.label}
           onChange={(event) => {
             const query = event.currentTarget.value;
-            setValue(query);
+            setValue(query); // Update the local `value` state
             handleSearch(query); // Use the handleSearch function
             combobox.resetSelectedOption();
             combobox.openDropdown();
@@ -88,11 +93,14 @@ export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
           onFocus={() => {
             combobox.openDropdown();
             if (data.length === 0) {
-              // Changed from data === null to data.length === 0
               handleSearch(value);
             }
           }}
-          onBlur={() => combobox.closeDropdown()}
+          onBlur={() => {
+            // Reset value to previously selected value if no new selection is made
+            setValue(props.selected || '');
+            combobox.closeDropdown();
+          }}
           rightSection={
             loading ? (
               <Loader size={18} />

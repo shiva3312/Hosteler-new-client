@@ -12,7 +12,7 @@ export const OrganizationRequestZodSchema = z.object({
   address: AddressZodSchema.nullish(),
 
   // reference fields
-  superAdminId: Primitive.safeID(),
+  superAdmin: Primitive.safeID(),
   units: z.array(Primitive.safeID()).optional(), // array of unit ids
   users: z.array(Primitive.safeID()).optional(),
 });

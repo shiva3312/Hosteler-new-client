@@ -22,14 +22,14 @@ function RoleBasedSelector() {
     }
 
     console.log('setting selected:', selected);
-    dispatch(setSelected(selected));
+    dispatch(setSelected({ data: selected, updateLocalStorage: true }));
   };
 
   console.log(unitResponse?.data, organizationResponse?.data);
 
   const filteredUnit =
     unitResponse?.data.filter(
-      (unit) => unit.organization === selected.organization,
+      (unit) => unit?.organization === selected?.organization,
     ) ?? [];
 
   // unit and organization dropdowns
