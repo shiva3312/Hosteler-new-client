@@ -1,31 +1,40 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { MealItemResponse } from '@/interfaces/mealItem.interface';
+import { MealItemResponse } from '@/interfaces/mess/meal-item.interface';
 import { api } from '@/lib/api/api-client';
 import { QueryConfig } from '@/lib/api/react-query';
 
-export const getMealItem = (): Promise<{
+export const getMealItems = (
+  params?: Record<string, any>,
+): Promise<{
   data: MealItemResponse[];
 }> => {
-  return api.get(`/mealItems`);
+  return api.get(`/meal-items`, { params });
 };
 
-export const getMealItemQueryOptions = () => {
+export const getMealItemQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['mealItems'],
-    queryFn: getMealItem,
+    queryKey: ['mealItems', params],
+    queryFn: getMealItems,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
 
-type UseMealItemOptions = {
+type UseMessOptions = {
   queryConfig?: QueryConfig<typeof getMealItemQueryOptions>;
+  params?: Record<string, any>;
+  enabled?: boolean;
 };
 
-export const useMealItems = ({ queryConfig }: UseMealItemOptions = {}) => {
+export const useMealItems = ({
+  queryConfig,
+  params,
+  enabled,
+}: UseMessOptions = {}) => {
   return useQuery({
-    ...getMealItemQueryOptions(),
+    ...getMealItemQueryOptions(params),
     ...queryConfig,
+    enabled,
   });
 };

@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { getMenuQueryOptions } from './get-all-menus';
+import { getMenuQueryOptions } from './get-all-menues';
 
 export type DeleteMenuDTO = {
   menuId: string;

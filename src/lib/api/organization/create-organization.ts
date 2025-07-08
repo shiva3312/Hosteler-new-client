@@ -7,12 +7,12 @@ import { MutationConfig } from '@/lib/api/react-query';
 
 import { useOrganizations } from './get-all-organizations';
 
-export const updateOrganization = ({ data }: { data: OrganizationRequest }) => {
+export const createOrganization = ({ data }: { data: OrganizationRequest }) => {
   return api.post(`/organization`, data);
 };
 
 type UseCreateOrganizationOptions = {
-  mutationConfig?: MutationConfig<typeof updateOrganization>;
+  mutationConfig?: MutationConfig<typeof createOrganization>;
 };
 
 export const useCreateOrganization = ({
@@ -28,6 +28,6 @@ export const useCreateOrganization = ({
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: updateOrganization,
+    mutationFn: createOrganization,
   });
 };

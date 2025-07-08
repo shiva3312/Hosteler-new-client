@@ -2,8 +2,6 @@
 import { Container, Title, Text, Button, Group } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
-import Counter from './counter';
-
 function LandingPage() {
   const navigate = useNavigate(); // Initialize the navigation hook
 
@@ -45,7 +43,6 @@ function LandingPage() {
           Register
         </Button>
       </Group>
-      <Counter />
     </Container>
   );
 }

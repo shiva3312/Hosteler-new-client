@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { getMessQueryOptions } from './get-all-messs';
+import { getMessQueryOptions } from './get-all-messes';
 
 export type DeleteMessDTO = {
   messId: string;

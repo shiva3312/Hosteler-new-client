@@ -18,7 +18,6 @@ export const updateOrganization = ({
 };
 
 type UseUpdateOrganizationOptions = {
-  organizationId: string;
   mutationConfig?: MutationConfig<typeof updateOrganization>;
 };
 

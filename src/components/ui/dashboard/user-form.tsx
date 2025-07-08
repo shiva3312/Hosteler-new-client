@@ -100,13 +100,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
       console.log('Updating user:', initialValues.username);
       updateProfileMutation.mutate({
         userId: initialValues._id!,
-        data: values,
+        data: values as UserRequest,
       });
       form.reset();
     } else {
       // Create new user
       console.log('Creating new user');
-      createProfileMutation.mutate({ data: values });
+      createProfileMutation.mutate({ data: values as UserRequest });
       form.reset();
     }
   };
@@ -332,7 +332,7 @@ function UserFormDrawer({ initialValues }: Props) {
         </UnstyledButton>
       ) : (
         <Button size="xs" onClick={open}>
-          {'Add User'}
+          {'Add New'}
         </Button>
       )}
     </>

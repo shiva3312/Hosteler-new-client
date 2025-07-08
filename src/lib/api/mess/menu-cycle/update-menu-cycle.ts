@@ -1,11 +1,11 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { UpdateMenuCycleRequest } from '@/interfaces/menuCycle.interface';
+import { UpdateMenuCycleRequest } from '@/interfaces/mess/menu-cycle.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMenuCycles } from './get-all-menuCycles';
+import { useMenuCycles } from './get-all-menu-cycles';
 
 export const updateMenuCycle = ({
   menuCycleId,
@@ -18,7 +18,6 @@ export const updateMenuCycle = ({
 };
 
 type UseUpdateMenuCycleOptions = {
-  menuCycleId: string;
   mutationConfig?: MutationConfig<typeof updateMenuCycle>;
 };
 

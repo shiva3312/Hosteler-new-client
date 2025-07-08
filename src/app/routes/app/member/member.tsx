@@ -1,8 +1,8 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import React from 'react';
+import { UsersList } from '@/components/ui/user/users-list';
 
 function Home() {
-  return <div>Member list</div>;
+  return <UsersList />;
 }
 
 export default Home;

@@ -5,27 +5,36 @@ import { GroupResponse } from '@/interfaces/group.interface';
 import { api } from '@/lib/api/api-client';
 import { QueryConfig } from '@/lib/api/react-query';
 
-export const getGroup = (): Promise<{
+export const getGroups = (
+  params?: Record<string, any>,
+): Promise<{
   data: GroupResponse[];
 }> => {
-  return api.get(`/groups`);
+  return api.get(`/groups`, { params });
 };
 
-export const getGroupQueryOptions = () => {
+export const getGroupQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['groups'],
-    queryFn: getGroup,
+    queryKey: ['groups', params],
+    queryFn: getGroups,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
 
 type UseGroupOptions = {
   queryConfig?: QueryConfig<typeof getGroupQueryOptions>;
+  params?: Record<string, any>;
+  enabled?: boolean;
 };
 
-export const useGroups = ({ queryConfig }: UseGroupOptions = {}) => {
+export const useGroups = ({
+  queryConfig,
+  params,
+  enabled,
+}: UseGroupOptions = {}) => {
   return useQuery({
-    ...getGroupQueryOptions(),
+    ...getGroupQueryOptions(params),
     ...queryConfig,
+    enabled,
   });
 };

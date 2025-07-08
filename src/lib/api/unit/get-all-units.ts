@@ -5,27 +5,36 @@ import { UnitResponse } from '@/interfaces/unit.interface';
 import { api } from '@/lib/api/api-client';
 import { QueryConfig } from '@/lib/api/react-query';
 
-export const getUnit = (): Promise<{
+export const getUnits = (
+  params?: Record<string, any>,
+): Promise<{
   data: UnitResponse[];
 }> => {
-  return api.get(`/units`);
+  return api.get(`/units`, { params });
 };
 
-export const getUnitQueryOptions = () => {
+export const getUnitQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['units'],
-    queryFn: getUnit,
+    queryKey: ['units', params],
+    queryFn: getUnits,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
 
 type UseUnitOptions = {
   queryConfig?: QueryConfig<typeof getUnitQueryOptions>;
+  params?: Record<string, any>;
+  enabled?: boolean;
 };
 
-export const useUnits = ({ queryConfig }: UseUnitOptions = {}) => {
+export const useUnits = ({
+  queryConfig,
+  params,
+  enabled,
+}: UseUnitOptions = {}) => {
   return useQuery({
-    ...getUnitQueryOptions(),
+    ...getUnitQueryOptions(params),
     ...queryConfig,
+    enabled,
   });
 };

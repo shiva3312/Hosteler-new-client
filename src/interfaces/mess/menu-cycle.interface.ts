@@ -10,15 +10,15 @@ import { Primitive } from '../primitive.class';
 
 export const MenuCycleRequestZodSchema = z.object({
   name: Primitive.safeString('Name', [], 2, 20).nullish(),
-  description: Primitive.safeString(),
-  startDay: Primitive.safeNumber('Start Day', 1, 30).default(1), // 1 for Monday, 7 for Sunday
+  description: Primitive.safeString().optional(),
+  startDay: Primitive.safeNumber('Start Day', 1, 31).optional().default(1), // 1 for Monday, 7 for Sunday
   menusInCycle: z
     .array(
       z.object({ order: Primitive.safeNumber(), menu: Primitive.safeID() }),
     )
-    .default([]), // array of menu ids in this cycle
-  tags: z.array(Primitive.safeString('Tag')).default([]), // array of tags for this menuCycle
-  likedByUserIds: z.array(Primitive.safeID()).default([]), // array of user ids who liked this menuCycle
+    .optional(),
+  tags: z.array(Primitive.safeString('Tag')).optional().default([]), // array of tags for this menuCycle
+  likedByUserIds: z.array(Primitive.safeID()).optional().default([]), // array of user ids who liked this menuCycle
   isActive: z.boolean().default(true), // whether this menuCycle is active or not
   // reference fields
   unit: Primitive.safeID().nullish(),

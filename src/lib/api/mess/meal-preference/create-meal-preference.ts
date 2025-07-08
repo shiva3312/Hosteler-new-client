@@ -1,22 +1,22 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { MealPreferenceRequest } from '@/interfaces/mealPreference.interface';
+import { MealPreferenceRequest } from '@/interfaces/mess/meal-preference.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMealPreferences } from './get-all-mealPreferences';
+import { useMealPreferences } from './get-all-meal-preferences';
 
-export const updateMealPreference = ({
+export const createMealPreference = ({
   data,
 }: {
   data: MealPreferenceRequest;
 }) => {
-  return api.post(`/mealPreference`, data);
+  return api.post(`/meal-preference`, data);
 };
 
 type UseCreateMealPreferenceOptions = {
-  mutationConfig?: MutationConfig<typeof updateMealPreference>;
+  mutationConfig?: MutationConfig<typeof createMealPreference>;
 };
 
 export const useCreateMealPreference = ({
@@ -32,6 +32,6 @@ export const useCreateMealPreference = ({
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: updateMealPreference,
+    mutationFn: createMealPreference,
   });
 };

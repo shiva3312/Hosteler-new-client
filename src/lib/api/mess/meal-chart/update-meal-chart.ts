@@ -1,11 +1,11 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { UpdateMealChartRequest } from '@/interfaces/mealChart.interface';
+import { UpdateMealChartRequest } from '@/interfaces/mess/meal-chart.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMealCharts } from './get-all-mealCharts';
+import { useMealCharts } from './get-all-meal-charts';
 
 export const updateMealChart = ({
   mealChartId,
@@ -18,7 +18,6 @@ export const updateMealChart = ({
 };
 
 type UseUpdateMealChartOptions = {
-  mealChartId: string;
   mutationConfig?: MutationConfig<typeof updateMealChart>;
 };
 

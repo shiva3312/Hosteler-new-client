@@ -31,15 +31,20 @@ import {
   UserRequestZodSchema,
   UserResponse,
 } from '@/interfaces/user.interface';
+import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
+import { SearchQuery } from '@/lib/api/search-query';
+import { useUnits } from '@/lib/api/unit/get-all-units';
 
 import { useUpdateProfile } from '../../../lib/api/user/update-profile';
 import { useCreateUser } from '../../../lib/api/user/user-create';
+import { AsyncAutocompleteCombobox } from '../core/dropdown';
+import { isEmpty } from 'lodash';
 
 type Props = {
   initialValues?: Partial<UserResponse>;
 };
 
-const genderOptions = Object.values(Gender).map((value) => ({
+const genderOptions = Object.entries(Gender).map(([value]) => ({
   value,
   label: value,
 }));
@@ -70,6 +75,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
     initialValues,
   });
   const { addNotification } = useNotifications();
+  const { data: organizations, isLoading: orgLoading } = useOrganizations({});
+  const { data: units, isLoading: unitLoading } = useUnits({
+    params: SearchQuery.unitSearchQuery({
+      organization: [form.values.organization!],
+    }),
+    enabled: !!form.values.organization,
+  });
 
   const updateProfileMutation = useUpdateProfile({
     mutationConfig: {
@@ -95,7 +107,7 @@ const UserForm = ({ initialValues = {} }: Props) => {
 
   const onSubmit = (values: Partial<UserRequest>): void => {
     console.log('Form submitted with values:', values);
-    if (initialValues) {
+    if (!isEmpty(initialValues)) {
       // Update existing user
       console.log('Updating user:', initialValues.username);
       updateProfileMutation.mutate({
@@ -106,7 +118,7 @@ const UserForm = ({ initialValues = {} }: Props) => {
     } else {
       // Create new user
       console.log('Creating new user');
-      createProfileMutation.mutate({ data: values });
+      createProfileMutation.mutate({ data: values as UserRequest });
       form.reset();
     }
   };
@@ -114,7 +126,7 @@ const UserForm = ({ initialValues = {} }: Props) => {
   return (
     <Box component="form" onSubmit={form.onSubmit(onSubmit)}>
       {/* Basic Info */}
-      <Title order={3}>Basic Info</Title>
+      <Title order={3}>Credential</Title>
       <Stack>
         <TextInput label="Username" {...form.getInputProps('username')} />
         <TextInput
@@ -122,13 +134,44 @@ const UserForm = ({ initialValues = {} }: Props) => {
           type="password"
           {...form.getInputProps('password')}
         />
+
+        <AsyncAutocompleteCombobox
+          label="Organization"
+          placeholder="Select organization"
+          data={
+            organizations?.data?.map((user) => ({
+              label: user.name,
+              value: user._id,
+            })) || []
+          }
+          selected={form.values.organization ?? ''}
+          onChange={(value) => {
+            form.setFieldValue('organization', value);
+            form.setFieldValue('unit', '');
+          }}
+          loading={orgLoading}
+        />
+
+        <AsyncAutocompleteCombobox
+          label="Unit"
+          placeholder="Select Unit"
+          data={
+            units?.data?.map((user) => ({
+              label: user.name,
+              value: user._id,
+            })) || []
+          }
+          selected={form.values.unit ?? ''}
+          onChange={(value) => form.setFieldValue('unit', value)}
+          loading={unitLoading}
+        />
       </Stack>
 
       <Divider my="md" />
 
       {/* Profile */}
       <Title order={3}>Profile</Title>
-      <Stack>
+      {/* <Stack>
         <TextInput
           label="First Name"
           {...form.getInputProps('profile.firstName')}
@@ -162,13 +205,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
           data={casteCategoryOptions}
           {...form.getInputProps('profile.casteCategory')}
         />
-      </Stack>
+      </Stack> */}
 
       <Divider my="md" />
 
       {/* Address */}
-      <Title order={3}>Address</Title>
-      <Stack>
+      {/* <Title order={3}>Address</Title> */}
+      {/* <Stack>
         <TextInput
           label="Address Line 1"
           {...form.getInputProps('profile.address.addressLine1')}
@@ -189,13 +232,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
           label="Postal Code"
           {...form.getInputProps('profile.address.postalCode')}
         />
-      </Stack>
+      </Stack> */}
 
-      <Divider my="md" />
+      {/* <Divider my="md" /> */}
 
       {/* Contacts */}
-      <Title order={3}>Contacts</Title>
-      <Stack>
+      {/* <Title order={3}>Contacts</Title> */}
+      {/* <Stack>
         <TextInput
           label="Email"
           {...form.getInputProps('profile.contacts.email')}
@@ -212,13 +255,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
           label="LinkedIn"
           {...form.getInputProps('profile.contacts.linkedinAccount')}
         />
-      </Stack>
+      </Stack> */}
 
-      <Divider my="md" />
+      {/* <Divider my="md" /> */}
 
       {/* Preferences */}
-      <Title order={3}>Preferences</Title>
-      <Stack>
+      {/* <Title order={3}>Preferences</Title> */}
+      {/* <Stack>
         <TextInput
           label="Preferred Language"
           {...form.getInputProps('profile.preferences.preferredLanguage')}
@@ -228,13 +271,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
           data={foodOptions}
           {...form.getInputProps('profile.preferences.foodPreference')}
         />
-      </Stack>
+      </Stack> */}
 
-      <Divider my="md" />
+      {/* <Divider my="md" /> */}
 
       {/* Medical */}
-      <Title order={3}>Medical</Title>
-      <Stack>
+      {/* <Title order={3}>Medical</Title> */}
+      {/* <Stack>
         <Select
           label="Blood Group"
           data={bloodGroupOptions}
@@ -244,13 +287,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
           label="Allergies"
           {...form.getInputProps('profile.medical.allergies')}
         />
-      </Stack>
+      </Stack> */}
 
-      <Divider my="md" />
+      {/* <Divider my="md" /> */}
 
       {/* Finance */}
-      <Title order={3}>Finance</Title>
-      <Stack>
+      {/* <Title order={3}>Finance</Title> */}
+      {/* <Stack>
         <TextInput
           label="Bank Name"
           {...form.getInputProps('profile.finance.bankName')}
@@ -263,13 +306,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
           label="IFSC Code"
           {...form.getInputProps('profile.finance.ifscCode')}
         />
-      </Stack>
+      </Stack> */}
 
-      <Divider my="md" />
+      {/* <Divider my="md" /> */}
 
       {/* Identity */}
-      <Title order={3}>Identity</Title>
-      <Stack>
+      {/* <Title order={3}>Identity</Title> */}
+      {/* <Stack>
         <TextInput
           label="Aadhar Card"
           {...form.getInputProps('profile.identity.aadharCard')}
@@ -278,13 +321,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
           label="PAN Card"
           {...form.getInputProps('profile.identity.panCard')}
         />
-      </Stack>
+      </Stack> */}
 
-      <Divider my="md" />
+      {/* <Divider my="md" /> */}
 
       {/* Tech Info */}
-      <Title order={3}>Tech Info</Title>
-      <Stack>
+      {/* <Title order={3}>Tech Info</Title> */}
+      {/* <Stack>
         <TextInput
           label="IP Address"
           {...form.getInputProps('profile.techInfo.ipAddress')}
@@ -294,13 +337,13 @@ const UserForm = ({ initialValues = {} }: Props) => {
           data={deviceTypeOptions}
           {...form.getInputProps('profile.techInfo.deviceType')}
         />
-      </Stack>
+      </Stack> */}
 
       <Divider my="md" />
 
       {/* Submit */}
       <Group justify="right" mt="md">
-        <Button type="submit">Submit</Button>
+        <Button type="submit">{initialValues ? 'Update' : 'Create'}</Button>
       </Group>
     </Box>
   );
@@ -332,7 +375,7 @@ function UserFormDrawer({ initialValues }: Props) {
         </UnstyledButton>
       ) : (
         <Button size="xs" onClick={open}>
-          {'Add User'}
+          {'Add New'}
         </Button>
       )}
     </>

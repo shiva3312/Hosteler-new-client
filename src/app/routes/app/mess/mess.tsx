@@ -1,7 +1,9 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
+import { MessesList } from '@/components/ui/mess/mess/mess-list';
+
 function Mess() {
-  return <div>Mess</div>;
+  return <MessesList />;
 }
 
 export default Mess;

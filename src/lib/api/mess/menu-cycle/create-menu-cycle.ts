@@ -1,18 +1,18 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { MenuCycleRequest } from '@/interfaces/menuCycle.interface';
+import { MenuCycleRequest } from '@/interfaces/mess/menu-cycle.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMenuCycles } from './get-all-menuCycles';
+import { useMenuCycles } from './get-all-menu-cycles';
 
-export const updateMenuCycle = ({ data }: { data: MenuCycleRequest }) => {
-  return api.post(`/menuCycle`, data);
+export const createMenuCycle = ({ data }: { data: MenuCycleRequest }) => {
+  return api.post(`/menu-cycle`, data);
 };
 
 type UseCreateMenuCycleOptions = {
-  mutationConfig?: MutationConfig<typeof updateMenuCycle>;
+  mutationConfig?: MutationConfig<typeof createMenuCycle>;
 };
 
 export const useCreateMenuCycle = ({
@@ -28,6 +28,6 @@ export const useCreateMenuCycle = ({
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: updateMenuCycle,
+    mutationFn: createMenuCycle,
   });
 };

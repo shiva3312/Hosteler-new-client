@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { getMealChartQueryOptions } from './get-all-mealCharts';
+import { getMealChartQueryOptions } from './get-all-meal-charts';
 
 export type DeleteMealChartDTO = {
   mealChartId: string;

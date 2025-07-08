@@ -1,7 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { MenuCycleResponse } from '@/interfaces/menuCycle.interface';
+import { MenuCycleResponse } from '@/interfaces/mess/menu-cycle.interface';
 import { api } from '@/lib/api/api-client';
 import { QueryConfig } from '@/lib/api/react-query';
 
@@ -15,7 +15,7 @@ export const getMenuCycleById = (
 
 export const getMenuCycleQueryOptions = (menuCycle: string) => {
   return queryOptions({
-    queryKey: ['menuCycle'],
+    queryKey: ['menuCycle', menuCycle],
     queryFn: () => getMenuCycleById(menuCycle),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -26,12 +26,14 @@ type UseMenuCycleOptions = {
   queryConfig?: QueryConfig<typeof getMenuCycleQueryOptions>;
 };
 
-export const useMenuCycles = ({
+export const useMenuCycle = ({
   menuCycle,
   queryConfig,
-}: UseMenuCycleOptions) => {
+  enabled,
+}: UseMenuCycleOptions & { enabled?: boolean }) => {
   return useQuery({
     ...getMenuCycleQueryOptions(menuCycle),
     ...queryConfig,
+    enabled,
   });
 };

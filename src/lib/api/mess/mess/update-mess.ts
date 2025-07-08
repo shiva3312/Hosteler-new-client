@@ -1,11 +1,11 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { UpdateMessRequest } from '@/interfaces/mess.interface';
+import { UpdateMessRequest } from '@/interfaces/mess/mess.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMesss } from './get-all-messs';
+import { useMesses } from './get-all-messes';
 
 export const updateMess = ({
   messId,
@@ -18,12 +18,11 @@ export const updateMess = ({
 };
 
 type UseUpdateMessOptions = {
-  messId: string;
   mutationConfig?: MutationConfig<typeof updateMess>;
 };
 
 export const useUpdateMess = ({ mutationConfig }: UseUpdateMessOptions) => {
-  const { refetch: refetchMess } = useMesss();
+  const { refetch: refetchMess } = useMesses();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 

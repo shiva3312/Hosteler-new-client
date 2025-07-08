@@ -19,7 +19,7 @@ export const theme = createTheme({
     Button: Button.extend({
       defaultProps: {
         // color: '#00ad73',
-        size: 'sm',
+        size: 'xs',
         radius: 'sm',
       },
     }),

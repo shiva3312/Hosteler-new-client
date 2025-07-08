@@ -1,7 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { MealItemResponse } from '@/interfaces/mealItem.interface';
+import { MealItemResponse } from '@/interfaces/mess/meal-item.interface';
 import { api } from '@/lib/api/api-client';
 import { QueryConfig } from '@/lib/api/react-query';
 
@@ -15,7 +15,7 @@ export const getMealItemById = (
 
 export const getMealItemQueryOptions = (mealItem: string) => {
   return queryOptions({
-    queryKey: ['mealItem'],
+    queryKey: ['mealItem', mealItem],
     queryFn: () => getMealItemById(mealItem),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -24,11 +24,17 @@ export const getMealItemQueryOptions = (mealItem: string) => {
 type UseMealItemOptions = {
   mealItem: string;
   queryConfig?: QueryConfig<typeof getMealItemQueryOptions>;
+  enabled?: boolean;
 };
 
-export const useMealItems = ({ mealItem, queryConfig }: UseMealItemOptions) => {
+export const useMealItem = ({
+  mealItem,
+  queryConfig,
+  enabled,
+}: UseMealItemOptions) => {
   return useQuery({
     ...getMealItemQueryOptions(mealItem),
     ...queryConfig,
+    enabled,
   });
 };

@@ -15,7 +15,7 @@ export const getOrganizationById = (
 
 export const getOrganizationQueryOptions = (organization: string) => {
   return queryOptions({
-    queryKey: ['organization'],
+    queryKey: ['organization', organization],
     queryFn: () => getOrganizationById(organization),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -24,14 +24,17 @@ export const getOrganizationQueryOptions = (organization: string) => {
 type UseOrganizationOptions = {
   organization: string;
   queryConfig?: QueryConfig<typeof getOrganizationQueryOptions>;
+  enabled?: boolean;
 };
 
 export const useOrganization = ({
   organization,
   queryConfig,
+  enabled,
 }: UseOrganizationOptions) => {
   return useQuery({
     ...getOrganizationQueryOptions(organization),
     ...queryConfig,
+    enabled,
   });
 };

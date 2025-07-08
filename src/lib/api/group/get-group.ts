@@ -15,7 +15,7 @@ export const getGroupById = (
 
 export const getGroupQueryOptions = (group: string) => {
   return queryOptions({
-    queryKey: ['group'],
+    queryKey: ['group', group],
     queryFn: () => getGroupById(group),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -24,11 +24,13 @@ export const getGroupQueryOptions = (group: string) => {
 type UseGroupOptions = {
   group: string;
   queryConfig?: QueryConfig<typeof getGroupQueryOptions>;
+  enabled?: boolean;
 };
 
-export const useGroups = ({ group, queryConfig }: UseGroupOptions) => {
+export const useGroup = ({ group, queryConfig, enabled }: UseGroupOptions) => {
   return useQuery({
     ...getGroupQueryOptions(group),
     ...queryConfig,
+    enabled,
   });
 };

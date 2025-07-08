@@ -18,7 +18,6 @@ export const updateGroup = ({
 };
 
 type UseUpdateGroupOptions = {
-  groupId: string;
   mutationConfig?: MutationConfig<typeof updateGroup>;
 };
 

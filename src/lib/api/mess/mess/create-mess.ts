@@ -1,24 +1,24 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { MessRequest } from '@/interfaces/mess.interface';
+import { MessRequest } from '@/interfaces/mess/mess.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMesss } from './get-all-messs';
+import { useMesses } from './get-all-messes';
 
-export const updateMess = ({ data }: { data: MessRequest }) => {
+export const createMess = ({ data }: { data: MessRequest }) => {
   return api.post(`/mess`, data);
 };
 
 type UseCreateMessOptions = {
-  mutationConfig?: MutationConfig<typeof updateMess>;
+  mutationConfig?: MutationConfig<typeof createMess>;
 };
 
 export const useCreateMess = ({
   mutationConfig,
 }: UseCreateMessOptions = {}) => {
-  const { refetch: refetchMess } = useMesss();
+  const { refetch: refetchMess } = useMesses();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
@@ -28,6 +28,6 @@ export const useCreateMess = ({
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: updateMess,
+    mutationFn: createMess,
   });
 };

@@ -15,7 +15,7 @@ export const getUnitById = (
 
 export const getUnitQueryOptions = (unit: string) => {
   return queryOptions({
-    queryKey: ['unit'],
+    queryKey: ['unit', unit],
     queryFn: () => getUnitById(unit),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -24,11 +24,13 @@ export const getUnitQueryOptions = (unit: string) => {
 type UseUnitOptions = {
   unit: string;
   queryConfig?: QueryConfig<typeof getUnitQueryOptions>;
+  enabled?: boolean;
 };
 
-export const useUnits = ({ unit, queryConfig }: UseUnitOptions) => {
+export const useUnit = ({ unit, queryConfig, enabled }: UseUnitOptions) => {
   return useQuery({
     ...getUnitQueryOptions(unit),
     ...queryConfig,
+    enabled,
   });
 };

@@ -1,8 +1,8 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import React from 'react';
+import { MenuCyclesList } from '@/components/ui/mess/menu-cycle/menu-cycles';
 
 function MenuCycle() {
-  return <div>MenuCycle</div>;
+  return <MenuCyclesList />;
 }
 
 export default MenuCycle;

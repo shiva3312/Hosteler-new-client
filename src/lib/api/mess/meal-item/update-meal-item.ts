@@ -1,11 +1,11 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { UpdateMealItemRequest } from '@/interfaces/mealItem.interface';
+import { UpdateMealItemRequest } from '@/interfaces/mess/meal-item.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMealItems } from './get-all-mealItems';
+import { useMealItems } from './get-all-meal-items';
 
 export const updateMealItem = ({
   mealItemId,
@@ -18,7 +18,6 @@ export const updateMealItem = ({
 };
 
 type UseUpdateMealItemOptions = {
-  mealItemId: string;
   mutationConfig?: MutationConfig<typeof updateMealItem>;
 };
 

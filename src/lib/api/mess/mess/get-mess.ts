@@ -1,7 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
-import { MessResponse } from '@/interfaces/mess.interface';
+import { MessResponse } from '@/interfaces/mess/mess.interface';
 import { api } from '@/lib/api/api-client';
 import { QueryConfig } from '@/lib/api/react-query';
 
@@ -15,7 +15,7 @@ export const getMessById = (
 
 export const getMessQueryOptions = (mess: string) => {
   return queryOptions({
-    queryKey: ['mess'],
+    queryKey: ['mess', mess],
     queryFn: () => getMessById(mess),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -24,11 +24,13 @@ export const getMessQueryOptions = (mess: string) => {
 type UseMessOptions = {
   mess: string;
   queryConfig?: QueryConfig<typeof getMessQueryOptions>;
+  enabled?: boolean;
 };
 
-export const useMesss = ({ mess, queryConfig }: UseMessOptions) => {
+export const useMess = ({ mess, queryConfig, enabled }: UseMessOptions) => {
   return useQuery({
     ...getMessQueryOptions(mess),
     ...queryConfig,
+    enabled,
   });
 };

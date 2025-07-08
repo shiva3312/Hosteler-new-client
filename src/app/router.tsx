@@ -90,7 +90,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
             {
               path: paths.app.mess.mealPreference.path,
               lazy: () =>
-                import('./routes/app/mess/menu-preference').then(
+                import('./routes/app/mess/meal-preference').then(
                   convert(queryClient),
                 ),
             },

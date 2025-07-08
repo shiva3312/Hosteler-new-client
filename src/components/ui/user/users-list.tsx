@@ -12,14 +12,26 @@ import DateBadge from '@/components/ui/core/badge/date-badge';
 import RoleBadge from '@/components/ui/core/badge/role-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { UserResponse } from '@/interfaces/user.interface';
+import { useGroups } from '@/lib/api/group/get-all-groups';
+import { SearchQuery } from '@/lib/api/search-query';
+import { useUsers } from '@/lib/api/user/get-users';
 
 import { DeleteUser } from './delete-user';
 import UserFormDrawer from './user-form';
 import UserProfileImage from './user-image';
-import { useUsers } from '../../../lib/api/user/get-users';
 
 export const UsersList = () => {
-  const usersQuery = useUsers();
+  const {
+    data: users,
+    isSuccess,
+    isLoading,
+  } = useUsers({
+    params: SearchQuery.userSearchQuery({}),
+  });
+  const { data: groups } = useGroups({
+    params: SearchQuery.groupSearchQuery({}),
+    enabled: isSuccess && users?.data.length > 0,
+  });
 
   const columns = useMemo<MRT_ColumnDef<UserResponse>[]>(
     () => [
@@ -30,7 +42,7 @@ export const UsersList = () => {
         id: 'username',
         size: 250,
         Footer: () => {
-          return <>{`${usersQuery.data?.data.length ?? 0} Users.`}</>;
+          return <>{`${users?.data.length ?? 0} Users.`}</>;
         },
         Cell: ({ row }) => <UserProfileImage user={row.original} />,
         enableEditing: true,
@@ -44,13 +56,15 @@ export const UsersList = () => {
         accessorKey: 'roles',
         header: 'Roles',
         id: 'roles',
+        // size: 250,
         Cell: ({ row }) => (
-          <Flex gap="xs" align="center">
+          <Flex gap="xs" wrap={'wrap'}>
             {row.original.roles?.map((role) => (
-              <RoleBadge key={role} variant="transparent" role={role} />
+              <RoleBadge key={role} variant="light" role={role} />
             ))}
           </Flex>
         ),
+        enableSorting: false,
         enableEditing: true,
         enableColumnFilter: true,
       },
@@ -60,6 +74,21 @@ export const UsersList = () => {
         header: 'Gender',
         id: 'profile.gender',
         Cell: ({ row }) => <Text>{row.original.profile?.gender}</Text>,
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.group,
+        accessorKey: 'group',
+        header: 'Group',
+        id: 'group',
+        Cell: ({ row }) => {
+          const group = groups?.data?.find((g) => g._id === row.original.group);
+          return <Text>{group?.name ?? ''}</Text>;
+        },
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {
@@ -117,15 +146,15 @@ export const UsersList = () => {
         enableEditing: false,
       },
     ],
-    [usersQuery.data?.data],
+    [groups?.data, users?.data.length],
   );
 
   const options: MRT_TableOptions<UserResponse> = useMemo(
     () => ({
       columns,
-      data: usersQuery.data?.data ?? [],
+      data: users?.data ?? [],
       getRowId: (row) => row._id ?? '',
-      rowCount: usersQuery.data?.data?.length ?? 0,
+      rowCount: users?.data?.length ?? 0,
       editDisplayMode: 'custom',
       // onEditingRowSave: handleSaveUser,
       renderRowActions: ({ row, table }) => (
@@ -152,7 +181,7 @@ export const UsersList = () => {
         return <UserFormDrawer />;
       },
     }),
-    [columns, usersQuery.data?.data],
+    [columns, users?.data],
   );
 
   const state: Partial<MRT_TableState<UserResponse>> = useMemo(
@@ -161,14 +190,14 @@ export const UsersList = () => {
         left: ['check'],
         right: ['mrt-row-actions'],
       },
-      isLoading: usersQuery.isLoading,
+      isLoading,
     }),
-    [usersQuery.isLoading],
+    [isLoading],
   );
 
   return (
     <GenericTable
-      data={usersQuery.data?.data ?? []}
+      data={users?.data ?? []}
       columns={columns}
       options={options}
       state={state}

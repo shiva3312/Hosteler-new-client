@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { getMenuCycleQueryOptions } from './get-all-menuCycles';
+import { getMenuCycleQueryOptions } from './get-all-menu-cycles';
 
 export type DeleteMenuCycleDTO = {
   menuCycleId: string;

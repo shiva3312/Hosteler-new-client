@@ -1,11 +1,11 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { UpdateMenuRequest } from '@/interfaces/menu.interface';
+import { UpdateMenuRequest } from '@/interfaces/mess/menu.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMenus } from './get-all-menus';
+import { useMenues } from './get-all-menues';
 
 export const updateMenu = ({
   menuId,
@@ -18,12 +18,11 @@ export const updateMenu = ({
 };
 
 type UseUpdateMenuOptions = {
-  menuId: string;
   mutationConfig?: MutationConfig<typeof updateMenu>;
 };
 
 export const useUpdateMenu = ({ mutationConfig }: UseUpdateMenuOptions) => {
-  const { refetch: refetchMenu } = useMenus();
+  const { refetch: refetchMenu } = useMenues();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 

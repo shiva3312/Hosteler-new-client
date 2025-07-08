@@ -1,37 +1,49 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import {
-  Box,
-  Button,
-  Divider,
-  Group,
-  Stack,
-  TextInput,
-  Textarea,
-  Title,
-} from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
+import { TextInput, Button, Drawer, UnstyledButton } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { useDisclosure } from '@mantine/hooks';
+import { IconEdit } from '@tabler/icons-react';
+import { isEmpty } from 'lodash';
 
-import { useNotifications } from '@/components/ui/core/notifications';
+import { UserRole } from '@/data/feature';
 import {
   OrganizationRequest,
-  OrganizationRequestZodSchema,
+  OrganizationResponse,
 } from '@/interfaces/organization.interface';
 import { useCreateOrganization } from '@/lib/api/organization/create-organization';
 import { useUpdateOrganization } from '@/lib/api/organization/update-organization';
+import { SearchQuery } from '@/lib/api/search-query';
+import { useUsers } from '@/lib/api/user/get-users';
 
-type OrganizationFormProps = {
+import { AsyncAutocompleteCombobox } from '../core/dropdown';
+import { useNotifications } from '../core/notifications';
+
+interface Props {
   initialValues?: Partial<OrganizationRequest>;
-};
+}
 
-export const OrganizationForm = ({
-  initialValues = {},
-}: OrganizationFormProps) => {
-  const form = useForm<Partial<OrganizationRequest>>({
-    validate: zodResolver(OrganizationRequestZodSchema),
+function OrganizationForm({ initialValues }: Props) {
+  const form = useForm({
     initialValues,
+    // validate : OrganizationRequestZodSchema
+  });
+  const { addNotification } = useNotifications();
+
+  const { data: users, isLoading } = useUsers({
+    params: SearchQuery.hasAllRoles([UserRole.SUPER_ADMIN]),
+    enabled: !!form.values.name,
   });
 
-  const { addNotification } = useNotifications();
+  const updateOrganizationMutation = useUpdateOrganization({
+    mutationConfig: {
+      onSuccess: () => {
+        addNotification({
+          type: 'success',
+          title: 'Organization Updated',
+        });
+      },
+    },
+  });
 
   const createOrganizationMutation = useCreateOrganization({
     mutationConfig: {
@@ -40,113 +52,93 @@ export const OrganizationForm = ({
           type: 'success',
           title: 'Organization Created',
         });
-        form.reset();
-      },
-      onError: (error) => {
-        addNotification({
-          type: 'error',
-          title: 'Error Creating Organization',
-          message: error.message,
-        });
       },
     },
   });
 
-  const updateOrganizationMutation = useUpdateOrganization({
-    organizationId: initialValues._id || '',
-    mutationConfig: {
-      onSuccess: () => {
-        addNotification({
-          type: 'success',
-          title: 'Organization Updated',
-        });
-        form.reset();
-      },
-      onError: (error) => {
-        addNotification({
-          type: 'error',
-          title: 'Error Updating Organization',
-          message: error.message,
-        });
-      },
-    },
-  });
-
-  const handleSubmit = (values: Partial<OrganizationRequest>) => {
-    if (initialValues._id) {
-      // Update existing organization
-      updateOrganizationMutation.mutate({
-        organizationId: initialValues._id,
-        data: values,
-      });
-    } else {
-      // Create new organization
+  const handleSubmit = (values: typeof form.values) => {
+    if (isEmpty(initialValues)) {
+      // Handle create organization logic
       createOrganizationMutation.mutate({
         data: values as OrganizationRequest,
       });
+      console.log('Creating organization with values:', values);
+    } else {
+      updateOrganizationMutation.mutate({
+        organizationId: (initialValues as OrganizationResponse)?._id,
+        data: values,
+      });
+
+      console.log('Updating organization with values:', values);
     }
+    // Add logic to handle form submission, e.g., API call
   };
 
   return (
-    <Box component="form" onSubmit={form.onSubmit(handleSubmit)}>
-      {/* Basic Info */}
-      <Title order={3}>Basic Info</Title>
-      <Stack>
-        <TextInput
-          label="Name"
-          placeholder="Enter organization name"
-          {...form.getInputProps('name')}
-        />
-        <Textarea
-          label="Description"
-          placeholder="Enter organization description"
-          {...form.getInputProps('description')}
-        />
-      </Stack>
-
-      <Divider my="md" />
-
-      {/* Address */}
-      <Title order={3}>Address</Title>
-      <Stack>
-        <TextInput
-          label="Address Line 1"
-          {...form.getInputProps('address.addressLine1')}
-        />
-        <TextInput label="City" {...form.getInputProps('address.city')} />
-        <TextInput label="State" {...form.getInputProps('address.state')} />
-        <TextInput label="Country" {...form.getInputProps('address.country')} />
-        <TextInput
-          label="Postal Code"
-          {...form.getInputProps('address.postalCode')}
-        />
-      </Stack>
-
-      <Divider my="md" />
-
-      {/* Contacts */}
-      <Title order={3}>Contacts</Title>
-      <Stack>
-        <TextInput label="Email" {...form.getInputProps('contacts.email')} />
-        <TextInput label="Phone" {...form.getInputProps('contacts.phone')} />
-        <TextInput
-          label="Alternate Phone"
-          {...form.getInputProps('contacts.alternatePhone')}
-        />
-        <TextInput
-          label="Emergency Phone"
-          {...form.getInputProps('contacts.emergencyPhone')}
-        />
-      </Stack>
-
-      <Divider my="md" />
-
-      {/* Submit */}
-      <Group position="right" mt="md">
-        <Button type="submit">
-          {initialValues._id ? 'Update Organization' : 'Create Organization'}
-        </Button>
-      </Group>
-    </Box>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <TextInput
+        label="Organization Name"
+        placeholder="Enter organization name"
+        {...form.getInputProps('name')}
+        required
+      />
+      <TextInput
+        label="Description"
+        placeholder="Enter description"
+        {...form.getInputProps('description')}
+        required
+      />
+      <AsyncAutocompleteCombobox
+        label="Super Admin"
+        placeholder="Select super admin"
+        data={
+          users?.data?.map((user) => ({
+            label: user.username,
+            value: user._id,
+          })) || []
+        }
+        selected={form.values.superAdmin ?? ''}
+        onChange={(value) => form.setFieldValue('superAdmin', value)}
+        loading={isLoading}
+      />
+      <Button type="submit" mt="md">
+        {initialValues ? 'Update' : 'Create'}
+      </Button>
+    </form>
   );
-};
+}
+
+// ----------------------
+// Drawer wrapper component
+// ----------------------
+
+function OrganizationFormDrawer({ initialValues }: Props) {
+  const [opened, { open, close }] = useDisclosure(false);
+
+  return (
+    <>
+      <Drawer
+        size="xl"
+        opened={opened}
+        onClose={close}
+        title={initialValues ? 'Edit Organization' : 'Create Organization'}
+        position="right"
+        closeOnClickOutside={false}
+      >
+        <OrganizationForm initialValues={initialValues} />
+      </Drawer>
+
+      {initialValues ? (
+        <UnstyledButton onClick={open}>
+          <IconEdit size={25} />
+        </UnstyledButton>
+      ) : (
+        <Button size="xs" onClick={open}>
+          {'Add New'}
+        </Button>
+      )}
+    </>
+  );
+}
+
+export default OrganizationFormDrawer;

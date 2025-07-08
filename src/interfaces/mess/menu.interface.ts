@@ -18,12 +18,14 @@ export const MenuRequestZodSchema = z.object({
   price: Primitive.safeNumber('Price', 0).optional(),
   image: Primitive.safeString('Image URL').optional(),
   description: Primitive.safeString(),
-  items: z.array(
-    z.object({
-      item: Primitive.safeID(), // id of the meal item
-      options: z.array(Primitive.safeID()).default([]),
-    }),
-  ),
+  items: z
+    .array(
+      z.object({
+        item: Primitive.safeID(), // id of the meal item
+        options: z.array(Primitive.safeID()).default([]),
+      }),
+    )
+    .default([]), // array of meal items with options
   MenuCategory: z.nativeEnum(MenuCategory).default(MenuCategory.Regular), // category of the menu, e.g., Regular, Special, Seasonal, Festive, Customs
   isActive: z.boolean().default(true), // whether this menu is active or not
   tags: z.array(Primitive.safeString('Tag')).default([]), // array of tags for this menu eg : ['vegan', 'gluten-free', 'spicy']

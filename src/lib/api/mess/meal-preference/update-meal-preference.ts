@@ -1,11 +1,11 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { UpdateMealPreferenceRequest } from '@/interfaces/mealPreference.interface';
+import { UpdateMealPreferenceRequest } from '@/interfaces/mess/meal-preference.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMealPreferences } from './get-all-mealPreferences';
+import { useMealPreferences } from './get-all-meal-preferences';
 
 export const updateMealPreference = ({
   mealPreferenceId,
@@ -18,7 +18,6 @@ export const updateMealPreference = ({
 };
 
 type UseUpdateMealPreferenceOptions = {
-  mealPreferenceId: string;
   mutationConfig?: MutationConfig<typeof updateMealPreference>;
 };
 

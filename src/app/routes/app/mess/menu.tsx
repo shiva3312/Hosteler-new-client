@@ -1,8 +1,8 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import React from 'react';
+import { MenuesList } from '@/components/ui/mess/menu/menu-list';
 
 function Menu() {
-  return <div>Menu</div>;
+  return <MenuesList />;
 }
 
 export default Menu;

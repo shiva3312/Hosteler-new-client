@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { getMealItemQueryOptions } from './get-all-mealItems';
+import { getMealItemQueryOptions } from './get-all-meal-items';
 
 export type DeleteMealItemDTO = {
   mealItemId: string;

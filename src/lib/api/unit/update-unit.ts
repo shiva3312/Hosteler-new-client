@@ -18,7 +18,6 @@ export const updateUnit = ({
 };
 
 type UseUpdateUnitOptions = {
-  unitId: string;
   mutationConfig?: MutationConfig<typeof updateUnit>;
 };
 

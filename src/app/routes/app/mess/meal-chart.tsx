@@ -1,8 +1,8 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import React from 'react';
+import { MealChartsList } from '@/components/ui/mess/meal-chart/meal-chart-list';
 
 function MealChart() {
-  return <div>MealChart</div>;
+  return <MealChartsList />;
 }
 
 export default MealChart;

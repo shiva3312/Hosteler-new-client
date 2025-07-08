@@ -1,18 +1,18 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { MealChartRequest } from '@/interfaces/mealChart.interface';
+import { MealChartRequest } from '@/interfaces/mess/meal-chart.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { useMealCharts } from './get-all-mealCharts';
+import { useMealCharts } from './get-all-meal-charts';
 
-export const updateMealChart = ({ data }: { data: MealChartRequest }) => {
-  return api.post(`/mealChart`, data);
+export const createMealChart = ({ data }: { data: MealChartRequest }) => {
+  return api.post(`/meal-chart`, data);
 };
 
 type UseCreateMealChartOptions = {
-  mutationConfig?: MutationConfig<typeof updateMealChart>;
+  mutationConfig?: MutationConfig<typeof createMealChart>;
 };
 
 export const useCreateMealChart = ({
@@ -28,6 +28,6 @@ export const useCreateMealChart = ({
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: updateMealChart,
+    mutationFn: createMealChart,
   });
 };

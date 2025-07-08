@@ -1,8 +1,8 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import React from 'react';
+import { UnitsList } from '@/components/ui/unit/unit-list';
 
 function Unit() {
-  return <div>Hostel</div>;
+  return <UnitsList />;
 }
 
 export default Unit;
