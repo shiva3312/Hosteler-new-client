@@ -4,8 +4,10 @@ import { z } from 'zod';
 
 import { UpdateUserRequestZodSchema } from '@/interfaces/user.interface';
 import { api } from '@/lib/api/api-client';
-import { useUser } from '@/lib/api/auth/auth';
 import { MutationConfig } from '@/lib/api/react-query';
+
+import { useUsers } from './get-users';
+import { SearchQuery } from '../search-query';
 
 export type UpdateProfileInput = z.infer<typeof UpdateUserRequestZodSchema>;
 
@@ -26,7 +28,9 @@ type UseUpdateProfileOptions = {
 export const useUpdateProfile = ({
   mutationConfig,
 }: UseUpdateProfileOptions = {}) => {
-  const { refetch: refetchUser } = useUser();
+  const { refetch: refetchUser } = useUsers({
+    params: SearchQuery.userSearchQuery({}),
+  });
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 

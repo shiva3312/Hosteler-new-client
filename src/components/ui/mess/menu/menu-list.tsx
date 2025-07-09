@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -14,8 +15,9 @@ import { MenuResponse } from '@/interfaces/mess/menu.interface';
 import { useMenues } from '@lib/api/mess/menu/get-all-menues';
 
 import { DeleteMenu } from './menu-delete';
-import MenuFormDrawer from './menu-form';
+import { MenuForm } from './menu-form';
 import MenuProfileImage from './menu-view';
+import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MenuesList = () => {
   const menuesQuery = useMenues();
@@ -89,7 +91,9 @@ export const MenuesList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <MenuFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <MenuForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -101,7 +105,11 @@ export const MenuesList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <MenuFormDrawer />;
+        return (
+          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+            <MenuForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, menuesQuery.data?.data],

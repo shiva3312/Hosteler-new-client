@@ -10,6 +10,9 @@ import {
   Select,
   Tooltip,
   Input,
+  ActionIcon,
+  TextInput,
+  MultiSelect,
 } from '@mantine/core';
 
 export const theme = createTheme({
@@ -19,19 +22,20 @@ export const theme = createTheme({
     Button: Button.extend({
       defaultProps: {
         // color: '#00ad73',
+        variant: 'filled',
         size: 'xs',
         radius: 'sm',
       },
     }),
-    Input: Input.extend({
+    ActionIcon: ActionIcon.extend({
       defaultProps: {
-        size: 'sm',
+        variant: 'light',
       },
     }),
-    Paper: Paper.extend({
+    TextInput: TextInput.extend({
       defaultProps: {
-        shadow: 'sm',
-        radius: 'sm',
+        autoComplete: 'off',
+        size: 'xs',
       },
     }),
     Title: Title.extend({
@@ -43,6 +47,7 @@ export const theme = createTheme({
       defaultProps: {
         color: 'teal',
         labelPosition: 'right',
+        size: 'xs',
       },
     }),
     NumberFormatter: NumberFormatter.extend({
@@ -52,9 +57,15 @@ export const theme = createTheme({
         thousandSeparator: true,
       },
     }),
+    MultiSelect: MultiSelect.extend({
+      defaultProps: {
+        size: 'xs',
+        searchable: true,
+      },
+    }),
     Select: Select.extend({
       defaultProps: {
-        size: 'sm',
+        size: 'xs',
         comboboxProps: {
           transitionProps: {
             transition: 'pop',

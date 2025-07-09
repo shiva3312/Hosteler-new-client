@@ -1,8 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button, Drawer, UnstyledButton } from '@mantine/core';
+import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { IconEdit } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
 import { GroupRequest, GroupResponse } from '@/interfaces/group.interface';
@@ -19,7 +17,7 @@ interface Props {
   initialValues?: Partial<GroupRequest>;
 }
 
-function GroupForm({ initialValues }: Props) {
+export function GroupForm({ initialValues }: Props) {
   const form = useForm({
     initialValues,
     // validate : GroupRequestZodSchema
@@ -123,38 +121,3 @@ function GroupForm({ initialValues }: Props) {
     </form>
   );
 }
-
-// ----------------------
-// Drawer wrapper component
-// ----------------------
-
-function GroupFormDrawer({ initialValues }: Props) {
-  const [opened, { open, close }] = useDisclosure(false);
-
-  return (
-    <>
-      <Drawer
-        size="xl"
-        opened={opened}
-        onClose={close}
-        title={initialValues ? 'Edit Group' : 'Create Group'}
-        position="right"
-        closeOnClickOutside={false}
-      >
-        <GroupForm initialValues={initialValues} />
-      </Drawer>
-
-      {initialValues ? (
-        <UnstyledButton onClick={open}>
-          <IconEdit size={25} />
-        </UnstyledButton>
-      ) : (
-        <Button size="xs" onClick={open}>
-          {'Add New'}
-        </Button>
-      )}
-    </>
-  );
-}
-
-export default GroupFormDrawer;

@@ -22,16 +22,21 @@ import { useNavigate } from 'react-router-dom';
 
 import { paths } from '@/config/paths';
 import { useLogout } from '@/lib/api/auth/auth';
+import { useMe } from '@/lib/api/user/get-me';
 
 function UserProfile() {
   const navigate = useNavigate();
   const logout = useLogout({
     onSuccess: () => navigate(paths.auth.login.getHref()),
   });
+
+  const { data: me } = useMe();
+
   const user = {
-    name: 'Shivam Chaurasia',
-    image:
-      'https://images.unsplash.com/photo-1601922023934-7c3e5b8f0c2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMDg5NzN8MHwxfGFsbHwxfHx8fHx8fHwxNjE1ODQxMjE0&ixlib=rb-1.2.1&q=80&w=400',
+    name: me?.data.profile
+      ? `${me.data.profile.firstName ?? ''} ${me.data.profile.lastName ?? ''}`.trim()
+      : `${me?.data.username ?? ''}`,
+    image: 'https://via.placeholder.com/150',
   };
 
   return (

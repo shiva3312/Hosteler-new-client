@@ -12,11 +12,16 @@ import {
   NumberInput,
   Drawer,
   UnstyledButton,
+  MultiSelect,
+  Grid,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
-import { IconEdit } from '@tabler/icons-react';
+import { IconEdit, IconKey } from '@tabler/icons-react';
+import { isEmpty } from 'lodash';
+import { useSelector } from 'react-redux';
 
 import { useNotifications } from '@/components/ui/core/notifications';
+import { UserRole } from '@/data/feature';
 import { useDisclosure } from '@/hooks/use-disclosure';
 import {
   Gender,
@@ -31,6 +36,7 @@ import {
   UserRequestZodSchema,
   UserResponse,
 } from '@/interfaces/user.interface';
+import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { SearchQuery } from '@/lib/api/search-query';
 import { useUnits } from '@/lib/api/unit/get-all-units';
@@ -38,7 +44,9 @@ import { useUnits } from '@/lib/api/unit/get-all-units';
 import { useUpdateProfile } from '../../../lib/api/user/update-profile';
 import { useCreateUser } from '../../../lib/api/user/user-create';
 import { AsyncAutocompleteCombobox } from '../core/dropdown';
-import { isEmpty } from 'lodash';
+import { GenericFieldset } from '../core/fieldset/fieldset';
+import { useAuth } from '@/lib/api/auth/auth';
+import { useMe } from '@/lib/api/user/get-me';
 
 type Props = {
   initialValues?: Partial<UserResponse>;
@@ -68,12 +76,17 @@ const deviceTypeOptions = Object.values(DeviceType).map((value) => ({
   value,
   label: value,
 }));
+const userRoles = Object.entries(UserRole).map(([key, value]) => ({
+  value,
+  label: key,
+}));
 
-const UserForm = ({ initialValues = {} }: Props) => {
+export const UserForm = ({ initialValues = {} }: Props) => {
   const form = useForm<Partial<UserRequest>>({
     validate: zodResolver(UserRequestZodSchema),
     initialValues,
   });
+  const { data: me } = useMe();
   const { addNotification } = useNotifications();
   const { data: organizations, isLoading: orgLoading } = useOrganizations({});
   const { data: units, isLoading: unitLoading } = useUnits({
@@ -86,9 +99,10 @@ const UserForm = ({ initialValues = {} }: Props) => {
   const updateProfileMutation = useUpdateProfile({
     mutationConfig: {
       onSuccess: () => {
+        form.reset();
         addNotification({
           type: 'success',
-          title: 'Profile Updated',
+          title: 'User Updated',
         });
       },
     },
@@ -97,9 +111,10 @@ const UserForm = ({ initialValues = {} }: Props) => {
   const createProfileMutation = useCreateUser({
     mutationConfig: {
       onSuccess: () => {
+        form.reset();
         addNotification({
           type: 'success',
-          title: 'Profile Updated',
+          title: 'User Created',
         });
       },
     },
@@ -114,63 +129,105 @@ const UserForm = ({ initialValues = {} }: Props) => {
         userId: initialValues._id!,
         data: values,
       });
-      form.reset();
     } else {
       // Create new user
       console.log('Creating new user');
       createProfileMutation.mutate({ data: values as UserRequest });
-      form.reset();
     }
   };
 
   return (
     <Box component="form" onSubmit={form.onSubmit(onSubmit)}>
       {/* Basic Info */}
-      <Title order={3}>Credential</Title>
-      <Stack>
-        <TextInput label="Username" {...form.getInputProps('username')} />
+      <GenericFieldset legend={'User Credential'} radius="md" p="md" mb="xl">
+        {/* Fake inputs to prevent browser autofill */}
         <TextInput
-          label="Password"
+          type="text"
+          name="username-fake"
+          autoComplete="username"
+          style={{ display: 'none' }}
+        />
+        <TextInput
           type="password"
-          {...form.getInputProps('password')}
+          name="password-fake"
+          autoComplete="new-password"
+          style={{ display: 'none' }}
         />
 
-        <AsyncAutocompleteCombobox
-          label="Organization"
-          placeholder="Select organization"
-          data={
-            organizations?.data?.map((user) => ({
-              label: user.name,
-              value: user._id,
-            })) || []
-          }
-          selected={form.values.organization ?? ''}
-          onChange={(value) => {
-            form.setFieldValue('organization', value);
-            form.setFieldValue('unit', '');
-          }}
-          loading={orgLoading}
-        />
+        <Stack gap="sm">
+          <Grid>
+            <Grid.Col span={6}>
+              <TextInput label="Username" {...form.getInputProps('username')} />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <TextInput
+                label="Password"
+                type="password"
+                {...form.getInputProps('password')}
+              />
+            </Grid.Col>
+          </Grid>
 
-        <AsyncAutocompleteCombobox
-          label="Unit"
-          placeholder="Select Unit"
-          data={
-            units?.data?.map((user) => ({
-              label: user.name,
-              value: user._id,
-            })) || []
-          }
-          selected={form.values.unit ?? ''}
-          onChange={(value) => form.setFieldValue('unit', value)}
-          loading={unitLoading}
-        />
-      </Stack>
+          <Divider label="Access Details" labelPosition="center" mt="sm" />
 
-      <Divider my="md" />
+          <Grid>
+            <Grid.Col span={6}>
+              <AsyncAutocompleteCombobox
+                label="Organization"
+                placeholder="Select organization"
+                data={
+                  organizations?.data?.map((org) => ({
+                    label: org.name,
+                    value: org._id,
+                  })) || []
+                }
+                selected={form.values.organization ?? ''}
+                onChange={(value) => {
+                  form.setFieldValue('organization', value);
+                  form.setFieldValue('unit', '');
+                }}
+                loading={orgLoading}
+              />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <AsyncAutocompleteCombobox
+                label="Unit"
+                placeholder="Select Unit"
+                data={
+                  units?.data?.map((unit) => ({
+                    label: unit.name,
+                    value: unit._id,
+                  })) || []
+                }
+                selected={form.values.unit ?? ''}
+                onChange={(value) => form.setFieldValue('unit', value)}
+                loading={unitLoading}
+              />
+            </Grid.Col>
+          </Grid>
+
+          <MultiSelect
+            label="Select Roles"
+            description="Select one or more roles for the user"
+            placeholder="Pick value"
+            data={userRoles.filter((role) => {
+              const x = AuthorizationService.hasHigherRole(
+                me?.data?.roles ?? [],
+                role.value as UserRole,
+              );
+
+              return x;
+            })}
+            {...form.getInputProps('roles')}
+            searchable
+          />
+        </Stack>
+      </GenericFieldset>
+
+      {/* <Divider my="md" /> */}
 
       {/* Profile */}
-      <Title order={3}>Profile</Title>
+      {/* <Title order={3}>Profile</Title> */}
       {/* <Stack>
         <TextInput
           label="First Name"
@@ -207,7 +264,7 @@ const UserForm = ({ initialValues = {} }: Props) => {
         />
       </Stack> */}
 
-      <Divider my="md" />
+      {/* <Divider my="md" /> */}
 
       {/* Address */}
       {/* <Title order={3}>Address</Title> */}
@@ -343,7 +400,9 @@ const UserForm = ({ initialValues = {} }: Props) => {
 
       {/* Submit */}
       <Group justify="right" mt="md">
-        <Button type="submit">{initialValues ? 'Update' : 'Create'}</Button>
+        <Button type="submit">
+          {!isEmpty(initialValues) ? 'Update' : 'Create'}
+        </Button>
       </Group>
     </Box>
   );
@@ -353,33 +412,33 @@ const UserForm = ({ initialValues = {} }: Props) => {
 // Drawer wrapper component
 // ----------------------
 
-function UserFormDrawer({ initialValues }: Props) {
-  const { isOpen: opened, open, close } = useDisclosure(false);
+// function UserFormDrawer({ initialValues }: Props) {
+//   const { isOpen: opened, open, close } = useDisclosure(false);
 
-  return (
-    <>
-      <Drawer
-        size="xl"
-        opened={opened}
-        onClose={close}
-        title={initialValues ? 'Edit User' : 'Create User'}
-        position="right"
-        closeOnClickOutside={false}
-      >
-        <UserForm initialValues={initialValues} />
-      </Drawer>
+//   return (
+//     <>
+//       <Drawer
+//         size="xl"
+//         opened={opened}
+//         onClose={close}
+//         title={initialValues ? 'Edit User' : 'Create User'}
+//         position="right"
+//         closeOnClickOutside={false}
+//       >
+//         <UserForm initialValues={initialValues} />
+//       </Drawer>
 
-      {initialValues ? (
-        <UnstyledButton onClick={open}>
-          <IconEdit size={25} />
-        </UnstyledButton>
-      ) : (
-        <Button size="xs" onClick={open}>
-          {'Add New'}
-        </Button>
-      )}
-    </>
-  );
-}
+//       {initialValues ? (
+//         <UnstyledButton onClick={open}>
+//           <IconEdit size={25} />
+//         </UnstyledButton>
+//       ) : (
+//         <Button size="xs" onClick={open}>
+//           {'Add New'}
+//         </Button>
+//       )}
+//     </>
+//   );
+// }
 
-export default UserFormDrawer;
+// export default UserFormDrawer;

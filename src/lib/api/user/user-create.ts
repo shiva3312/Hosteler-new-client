@@ -4,8 +4,10 @@ import { z } from 'zod';
 
 import { UserRequestZodSchema } from '@/interfaces/user.interface';
 import { api } from '@/lib/api/api-client';
-import { useUser } from '@/lib/api/auth/auth';
 import { MutationConfig } from '@/lib/api/react-query';
+
+import { useUsers } from './get-users';
+import { SearchQuery } from '../search-query';
 
 export type CreateUserInput = z.infer<typeof UserRequestZodSchema>;
 
@@ -20,7 +22,9 @@ type UseCreateUserOptions = {
 export const useCreateUser = ({
   mutationConfig,
 }: UseCreateUserOptions = {}) => {
-  const { refetch: refetchUser } = useUser();
+  const { refetch: refetchUser } = useUsers({
+    params: SearchQuery.userSearchQuery({}),
+  });
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 

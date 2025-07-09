@@ -1,8 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button, Drawer, UnstyledButton } from '@mantine/core';
+import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { IconEdit } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
 import { MessRequest, MessResponse } from '@/interfaces/mess/mess.interface';
@@ -15,7 +13,7 @@ interface Props {
   initialValues?: Partial<MessRequest>;
 }
 
-function MessForm({ initialValues }: Props) {
+export function MessForm({ initialValues }: Props) {
   const form = useForm({
     initialValues,
     // validate : MessRequestZodSchema
@@ -82,38 +80,3 @@ function MessForm({ initialValues }: Props) {
     </form>
   );
 }
-
-// ----------------------
-// Drawer wrapper component
-// ----------------------
-
-function MessFormDrawer({ initialValues }: Props) {
-  const [opened, { open, close }] = useDisclosure(false);
-
-  return (
-    <>
-      <Drawer
-        size="xl"
-        opened={opened}
-        onClose={close}
-        title={initialValues ? 'Edit Mess' : 'Create Mess'}
-        position="right"
-        closeOnClickOutside={false}
-      >
-        <MessForm initialValues={initialValues} />
-      </Drawer>
-
-      {initialValues ? (
-        <UnstyledButton onClick={open}>
-          <IconEdit size={25} />
-        </UnstyledButton>
-      ) : (
-        <Button size="xs" onClick={open}>
-          {'Add New'}
-        </Button>
-      )}
-    </>
-  );
-}
-
-export default MessFormDrawer;

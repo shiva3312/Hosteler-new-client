@@ -1,8 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button, Drawer, UnstyledButton } from '@mantine/core';
+import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { IconEdit } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
 import { UserRole } from '@/data/feature';
@@ -22,7 +20,7 @@ interface Props {
   initialValues?: Partial<OrganizationRequest>;
 }
 
-function OrganizationForm({ initialValues }: Props) {
+export function OrganizationForm({ initialValues }: Props) {
   const form = useForm({
     initialValues,
     // validate : OrganizationRequestZodSchema
@@ -107,38 +105,3 @@ function OrganizationForm({ initialValues }: Props) {
     </form>
   );
 }
-
-// ----------------------
-// Drawer wrapper component
-// ----------------------
-
-function OrganizationFormDrawer({ initialValues }: Props) {
-  const [opened, { open, close }] = useDisclosure(false);
-
-  return (
-    <>
-      <Drawer
-        size="xl"
-        opened={opened}
-        onClose={close}
-        title={initialValues ? 'Edit Organization' : 'Create Organization'}
-        position="right"
-        closeOnClickOutside={false}
-      >
-        <OrganizationForm initialValues={initialValues} />
-      </Drawer>
-
-      {initialValues ? (
-        <UnstyledButton onClick={open}>
-          <IconEdit size={25} />
-        </UnstyledButton>
-      ) : (
-        <Button size="xs" onClick={open}>
-          {'Add New'}
-        </Button>
-      )}
-    </>
-  );
-}
-
-export default OrganizationFormDrawer;

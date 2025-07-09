@@ -1,8 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button, Drawer, UnstyledButton } from '@mantine/core';
+import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { IconEdit } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
 import {
@@ -18,7 +16,7 @@ interface Props {
   initialValues?: Partial<MealItemResponse>;
 }
 
-function MealItemForm({ initialValues }: Props) {
+export function MealItemForm({ initialValues }: Props) {
   const form = useForm({
     initialValues,
     // validate : MealItemRequestZodSchema
@@ -87,38 +85,3 @@ function MealItemForm({ initialValues }: Props) {
     </form>
   );
 }
-
-// ----------------------
-// Drawer wrapper component
-// ----------------------
-
-function MealItemFormDrawer({ initialValues }: Props) {
-  const [opened, { open, close }] = useDisclosure(false);
-
-  return (
-    <>
-      <Drawer
-        size="xl"
-        opened={opened}
-        onClose={close}
-        title={initialValues ? 'Edit MealItem' : 'Create MealItem'}
-        position="right"
-        closeOnClickOutside={false}
-      >
-        <MealItemForm initialValues={initialValues} />
-      </Drawer>
-
-      {initialValues ? (
-        <UnstyledButton onClick={open}>
-          <IconEdit size={25} />
-        </UnstyledButton>
-      ) : (
-        <Button size="xs" onClick={open}>
-          {'Add New'}
-        </Button>
-      )}
-    </>
-  );
-}
-
-export default MealItemFormDrawer;

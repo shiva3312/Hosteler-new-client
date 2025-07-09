@@ -69,8 +69,13 @@ const authConfig = {
   logoutFn: logout,
 };
 
-export const { useUser, useLogin, useLogout, useRegister, AuthLoader } =
-  configureAuth(authConfig);
+export const {
+  useUser: useAuth,
+  useLogin,
+  useLogout,
+  useRegister,
+  AuthLoader,
+} = configureAuth(authConfig);
 
 export const getToken = (): string | undefined => {
   // Get the token from cookies

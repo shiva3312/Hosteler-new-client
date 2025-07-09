@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -14,8 +15,9 @@ import { MealChartResponse } from '@/interfaces/mess/meal-chart.interface';
 import { useMealCharts } from '@lib/api/mess/meal-chart/get-all-meal-charts';
 
 import { DeleteMealChart } from './meal-chart-delete';
-import MealChartFormDrawer from './meal-chart-form';
+import { MealChartForm } from './meal-chart-form';
 import MealChartProfileImage from './meal-chart-view';
+import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MealChartsList = () => {
   const mealChartsQuery = useMealCharts();
@@ -89,7 +91,9 @@ export const MealChartsList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <MealChartFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <MealChartForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -101,7 +105,11 @@ export const MealChartsList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <MealChartFormDrawer />;
+        return (
+          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+            <MealChartForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, mealChartsQuery.data?.data],

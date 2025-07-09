@@ -1,8 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button, Drawer, UnstyledButton } from '@mantine/core';
+import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { IconEdit } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
 import { UserRole } from '@/data/feature';
@@ -20,7 +18,7 @@ interface Props {
   initialValues?: Partial<UnitRequest>;
 }
 
-function UnitForm({ initialValues }: Props) {
+export function UnitForm({ initialValues }: Props) {
   const form = useForm({
     initialValues,
     // validate : UnitRequestZodSchema
@@ -127,38 +125,3 @@ function UnitForm({ initialValues }: Props) {
     </form>
   );
 }
-
-// ----------------------
-// Drawer wrapper component
-// ----------------------
-
-function UnitFormDrawer({ initialValues }: Props) {
-  const [opened, { open, close }] = useDisclosure(false);
-
-  return (
-    <>
-      <Drawer
-        size="xl"
-        opened={opened}
-        onClose={close}
-        title={initialValues ? 'Edit Unit' : 'Create Unit'}
-        position="right"
-        closeOnClickOutside={false}
-      >
-        <UnitForm initialValues={initialValues} />
-      </Drawer>
-
-      {initialValues ? (
-        <UnstyledButton onClick={open}>
-          <IconEdit size={25} />
-        </UnstyledButton>
-      ) : (
-        <Button size="xs" onClick={open}>
-          {'Add New'}
-        </Button>
-      )}
-    </>
-  );
-}
-
-export default UnitFormDrawer;

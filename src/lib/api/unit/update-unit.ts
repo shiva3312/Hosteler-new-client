@@ -1,11 +1,13 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
+import { UserRole } from '@/data/feature';
 import { UpdateUnitRequest } from '@/interfaces/unit.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
 import { useUnits } from './get-all-units';
+import { SearchQuery } from '../search-query';
 
 export const updateUnit = ({
   unitId,
@@ -22,7 +24,11 @@ type UseUpdateUnitOptions = {
 };
 
 export const useUpdateUnit = ({ mutationConfig }: UseUpdateUnitOptions) => {
-  const { refetch: refetchUnit } = useUnits();
+  const { refetch: refetchUnit } = useUnits({
+    params: SearchQuery.userSearchQuery({
+      hasAllRoles: [UserRole.ADMIN],
+    }),
+  });
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 

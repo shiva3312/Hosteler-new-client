@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { getGroupQueryOptions } from './get-all-groups';
+import { getGroupQueryOptions, useGroups } from './get-all-groups';
 
 export type DeleteGroupDTO = {
   groupId: string;
@@ -22,6 +22,7 @@ export const useDeleteGroup = ({
   mutationConfig,
 }: UseDeleteGroupOptions = {}) => {
   const queryClient = useQueryClient();
+  const { refetch: refetchGroup } = useGroups();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
@@ -30,6 +31,7 @@ export const useDeleteGroup = ({
       queryClient.invalidateQueries({
         queryKey: getGroupQueryOptions().queryKey,
       });
+      refetchGroup();
       onSuccess?.(...args);
     },
     ...restConfig,

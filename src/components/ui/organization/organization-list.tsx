@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -15,8 +16,9 @@ import { SearchQuery } from '@/lib/api/search-query';
 import { useOrganizations } from '@lib/api/organization/get-all-organizations';
 
 import { DeleteOrganization } from './organization-delete';
-import OrganizationFormDrawer from './organization-form';
+import { OrganizationForm } from './organization-form';
 import OrganizationProfileImage from './organization-view';
+import { GenericDrawer } from '../core/drawer/drawer';
 
 export const OrganizationsList = () => {
   const { data: organizations, isLoading } = useOrganizations({
@@ -88,7 +90,9 @@ export const OrganizationsList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <OrganizationFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <OrganizationForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -100,7 +104,11 @@ export const OrganizationsList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <OrganizationFormDrawer />;
+        return (
+          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+            <OrganizationForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, organizations?.data],

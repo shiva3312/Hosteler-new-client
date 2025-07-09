@@ -19,7 +19,7 @@ export interface ContextState {
   selected: Selected;
 }
 
-const initialState: ContextState = {
+export const initialContextState: ContextState = {
   roles: [],
   organization: '',
   unit: '',
@@ -33,7 +33,7 @@ const initialState: ContextState = {
 
 const contextSlice = createSlice({
   name: 'context',
-  initialState,
+  initialState: initialContextState,
   reducers: {
     setContext: (
       state,

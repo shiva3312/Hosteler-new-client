@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { useNotifications } from '@/components/ui/core/notifications';
 import { UserResponse } from '@/interfaces/user.interface';
-import { useUser } from '@/lib/api/auth/auth';
+import { useAuth } from '@/lib/api/auth/auth';
 
 import { useDeleteUser } from '../../../lib/api/user/delete-user';
 
@@ -14,7 +14,7 @@ type DeleteUserProps = {
 };
 
 export const DeleteUser = ({ user: targetedUser }: DeleteUserProps) => {
-  const user = useUser();
+  const user = useAuth();
   const { addNotification } = useNotifications();
   const [opened, setOpened] = useState(false);
 

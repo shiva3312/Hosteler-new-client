@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { MenuCyclesList } from '@/components/ui/mess/menu-cycle/menu-cycles';
+import { MenuCyclesList } from '@/components/ui/mess/menu-cycle/menu-cycle-list';
 
 function MenuCycle() {
   return <MenuCyclesList />;

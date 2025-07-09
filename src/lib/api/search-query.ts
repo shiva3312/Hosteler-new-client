@@ -51,7 +51,7 @@ export class SearchQuery {
    */
   public static organizationSearchQuery(): Record<string, any> {
     // If no organization is provided, use the context organization
-    const query: Record<string, any> = { ttt: 'sdf' };
+    const query: Record<string, any> = {};
 
     console.log('organizationSearchQuery', query);
     return query;

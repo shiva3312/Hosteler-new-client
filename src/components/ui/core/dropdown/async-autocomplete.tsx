@@ -22,6 +22,7 @@ interface AsyncAutocompleteProps {
   data: ComboboxOption[];
   loading: boolean;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  required?: boolean; // Optional prop to indicate if the field is required
 }
 
 export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
@@ -29,7 +30,7 @@ export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  const { data, loading, onSearch } = props;
+  const { data, loading, onSearch, required } = props;
   const [value, setValue] = useState(props.selected || ''); // Initialize with selected value
   const [filteredData, setFilteredData] = useState<ComboboxOption[]>([]); // State to hold filtered data
 
@@ -82,6 +83,7 @@ export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
             data.find((item) => item.value === value)?.label || value // Show label if value matches, fallback to value
           }
           label={props.label}
+          required={required}
           onChange={(event) => {
             const query = event.currentTarget.value;
             setValue(query); // Update the local `value` state

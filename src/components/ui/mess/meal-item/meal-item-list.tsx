@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -14,8 +15,9 @@ import { MealItemResponse } from '@/interfaces/mess/meal-item.interface';
 import { useMealItems } from '@lib/api/mess/meal-item/get-all-meal-items';
 
 import { DeleteMealItem } from './meal-item-delete';
-import MealItemFormDrawer from './meal-item-form';
+import { MealItemForm } from './meal-item-form';
 import MealItemProfileImage from './meal-item-view';
+import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MealItemsList = () => {
   const mealItemsQuery = useMealItems();
@@ -89,7 +91,9 @@ export const MealItemsList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <MealItemFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <MealItemForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -101,7 +105,11 @@ export const MealItemsList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <MealItemFormDrawer />;
+        return (
+          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+            <MealItemForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, mealItemsQuery.data?.data],

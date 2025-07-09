@@ -4,7 +4,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { getOrganizationQueryOptions } from './get-all-organizations';
+import {
+  getOrganizationQueryOptions,
+  useOrganizations,
+} from './get-all-organizations';
+import { SearchQuery } from '../search-query';
 
 export type DeleteOrganizationDTO = {
   organizationId: string;
@@ -24,7 +28,9 @@ export const useDeleteOrganization = ({
   mutationConfig,
 }: UseDeleteOrganizationOptions = {}) => {
   const queryClient = useQueryClient();
-
+  const { refetch: refetchOrganization } = useOrganizations({
+    params: SearchQuery.organizationSearchQuery(),
+  });
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
@@ -32,6 +38,7 @@ export const useDeleteOrganization = ({
       queryClient.invalidateQueries({
         queryKey: getOrganizationQueryOptions().queryKey,
       });
+      refetchOrganization();
       onSuccess?.(...args);
     },
     ...restConfig,

@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -14,8 +15,9 @@ import { MenuCycleResponse } from '@/interfaces/mess/menu-cycle.interface';
 import { useMenuCycles } from '@lib/api/mess/menu-cycle/get-all-menu-cycles';
 
 import { DeleteMenuCycle } from './menu-cycle-delete';
-import MenuCycleFormDrawer from './menu-cycle-form';
+import { MenuCycleForm } from './menu-cycle-form';
 import MenuCycleProfileImage from './menu-cycle-view';
+import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MenuCyclesList = () => {
   const menuCyclesQuery = useMenuCycles();
@@ -89,7 +91,9 @@ export const MenuCyclesList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <MenuCycleFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <MenuCycleForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -101,7 +105,11 @@ export const MenuCyclesList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <MenuCycleFormDrawer />;
+        return (
+          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+            <MenuCycleForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, menuCyclesQuery.data?.data],

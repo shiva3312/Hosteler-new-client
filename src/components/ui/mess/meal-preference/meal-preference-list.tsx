@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -14,7 +15,8 @@ import { MealPreferenceResponse } from '@/interfaces/mess/meal-preference.interf
 import { useMealPreferences } from '@lib/api/mess/meal-preference/get-all-meal-preferences';
 
 import { DeleteMealPreference } from './meal-preference-delete';
-import MealPreferenceFormDrawer from './meal-preference-form';
+import { MealPreferenceForm } from './meal-preference-form';
+import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MealPreferencesList = () => {
   const mealPreferencesQuery = useMealPreferences();
@@ -70,7 +72,9 @@ export const MealPreferencesList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <MealPreferenceFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <MealPreferenceForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -82,7 +86,11 @@ export const MealPreferencesList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <MealPreferenceFormDrawer />;
+        return (
+          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+            <MealPreferenceForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, mealPreferencesQuery.data?.data],

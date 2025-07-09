@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -14,8 +15,9 @@ import { MessResponse } from '@/interfaces/mess/mess.interface';
 import { useMesses } from '@lib/api/mess/mess/get-all-messes';
 
 import { DeleteMess } from './mess-delete';
-import MessFormDrawer from './mess-form';
+import { MessForm } from './mess-form';
 import MessProfileImage from './mess-view';
+import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MessesList = () => {
   const messesQuery = useMesses();
@@ -28,11 +30,6 @@ export const MessesList = () => {
         header: 'Name',
         id: 'name',
         size: 250,
-        // Footer: () => {
-        //   return (
-        //     <>{`${messesQuery.data?.data.length ?? 0} Messes.`}</>
-        //   );
-        // },
         Cell: ({ row }) => <MessProfileImage mess={row.original} />,
         enableEditing: true,
         enableColumnFilter: true,
@@ -89,7 +86,9 @@ export const MessesList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <MessFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <MessForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -101,7 +100,11 @@ export const MessesList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <MessFormDrawer />;
+        return (
+          <GenericDrawer title="Create User" trigger={<Button>Add New</Button>}>
+            <MessForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, messesQuery.data?.data],

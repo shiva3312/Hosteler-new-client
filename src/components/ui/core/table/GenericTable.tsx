@@ -79,10 +79,10 @@ const GenericTable = <TData extends object>({
     mantineTableProps: {
       //   className: clsx(classes.table),
       // highlightOnHover: false,
-      striped: 'odd',
-      withColumnBorders: true,
-      withRowBorders: true,
-      withTableBorder: true,
+      // striped: 'odd',
+      // withColumnBorders: true,
+      // withRowBorders: true,
+      // withTableBorder: true,
     },
 
     ...options,

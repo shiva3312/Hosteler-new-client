@@ -1,8 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button, Drawer, UnstyledButton } from '@mantine/core';
+import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useDisclosure } from '@mantine/hooks';
-import { IconEdit } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
 import {
@@ -18,7 +16,7 @@ interface Props {
   initialValues?: Partial<MenuCycleResponse>;
 }
 
-function MenuCycleForm({ initialValues }: Props) {
+export function MenuCycleForm({ initialValues }: Props) {
   const form = useForm({
     initialValues,
     // validate : MenuCycleRequestZodSchema
@@ -87,38 +85,3 @@ function MenuCycleForm({ initialValues }: Props) {
     </form>
   );
 }
-
-// ----------------------
-// Drawer wrapper component
-// ----------------------
-
-function MenuCycleFormDrawer({ initialValues }: Props) {
-  const [opened, { open, close }] = useDisclosure(false);
-
-  return (
-    <>
-      <Drawer
-        size="xl"
-        opened={opened}
-        onClose={close}
-        title={initialValues ? 'Edit MenuCycle' : 'Create MenuCycle'}
-        position="right"
-        closeOnClickOutside={false}
-      >
-        <MenuCycleForm initialValues={initialValues} />
-      </Drawer>
-
-      {initialValues ? (
-        <UnstyledButton onClick={open}>
-          <IconEdit size={25} />
-        </UnstyledButton>
-      ) : (
-        <Button size="xs" onClick={open}>
-          {'Add New'}
-        </Button>
-      )}
-    </>
-  );
-}
-
-export default MenuCycleFormDrawer;

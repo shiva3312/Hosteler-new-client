@@ -7,7 +7,7 @@ import logo from '@/assets/logo.svg';
 import { Head } from '@/components/seo';
 import { Link } from '@/components/ui/core/link';
 import { paths } from '@/config/paths';
-import { useUser } from '@/lib/api/auth/auth';
+import { useAuth } from '@/lib/api/auth/auth';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ type LayoutProps = {
 };
 
 export const AuthLayout = ({ children, title }: LayoutProps) => {
-  const user = useUser();
+  const user = useAuth();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get('redirectTo');
 

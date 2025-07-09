@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { AppShell, Box, Burger, Flex } from '@mantine/core';
+import { Anchor, AppShell, Box, Burger, Flex } from '@mantine/core';
 import {
   IconUsers,
   IconGauge,
@@ -145,7 +145,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               hiddenFrom="sm"
               size="sm"
             />
-            <span className="logo">Logo</span>
+            <Anchor
+              href={paths.home.getHref()}
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = paths.app.dashboard.getHref();
+              }}
+            >
+              <span className="logo">HostelEase</span>
+            </Anchor>
           </Box>
           <Flex gap={'xl'} align={'center'}>
             <RoleBasedSelector />

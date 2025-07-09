@@ -122,7 +122,7 @@ export const Authorization = ({
   let canAccess = false;
 
   if (action) {
-    canAccess = checkAccess(action);
+    canAccess = checkAccess(action as Action);
   }
 
   return <>{canAccess ? children : forbiddenFallback}</>;

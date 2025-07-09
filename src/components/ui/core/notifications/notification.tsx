@@ -25,7 +25,7 @@ export const Notification = ({
   onDismiss,
 }: NotificationProps) => {
   return (
-    <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
+    <div className="z-[99999] flex w-full flex-col items-center space-y-4 sm:items-end">
       <div className="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/5">
         <div className="p-4" role="alert" aria-label={title}>
           <div className="flex items-start">

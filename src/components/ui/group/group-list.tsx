@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -16,8 +17,9 @@ import { SearchQuery } from '@/lib/api/search-query';
 import { useGroups } from '@lib/api/group/get-all-groups';
 
 import { DeleteGroup } from './group-delete';
-import GroupFormDrawer from './group-form';
+import { GroupForm } from './group-form';
 import GroupProfileImage from './group-view';
+import { GenericDrawer } from '../core/drawer/drawer';
 
 export const GroupsList = () => {
   const { data: groups, isLoading, isSuccess } = useGroups();
@@ -108,7 +110,9 @@ export const GroupsList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <GroupFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <GroupForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -120,7 +124,11 @@ export const GroupsList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <GroupFormDrawer />;
+        return (
+          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+            <GroupForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, groups?.data],

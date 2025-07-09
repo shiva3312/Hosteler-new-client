@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -10,14 +11,17 @@ import { useMemo } from 'react';
 
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
+import { UserRole } from '@/data/feature';
 import { UnitResponse } from '@/interfaces/unit.interface';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { SearchQuery } from '@/lib/api/search-query';
+import { useUsers } from '@/lib/api/user/get-users';
 import { useUnits } from '@lib/api/unit/get-all-units';
 
 import { DeleteUnit } from './unit-delete';
-import UnitFormDrawer from './unit-form';
-import UnitProfileImage from './unit-view';
+import { UnitForm } from './unit-form';
+import { GenericDrawer } from '../core/drawer/drawer';
+import UserProfileImage from '../user/user-image';
 
 export const UnitsList = () => {
   const unitsQuery = useUnits({
@@ -25,6 +29,12 @@ export const UnitsList = () => {
   });
   const { data: organizations } = useOrganizations({
     params: SearchQuery.organizationSearchQuery(),
+  });
+
+  const { data: users } = useUsers({
+    params: SearchQuery.userSearchQuery({
+      hasAllRoles: [UserRole.ADMIN],
+    }),
   });
 
   const columns = useMemo<MRT_ColumnDef<UnitResponse>[]>(
@@ -35,7 +45,24 @@ export const UnitsList = () => {
         header: 'Name',
         id: 'name',
         size: 250,
-        Cell: ({ row }) => <UnitProfileImage unit={row.original} />,
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.admin,
+        accessorKey: 'admin',
+        header: 'Admin',
+        id: 'admin',
+        size: 250,
+        Cell: ({ row }) => {
+          const admin = users?.data.find(
+            (user) => user._id === row.original.admin,
+          );
+          return admin ? <UserProfileImage user={admin} /> : <>N/A</>;
+        },
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {
@@ -89,7 +116,7 @@ export const UnitsList = () => {
         enableEditing: false,
       },
     ],
-    [organizations?.data],
+    [organizations?.data, users?.data],
   );
 
   const options: MRT_TableOptions<UnitResponse> = useMemo(
@@ -109,7 +136,9 @@ export const UnitsList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <UnitFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <UnitForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -121,7 +150,11 @@ export const UnitsList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <UnitFormDrawer />;
+        return (
+          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+            <UnitForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, unitsQuery.data?.data],

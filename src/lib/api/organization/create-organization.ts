@@ -6,6 +6,7 @@ import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
 import { useOrganizations } from './get-all-organizations';
+import { SearchQuery } from '../search-query';
 
 export const createOrganization = ({ data }: { data: OrganizationRequest }) => {
   return api.post(`/organization`, data);
@@ -18,7 +19,9 @@ type UseCreateOrganizationOptions = {
 export const useCreateOrganization = ({
   mutationConfig,
 }: UseCreateOrganizationOptions = {}) => {
-  const { refetch: refetchOrganization } = useOrganizations();
+  const { refetch: refetchOrganization } = useOrganizations({
+    params: SearchQuery.organizationSearchQuery(),
+  });
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 

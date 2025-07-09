@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon, Text } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Text, Button } from '@mantine/core';
+import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
   MRT_TableOptions,
@@ -13,12 +14,15 @@ import RoleBadge from '@/components/ui/core/badge/role-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { UserResponse } from '@/interfaces/user.interface';
 import { useGroups } from '@/lib/api/group/get-all-groups';
+import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { SearchQuery } from '@/lib/api/search-query';
+import { useUnits } from '@/lib/api/unit/get-all-units';
 import { useUsers } from '@/lib/api/user/get-users';
 
 import { DeleteUser } from './delete-user';
-import UserFormDrawer from './user-form';
+import { UserForm } from './user-form';
 import UserProfileImage from './user-image';
+import { GenericDrawer } from '../core/drawer/drawer';
 
 export const UsersList = () => {
   const {
@@ -33,6 +37,16 @@ export const UsersList = () => {
     enabled: isSuccess && users?.data.length > 0,
   });
 
+  const { data: organizations } = useOrganizations({
+    params: SearchQuery.organizationSearchQuery(),
+    enabled: isSuccess && users?.data.length > 0,
+  });
+
+  const { data: units } = useUnits({
+    params: SearchQuery.unitSearchQuery({}),
+    enabled: isSuccess && users?.data.length > 0,
+  });
+
   const columns = useMemo<MRT_ColumnDef<UserResponse>[]>(
     () => [
       {
@@ -41,10 +55,68 @@ export const UsersList = () => {
         header: 'Username',
         id: 'username',
         size: 250,
-        Footer: () => {
-          return <>{`${users?.data.length ?? 0} Users.`}</>;
-        },
+        // Footer: () => {
+        //   return <>{`${users?.data.length ?? 0} Users.`}</>;
+        // },
         Cell: ({ row }) => <UserProfileImage user={row.original} />,
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) =>
+          `${row.profile?.firstName ?? ''} ${row.profile?.lastName ?? ''}`,
+        accessorKey: 'profile.fullName',
+        header: 'Full Name',
+        id: 'profile.fullName',
+        size: 250,
+        Cell: ({ row }) => (
+          <Text>
+            {`${row.original.profile?.firstName ?? ''} ${row.original.profile?.lastName ?? ''}`.trim()}
+          </Text>
+        ),
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.unit,
+        accessorKey: 'unit',
+        header: 'Unit',
+        id: 'unit',
+        Cell: ({ row }) => {
+          // const unit = row.original.unit;
+          return (
+            <Text>
+              {units?.data?.find((u) => u._id === row.original.unit)?.name ??
+                'N/A'}
+            </Text>
+          );
+        },
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.organization,
+        accessorKey: 'organization',
+        header: 'Organization',
+        id: 'organization',
+        Cell: ({ row }) => {
+          return (
+            <Text>
+              {organizations?.data?.find(
+                (org) => org._id === row.original.organization,
+              )?.name ?? 'N/A'}
+            </Text>
+          );
+        },
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {
@@ -146,7 +218,7 @@ export const UsersList = () => {
         enableEditing: false,
       },
     ],
-    [groups?.data, users?.data.length],
+    [groups?.data, organizations?.data, units?.data],
   );
 
   const options: MRT_TableOptions<UserResponse> = useMemo(
@@ -166,7 +238,9 @@ export const UsersList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <UserFormDrawer initialValues={row.original!} />
+              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <UserForm initialValues={row.original!} />
+              </GenericDrawer>
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Delete">
@@ -178,7 +252,11 @@ export const UsersList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
-        return <UserFormDrawer />;
+        return (
+          <GenericDrawer title="Create User" trigger={<Button>Add New</Button>}>
+            <UserForm />
+          </GenericDrawer>
+        );
       },
     }),
     [columns, users?.data],

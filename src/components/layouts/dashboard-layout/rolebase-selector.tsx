@@ -3,7 +3,7 @@ import { Flex } from '@mantine/core';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AsyncAutocompleteCombobox } from '@/components/ui/core/dropdown';
-import { Action, Authorization } from '@/lib/api/auth/authorization';
+import { Action, Authorization } from '@/lib/api/auth/authorization-wrapper';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { useUnits } from '@/lib/api/unit/get-all-units';
 import { RootState, AppDispatch } from '@/lib/store';

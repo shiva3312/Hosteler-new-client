@@ -34,9 +34,14 @@ export enum UserRole {
   MASTER_ADMIN = 'master_admin', // Full access across all environments
   SUPER_ADMIN = 'super_admin', // Full access across all organizations
   ADMIN = 'admin', // Admin access limited to a specific unit
-  SUPPORT = 'support', // Limited access for support purposes
   USER = 'user', // Regular user with basic access
   GUEST = 'guest', // Limited access, typically read-only
+
+  // other roles can be added as needed
+  SUPPLIER = 'supplier', // Supplier role with specific permissions
+  MANAGER = 'manager', // Manager role with elevated permissions
+  EMPLOYEE = 'employee', // Employee role with standard permissions
+  AUDITOR = 'auditor', // Auditor role with read-only access to certain features
 }
 
 export enum Feature {
@@ -73,12 +78,7 @@ export const ApplicationFeature: AppFeature[] = [
       UserManagementActions.UPDATE_ROLE,
       UserManagementActions.DELETE_ROLE,
     ],
-    requiredRole: [
-      UserRole.MASTER_ADMIN,
-      UserRole.SUPER_ADMIN,
-      UserRole.ADMIN,
-      UserRole.SUPPORT,
-    ],
+    requiredRole: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
   },
   {
     name: Feature.ROLE_MANAGEMENT,
@@ -91,12 +91,7 @@ export const ApplicationFeature: AppFeature[] = [
       GeneralAction.UPDATE,
       GeneralAction.DELETE,
     ],
-    requiredRole: [
-      UserRole.MASTER_ADMIN,
-      UserRole.SUPER_ADMIN,
-      UserRole.ADMIN,
-      UserRole.SUPPORT,
-    ],
+    requiredRole: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
   },
   {
     name: Feature.BILLING,
@@ -109,12 +104,7 @@ export const ApplicationFeature: AppFeature[] = [
       GeneralAction.UPDATE,
       GeneralAction.DELETE,
     ],
-    requiredRole: [
-      UserRole.MASTER_ADMIN,
-      UserRole.SUPER_ADMIN,
-      UserRole.ADMIN,
-      UserRole.SUPPORT,
-    ],
+    requiredRole: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
   },
   {
     name: Feature.REPORTING,
@@ -131,7 +121,7 @@ export const ApplicationFeature: AppFeature[] = [
       UserRole.MASTER_ADMIN,
       UserRole.SUPER_ADMIN,
       UserRole.ADMIN,
-      UserRole.SUPPORT,
+      ,
       UserRole.USER,
       UserRole.GUEST,
     ],
@@ -151,7 +141,7 @@ export const ApplicationFeature: AppFeature[] = [
       UserRole.MASTER_ADMIN,
       UserRole.SUPER_ADMIN,
       UserRole.ADMIN,
-      UserRole.SUPPORT,
+      ,
       UserRole.USER,
       UserRole.GUEST,
     ],
@@ -171,7 +161,7 @@ export const ApplicationFeature: AppFeature[] = [
       UserRole.MASTER_ADMIN,
       UserRole.SUPER_ADMIN,
       UserRole.ADMIN,
-      UserRole.SUPPORT,
+      ,
     ],
   },
   {
@@ -189,7 +179,7 @@ export const ApplicationFeature: AppFeature[] = [
       UserRole.MASTER_ADMIN,
       UserRole.SUPER_ADMIN,
       UserRole.ADMIN,
-      UserRole.SUPPORT,
+      ,
     ],
   },
 ];
