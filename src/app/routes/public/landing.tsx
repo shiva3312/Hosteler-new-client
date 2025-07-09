@@ -1,17 +1,29 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { Container, Title, Text, Button, Group } from '@mantine/core';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { paths } from '@/config/paths';
+import { getToken } from '@/lib/api/auth/auth';
+
 function LandingPage() {
-  const navigate = useNavigate(); // Initialize the navigation hook
+  const navigate = useNavigate();
 
   const handleLoginRedirect = () => {
-    navigate('/auth/login'); // Redirect to login page
+    navigate(paths.auth.login.getHref());
   };
 
   const handleRegisterRedirect = () => {
-    navigate('/auth/register'); // Redirect to register page
+    navigate(paths.auth.register.getHref());
   };
+
+  useEffect(() => {
+    // If user is already authenticated, redirect to dashboard or home page
+    const token = getToken();
+    if (token) {
+      navigate(paths.app.dashboard.getHref());
+    }
+  }, [navigate]);
 
   return (
     <Container size="lg" style={{ padding: '80px 0', textAlign: 'center' }}>

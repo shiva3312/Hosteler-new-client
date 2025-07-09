@@ -7,29 +7,37 @@ import { Action, Authorization } from '@/lib/api/auth/authorization-wrapper';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { useUnits } from '@/lib/api/unit/get-all-units';
 import { RootState, AppDispatch } from '@/lib/store';
-import { Selected, setSelected } from '@/lib/store/slice/context-slice';
+import { Selected, setContext } from '@/lib/store/slice/context-slice';
 
 function RoleBasedSelector() {
-  const { selected } = useSelector((state: RootState) => state.context);
+  const context = useSelector((state: RootState) => state.context);
   const dispatch: AppDispatch = useDispatch();
   const { data: unitResponse, isLoading: unitLoading } = useUnits();
   const { data: organizationResponse, isLoading: orgLoading } =
     useOrganizations();
 
   const handleClick = (selected: Partial<Selected>) => {
-    if (selected.organization === '') {
-      selected.unit = '';
+    if (selected.organization === '' || selected.organization === null) {
+      selected.unit = null;
     }
 
     console.log('setting selected:', selected);
-    dispatch(setSelected({ data: selected, updateLocalStorage: true }));
+    dispatch(
+      setContext({
+        data: {
+          selectedOrganization: selected.organization,
+          selectedUnit: selected.unit ?? null,
+        },
+        updateLocalStorage: true,
+      }),
+    );
   };
 
   console.log(unitResponse?.data, organizationResponse?.data);
 
   const filteredUnit =
     unitResponse?.data.filter(
-      (unit) => unit?.organization === selected?.organization,
+      (unit) => unit?.organization === context?.selectedOrganization,
     ) ?? [];
 
   // unit and organization dropdowns
@@ -45,7 +53,7 @@ function RoleBasedSelector() {
           onChange={(value) => {
             handleClick({ organization: value });
           }}
-          selected={selected.organization}
+          selected={context.selectedOrganization}
           placeholder="Select Organization"
         />
       </Authorization>
@@ -59,7 +67,7 @@ function RoleBasedSelector() {
           onChange={(value) => {
             handleClick({ unit: value });
           }}
-          selected={selected.unit}
+          selected={context.selectedUnit}
           placeholder="Select Unit"
         />
       </Authorization>

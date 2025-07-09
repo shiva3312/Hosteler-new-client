@@ -2,13 +2,10 @@
 import { UserRole } from '@/data/feature';
 
 import { store } from '../store';
-import { ContextState } from '../store/slice/context-slice';
-
 export class SearchQuery {
-  private static context: ContextState;
-
-  constructor() {
-    SearchQuery.context = store.getState().context;
+  public static getContext() {
+    console.log('SearchQuery context', store.getState());
+    return store.getState().context;
   }
 
   /**
@@ -49,9 +46,20 @@ export class SearchQuery {
    * This is useful for filtering organizations based on the current context or a specific organization ID.
    * @returns
    */
-  public static organizationSearchQuery(): Record<string, any> {
+  public static organizationSearchQuery(
+    organizations?: string[],
+  ): Record<string, any> {
+    const context = this.getContext();
+
     // If no organization is provided, use the context organization
     const query: Record<string, any> = {};
+
+    if (!organizations || organizations.length === 0) {
+      query.organization =
+        context?.selectedOrganization ?? context?.user?.organization;
+    } else {
+      query.organization = { in: organizations };
+    }
 
     console.log('organizationSearchQuery', query);
     return query;
@@ -65,14 +73,27 @@ export class SearchQuery {
    */
   public static unitSearchQuery(args: {
     organization?: string[];
+    units?: string[];
   }): Record<string, any> {
+    const context = this.getContext();
+
     // If no organization is provided, use the context organization
     const query: Record<string, any> = {};
     if (!args?.organization) {
-      query.organization = this.context?.organization ?? undefined;
+      query.organization =
+        context?.selectedOrganization ??
+        context?.user?.organization ??
+        undefined;
     } else {
       query.organization = { in: args.organization };
     }
+
+    if (!args?.units || args.units.length === 0) {
+      query._id = context?.selectedUnit ?? context?.user?.unit ?? undefined;
+    } else {
+      query._id = { in: args.units };
+    }
+
     console.log('unitSearchQuery', query);
     return query;
   }
@@ -88,11 +109,13 @@ export class SearchQuery {
     organization?: string;
     unit?: string;
   }): Record<string, any> {
+    const context = this.getContext();
+
     // If no organization is provided, use the context organization
     const query: Record<string, any> = {};
     if (!args?.organization)
-      args.organization = this.context?.organization ?? undefined;
-    if (!args?.unit) args.unit = this.context?.unit ?? undefined;
+      args.organization = context?.user?.organization ?? undefined;
+    if (!args?.unit) args.unit = context?.user?.unit ?? undefined;
     else {
       query.organization = args.organization;
     }
@@ -116,10 +139,15 @@ export class SearchQuery {
     hasAllRoles?: UserRole[];
     anyRoles?: UserRole[];
   }): Record<string, any> {
+    const context = this.getContext();
     // If no organization or unit is provided, return an empty query
     if (!args?.organization)
-      args.organization = this.context?.organization ?? undefined;
-    if (!args?.unit) args.unit = this.context?.unit ?? undefined;
+      args.organization =
+        context?.selectedOrganization ??
+        context?.user?.organization ??
+        undefined;
+    if (!args?.unit)
+      args.unit = context?.selectedUnit ?? context?.user?.unit ?? undefined;
 
     const query: Record<string, any> = {
       organization: args.organization,

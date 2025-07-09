@@ -18,11 +18,12 @@ import {
   IconSwitchHorizontal,
   IconTrash,
 } from '@tabler/icons-react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { paths } from '@/config/paths';
 import { useLogout } from '@/lib/api/auth/auth';
-import { useMe } from '@/lib/api/user/get-me';
+import { RootState } from '@/lib/store';
 
 function UserProfile() {
   const navigate = useNavigate();
@@ -30,12 +31,12 @@ function UserProfile() {
     onSuccess: () => navigate(paths.auth.login.getHref()),
   });
 
-  const { data: me } = useMe();
+  const me = useSelector((state: RootState) => state.context.user);
 
   const user = {
-    name: me?.data.profile
-      ? `${me.data.profile.firstName ?? ''} ${me.data.profile.lastName ?? ''}`.trim()
-      : `${me?.data.username ?? ''}`,
+    name: me?.profile
+      ? `${me?.profile.firstName ?? ''} ${me?.profile.lastName ?? ''}`.trim()
+      : `${me?.username ?? ''}`,
     image: 'https://via.placeholder.com/150',
   };
 

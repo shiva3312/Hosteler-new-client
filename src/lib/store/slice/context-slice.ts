@@ -2,7 +2,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { UserRole } from '@/data/feature';
+import { UserResponse } from '@/interfaces/user.interface';
 import { LocalStorage } from '@/utils/local-storage.class';
 
 export interface Selected {
@@ -11,24 +11,17 @@ export interface Selected {
 }
 
 export interface ContextState {
-  roles: UserRole[];
-  organization?: string | null;
-  unit?: string | null;
-  user: string;
-  activeRoute: string;
-  selected: Selected;
+  user: UserResponse | null;
+  activeRoute: string | null;
+  selectedOrganization?: string | null;
+  selectedUnit?: string | null;
 }
 
 export const initialContextState: ContextState = {
-  roles: [],
-  organization: '',
-  unit: '',
-  user: '',
-  activeRoute: '',
-  selected: {
-    organization: '',
-    unit: '',
-  },
+  user: null,
+  activeRoute: null,
+  selectedOrganization: null,
+  selectedUnit: null,
 };
 
 const contextSlice = createSlice({
@@ -42,41 +35,22 @@ const contextSlice = createSlice({
         updateLocalStorage?: boolean;
       }>,
     ) => {
-      const { roles, organization, unit, user, activeRoute } =
+      const { user, activeRoute, selectedOrganization, selectedUnit } =
         action.payload.data || {};
-      if (roles !== undefined) state.roles = roles;
-      if (organization !== undefined) state.organization = organization;
-      if (unit !== undefined) state.unit = unit;
       if (user !== undefined) state.user = user;
       if (activeRoute !== undefined) state.activeRoute = activeRoute;
+      if (selectedOrganization !== undefined)
+        state.selectedOrganization = selectedOrganization;
+      if (selectedUnit !== undefined) state.selectedUnit = selectedUnit;
 
       // save state in localStorage
       if (action.payload.updateLocalStorage) {
-        console.log('Setting selected in context slice:', state.selected);
-        LocalStorage.set(LocalStorage.KEY.CONTEXT, _.cloneDeep(state));
-      }
-    },
-
-    setSelected: (
-      state,
-      action: PayloadAction<{
-        data: Partial<Selected>;
-        updateLocalStorage?: boolean;
-      }>,
-    ) => {
-      const { organization, unit } = action.payload.data || {};
-      if (organization !== undefined)
-        state.selected.organization = organization;
-      if (unit !== undefined) state.selected.unit = unit;
-
-      // save state in localStorage
-      if (action.payload.updateLocalStorage) {
-        console.log('Setting selected in context slice:', state.selected);
+        console.log('Setting selected in context slice:', state);
         LocalStorage.set(LocalStorage.KEY.CONTEXT, _.cloneDeep(state));
       }
     },
   },
 });
 
-export const { setContext, setSelected } = contextSlice.actions;
+export const { setContext } = contextSlice.actions;
 export default contextSlice.reducer;

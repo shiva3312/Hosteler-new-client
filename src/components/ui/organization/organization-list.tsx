@@ -1,6 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button, Text } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
@@ -13,6 +13,7 @@ import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { OrganizationResponse } from '@/interfaces/organization.interface';
 import { SearchQuery } from '@/lib/api/search-query';
+import { useUsers } from '@/lib/api/user/get-users';
 import { useOrganizations } from '@lib/api/organization/get-all-organizations';
 
 import { DeleteOrganization } from './organization-delete';
@@ -25,6 +26,8 @@ export const OrganizationsList = () => {
     params: SearchQuery.organizationSearchQuery(),
   });
 
+  const { data: users } = useUsers();
+
   const columns = useMemo<MRT_ColumnDef<OrganizationResponse>[]>(
     () => [
       {
@@ -36,6 +39,24 @@ export const OrganizationsList = () => {
         Cell: ({ row }) => (
           <OrganizationProfileImage organization={row.original} />
         ),
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.superAdmin,
+        accessorKey: 'superAdmin',
+        header: 'Super Admin',
+        id: 'superAdmin',
+        size: 250,
+        Cell: ({ row }) => {
+          const user = users?.data.find(
+            (user) => user._id === row.original.superAdmin,
+          );
+          return <Text>{user ? user.username : 'Not assigned'}</Text>;
+        },
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {

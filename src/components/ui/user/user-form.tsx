@@ -83,7 +83,7 @@ const userRoles = Object.entries(UserRole).map(([key, value]) => ({
 
 export const UserForm = ({ initialValues = {} }: Props) => {
   const form = useForm<Partial<UserRequest>>({
-    validate: zodResolver(UserRequestZodSchema),
+    // validate: zodResolver(UserRequestZodSchema),
     initialValues,
   });
   const { data: me } = useMe();
@@ -120,6 +120,8 @@ export const UserForm = ({ initialValues = {} }: Props) => {
     },
   });
 
+  console.log('Form values:', form.values);
+
   const onSubmit = (values: Partial<UserRequest>): void => {
     console.log('Form submitted with values:', values);
     if (!isEmpty(initialValues)) {
@@ -131,7 +133,6 @@ export const UserForm = ({ initialValues = {} }: Props) => {
       });
     } else {
       // Create new user
-      console.log('Creating new user');
       createProfileMutation.mutate({ data: values as UserRequest });
     }
   };
@@ -170,42 +171,6 @@ export const UserForm = ({ initialValues = {} }: Props) => {
 
           <Divider label="Access Details" labelPosition="center" mt="sm" />
 
-          <Grid>
-            <Grid.Col span={6}>
-              <AsyncAutocompleteCombobox
-                label="Organization"
-                placeholder="Select organization"
-                data={
-                  organizations?.data?.map((org) => ({
-                    label: org.name,
-                    value: org._id,
-                  })) || []
-                }
-                selected={form.values.organization ?? ''}
-                onChange={(value) => {
-                  form.setFieldValue('organization', value);
-                  form.setFieldValue('unit', '');
-                }}
-                loading={orgLoading}
-              />
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <AsyncAutocompleteCombobox
-                label="Unit"
-                placeholder="Select Unit"
-                data={
-                  units?.data?.map((unit) => ({
-                    label: unit.name,
-                    value: unit._id,
-                  })) || []
-                }
-                selected={form.values.unit ?? ''}
-                onChange={(value) => form.setFieldValue('unit', value)}
-                loading={unitLoading}
-              />
-            </Grid.Col>
-          </Grid>
-
           <MultiSelect
             label="Select Roles"
             description="Select one or more roles for the user"
@@ -219,8 +184,61 @@ export const UserForm = ({ initialValues = {} }: Props) => {
               return x;
             })}
             {...form.getInputProps('roles')}
+            onChange={(value) => {
+              form.setFieldValue('roles', value as UserRole[]);
+
+              if (value.includes(UserRole.MASTER_ADMIN)) {
+                form.setFieldValue('organization', null);
+                form.setFieldValue('unit', null);
+              }
+              if (value.includes(UserRole.SUPER_ADMIN)) {
+                form.setFieldValue('unit', null);
+              }
+            }}
             searchable
           />
+
+          <Grid>
+            {!form.values.roles?.includes(UserRole.MASTER_ADMIN) && (
+              <Grid.Col>
+                <AsyncAutocompleteCombobox
+                  label="Organization"
+                  placeholder="Select organization"
+                  data={
+                    organizations?.data?.map((org) => ({
+                      label: org.name,
+                      value: org._id,
+                    })) || []
+                  }
+                  selected={form.values.organization ?? ''}
+                  onChange={(value) => {
+                    form.setFieldValue('organization', value);
+                    form.setFieldValue('unit', null);
+                  }}
+                  loading={orgLoading}
+                />
+              </Grid.Col>
+            )}
+            {!form.values.roles?.some((role) =>
+              [UserRole.SUPER_ADMIN, UserRole.MASTER_ADMIN].includes(role),
+            ) && (
+              <Grid.Col>
+                <AsyncAutocompleteCombobox
+                  label="Unit"
+                  placeholder="Select Unit"
+                  data={
+                    units?.data?.map((unit) => ({
+                      label: unit.name,
+                      value: unit._id,
+                    })) || []
+                  }
+                  selected={form.values.unit ?? ''}
+                  onChange={(value) => form.setFieldValue('unit', value)}
+                  loading={unitLoading}
+                />
+              </Grid.Col>
+            )}
+          </Grid>
         </Stack>
       </GenericFieldset>
 
