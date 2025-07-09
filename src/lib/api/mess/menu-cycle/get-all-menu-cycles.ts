@@ -15,7 +15,7 @@ export const getMenuCycles = (
 
 export const getMenuCycleQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['menuCycles', params],
+    queryKey: ['menu-cycles', params],
     queryFn: getMenuCycles,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

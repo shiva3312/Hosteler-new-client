@@ -10,12 +10,12 @@ export const getMenuCycleById = (
 ): Promise<{
   data: MenuCycleResponse[];
 }> => {
-  return api.get(`/menuCycle/${menuCycle}`);
+  return api.get(`/menu-cycle/${menuCycle}`);
 };
 
 export const getMenuCycleQueryOptions = (menuCycle: string) => {
   return queryOptions({
-    queryKey: ['menuCycle', menuCycle],
+    queryKey: ['menu-cycle', menuCycle],
     queryFn: () => getMenuCycleById(menuCycle),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

@@ -10,12 +10,12 @@ export const getMealItemById = (
 ): Promise<{
   data: MealItemResponse[];
 }> => {
-  return api.get(`/mealItem/${mealItem}`);
+  return api.get(`/meal-item/${mealItem}`);
 };
 
 export const getMealItemQueryOptions = (mealItem: string) => {
   return queryOptions({
-    queryKey: ['mealItem', mealItem],
+    queryKey: ['meal-item', mealItem],
     queryFn: () => getMealItemById(mealItem),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

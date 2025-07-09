@@ -425,38 +425,3 @@ export const UserForm = ({ initialValues = {} }: Props) => {
     </Box>
   );
 };
-
-// ----------------------
-// Drawer wrapper component
-// ----------------------
-
-// function UserFormDrawer({ initialValues }: Props) {
-//   const { isOpen: opened, open, close } = useDisclosure(false);
-
-//   return (
-//     <>
-//       <Drawer
-//         size="xl"
-//         opened={opened}
-//         onClose={close}
-//         title={initialValues ? 'Edit User' : 'Create User'}
-//         position="right"
-//         closeOnClickOutside={false}
-//       >
-//         <UserForm initialValues={initialValues} />
-//       </Drawer>
-
-//       {initialValues ? (
-//         <UnstyledButton onClick={open}>
-//           <IconEdit size={25} />
-//         </UnstyledButton>
-//       ) : (
-//         <Button size="xs" onClick={open}>
-//           {'Add New'}
-//         </Button>
-//       )}
-//     </>
-//   );
-// }
-
-// export default UserFormDrawer;

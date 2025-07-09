@@ -13,7 +13,7 @@ export type DeleteMealPreferenceDTO = {
 export const deleteMealPreference = ({
   mealPreferenceId,
 }: DeleteMealPreferenceDTO) => {
-  return api.delete(`/mealPreference/${mealPreferenceId}`);
+  return api.delete(`/meal-preference/${mealPreferenceId}`);
 };
 
 type UseDeleteMealPreferenceOptions = {

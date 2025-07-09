@@ -14,7 +14,7 @@ export const updateMealChart = ({
   mealChartId: string;
   data: UpdateMealChartRequest;
 }) => {
-  return api.put(`/mealChart/${mealChartId}`, data);
+  return api.put(`/meal-chart/${mealChartId}`, data);
 };
 
 type UseUpdateMealChartOptions = {

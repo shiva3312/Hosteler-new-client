@@ -10,12 +10,12 @@ export const getMealChartById = (
 ): Promise<{
   data: MealChartResponse[];
 }> => {
-  return api.get(`/mealChart/${mealChart}`);
+  return api.get(`/meal-chart/${mealChart}`);
 };
 
 export const getMealChartQueryOptions = (mealChart: string) => {
   return queryOptions({
-    queryKey: ['mealChart', mealChart],
+    queryKey: ['meal-chart', mealChart],
     queryFn: () => getMealChartById(mealChart),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

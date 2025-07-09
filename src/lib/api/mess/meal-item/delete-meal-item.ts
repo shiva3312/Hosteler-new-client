@@ -11,7 +11,7 @@ export type DeleteMealItemDTO = {
 };
 
 export const deleteMealItem = ({ mealItemId }: DeleteMealItemDTO) => {
-  return api.delete(`/mealItem/${mealItemId}`);
+  return api.delete(`/meal-item/${mealItemId}`);
 };
 
 type UseDeleteMealItemOptions = {

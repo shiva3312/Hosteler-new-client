@@ -10,12 +10,12 @@ export const getMealCharts = (
 ): Promise<{
   data: MealChartResponse[];
 }> => {
-  return api.get(`/meal-items`, { params });
+  return api.get(`/meal-charts`, { params });
 };
 
 export const getMealChartQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['mealCharts', params],
+    queryKey: ['meal-charts', params],
     queryFn: getMealCharts,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

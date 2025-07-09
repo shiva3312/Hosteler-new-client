@@ -14,7 +14,7 @@ export const updateMenuCycle = ({
   menuCycleId: string;
   data: UpdateMenuCycleRequest;
 }) => {
-  return api.put(`/menuCycle/${menuCycleId}`, data);
+  return api.put(`/menu-cycle/${menuCycleId}`, data);
 };
 
 type UseUpdateMenuCycleOptions = {

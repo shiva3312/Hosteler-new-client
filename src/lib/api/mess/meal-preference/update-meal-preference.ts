@@ -14,7 +14,7 @@ export const updateMealPreference = ({
   mealPreferenceId: string;
   data: UpdateMealPreferenceRequest;
 }) => {
-  return api.put(`/mealPreference/${mealPreferenceId}`, data);
+  return api.put(`/meal-preference/${mealPreferenceId}`, data);
 };
 
 type UseUpdateMealPreferenceOptions = {

@@ -14,8 +14,9 @@ export const UnitRequestZodSchema = z.object({
 
   // reference fields
   admin: Primitive.safeID(),
+  mess: Primitive.safeID().nullish(),
   users: z.array(Primitive.safeID()).optional().default([]),
-  groups: z.array(Primitive.safeID()).nullish().default([]), // array of group ids
+  groups: z.array(Primitive.safeID()).nullish().default([]),
   organization: Primitive.safeID(),
 });
 

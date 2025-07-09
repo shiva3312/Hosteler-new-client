@@ -11,7 +11,7 @@ export type DeleteMealChartDTO = {
 };
 
 export const deleteMealChart = ({ mealChartId }: DeleteMealChartDTO) => {
-  return api.delete(`/mealChart/${mealChartId}`);
+  return api.delete(`/meal-chart/${mealChartId}`);
 };
 
 type UseDeleteMealChartOptions = {

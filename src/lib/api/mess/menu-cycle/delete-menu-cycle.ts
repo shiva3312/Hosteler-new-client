@@ -11,7 +11,7 @@ export type DeleteMenuCycleDTO = {
 };
 
 export const deleteMenuCycle = ({ menuCycleId }: DeleteMenuCycleDTO) => {
-  return api.delete(`/menuCycle/${menuCycleId}`);
+  return api.delete(`/menu-cycle/${menuCycleId}`);
 };
 
 type UseDeleteMenuCycleOptions = {

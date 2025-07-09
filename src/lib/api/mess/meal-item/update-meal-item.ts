@@ -14,7 +14,7 @@ export const updateMealItem = ({
   mealItemId: string;
   data: UpdateMealItemRequest;
 }) => {
-  return api.put(`/mealItem/${mealItemId}`, data);
+  return api.put(`/meal-item/${mealItemId}`, data);
 };
 
 type UseUpdateMealItemOptions = {

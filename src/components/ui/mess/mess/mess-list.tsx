@@ -1,6 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button, Text } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
@@ -12,6 +12,9 @@ import { useMemo } from 'react';
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { MessResponse } from '@/interfaces/mess/mess.interface';
+import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
+import { SearchQuery } from '@/lib/api/search-query';
+import { useUnits } from '@/lib/api/unit/get-all-units';
 import { useMesses } from '@lib/api/mess/mess/get-all-messes';
 
 import { DeleteMess } from './mess-delete';
@@ -20,7 +23,17 @@ import MessProfileImage from './mess-view';
 import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MessesList = () => {
-  const messesQuery = useMesses();
+  const { data: messes, isSuccess, isLoading } = useMesses();
+
+  const { data: organizations } = useOrganizations({
+    params: SearchQuery.organizationSearchQuery(),
+    enabled: isSuccess && messes?.data.length > 0,
+  });
+
+  const { data: units } = useUnits({
+    params: SearchQuery.unitSearchQuery({}),
+    enabled: isSuccess && messes?.data.length > 0,
+  });
 
   const columns = useMemo<MRT_ColumnDef<MessResponse>[]>(
     () => [
@@ -31,6 +44,46 @@ export const MessesList = () => {
         id: 'name',
         size: 250,
         Cell: ({ row }) => <MessProfileImage mess={row.original} />,
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.unit,
+        accessorKey: 'unit',
+        header: 'Unit',
+        id: 'unit',
+        Cell: ({ row }) => {
+          // const unit = row.original.unit;
+          return (
+            <Text>
+              {units?.data?.find((u) => u._id === row.original.unit)?.name ??
+                'N/A'}
+            </Text>
+          );
+        },
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.organization,
+        accessorKey: 'organization',
+        header: 'Organization',
+        id: 'organization',
+        Cell: ({ row }) => {
+          return (
+            <Text>
+              {organizations?.data?.find(
+                (org) => org._id === row.original.organization,
+              )?.name ?? 'N/A'}
+            </Text>
+          );
+        },
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {
@@ -72,9 +125,9 @@ export const MessesList = () => {
   const options: MRT_TableOptions<MessResponse> = useMemo(
     () => ({
       columns,
-      data: messesQuery.data?.data ?? [],
+      data: messes?.data ?? [],
       getRowId: (row) => row._id ?? '',
-      rowCount: messesQuery.data?.data?.length ?? 0,
+      rowCount: messes?.data?.length ?? 0,
       editDisplayMode: 'custom',
       // onEditingRowSave: handleSaveMess,
       renderRowActions: ({ row, table }) => (
@@ -107,7 +160,7 @@ export const MessesList = () => {
         );
       },
     }),
-    [columns, messesQuery.data?.data],
+    [columns, messes?.data],
   );
 
   const state: Partial<MRT_TableState<MessResponse>> = useMemo(
@@ -116,14 +169,14 @@ export const MessesList = () => {
         left: ['check'],
         right: ['mrt-row-actions'],
       },
-      isLoading: messesQuery.isLoading,
+      isLoading,
     }),
-    [messesQuery.isLoading],
+    [isLoading],
   );
 
   return (
     <GenericTable
-      data={messesQuery.data?.data ?? []}
+      data={messes?.data ?? []}
       columns={columns}
       options={options}
       state={state}

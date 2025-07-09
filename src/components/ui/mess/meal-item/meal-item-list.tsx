@@ -1,6 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button, Text } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
@@ -12,15 +12,29 @@ import { useMemo } from 'react';
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { MealItemResponse } from '@/interfaces/mess/meal-item.interface';
+import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
+import { SearchQuery } from '@/lib/api/search-query';
+import { useUnits } from '@/lib/api/unit/get-all-units';
 import { useMealItems } from '@lib/api/mess/meal-item/get-all-meal-items';
 
 import { DeleteMealItem } from './meal-item-delete';
 import { MealItemForm } from './meal-item-form';
 import MealItemProfileImage from './meal-item-view';
+import MealTypeBadge from '../../core/badge/meal-type';
 import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MealItemsList = () => {
-  const mealItemsQuery = useMealItems();
+  const { data: mealItem, isSuccess, isLoading } = useMealItems();
+
+  const { data: organizations } = useOrganizations({
+    params: SearchQuery.organizationSearchQuery(),
+    enabled: isSuccess && mealItem?.data.length > 0,
+  });
+
+  const { data: units } = useUnits({
+    params: SearchQuery.unitSearchQuery({}),
+    enabled: isSuccess && mealItem?.data.length > 0,
+  });
 
   const columns = useMemo<MRT_ColumnDef<MealItemResponse>[]>(
     () => [
@@ -30,12 +44,62 @@ export const MealItemsList = () => {
         header: 'Name',
         id: 'name',
         size: 250,
-        // Footer: () => {
-        //   return (
-        //     <>{`${mealItemsQuery.data?.data.length ?? 0} MealItems.`}</>
-        //   );
-        // },
         Cell: ({ row }) => <MealItemProfileImage mealItem={row.original} />,
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.mealType,
+        accessorKey: 'mealType',
+        header: 'Meal Type',
+        id: 'mealType',
+        size: 250,
+        Cell: ({ row }) => (
+          <MealTypeBadge key={row.original._id} value={row.original.mealType} />
+        ),
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.unit,
+        accessorKey: 'unit',
+        header: 'Unit',
+        id: 'unit',
+        Cell: ({ row }) => {
+          // const unit = row.original.unit;
+          return (
+            <Text>
+              {units?.data?.find((u) => u._id === row.original.unit)?.name ??
+                'N/A'}
+            </Text>
+          );
+        },
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.organization,
+        accessorKey: 'organization',
+        header: 'Organization',
+        id: 'organization',
+        Cell: ({ row }) => {
+          return (
+            <Text>
+              {organizations?.data?.find(
+                (org) => org._id === row.original.organization,
+              )?.name ?? 'N/A'}
+            </Text>
+          );
+        },
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {
@@ -77,9 +141,9 @@ export const MealItemsList = () => {
   const options: MRT_TableOptions<MealItemResponse> = useMemo(
     () => ({
       columns,
-      data: mealItemsQuery.data?.data ?? [],
+      data: mealItem?.data ?? [],
       getRowId: (row) => row._id ?? '',
-      rowCount: mealItemsQuery.data?.data?.length ?? 0,
+      rowCount: mealItem?.data?.length ?? 0,
       editDisplayMode: 'custom',
       // onEditingRowSave: handleSaveMealItem,
       renderRowActions: ({ row, table }) => (
@@ -112,7 +176,7 @@ export const MealItemsList = () => {
         );
       },
     }),
-    [columns, mealItemsQuery.data?.data],
+    [columns, mealItem?.data],
   );
 
   const state: Partial<MRT_TableState<MealItemResponse>> = useMemo(
@@ -121,14 +185,14 @@ export const MealItemsList = () => {
         left: ['check'],
         right: ['mrt-row-actions'],
       },
-      isLoading: mealItemsQuery.isLoading,
+      isLoading,
     }),
-    [mealItemsQuery.isLoading],
+    [isLoading],
   );
 
   return (
     <GenericTable
-      data={mealItemsQuery.data?.data ?? []}
+      data={mealItem?.data ?? []}
       columns={columns}
       options={options}
       state={state}

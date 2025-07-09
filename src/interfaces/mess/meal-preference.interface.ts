@@ -8,7 +8,7 @@ import {
 import { Primitive } from '../primitive.class';
 
 export const MealPreferenceRequestZodSchema = z.object({
-  amount: Primitive.safeNumber('Amount', 0).optional(),
+  quantity: Primitive.safeNumber('Quantity', 0).optional(),
   interest: Primitive.safeNumber('Interest', 0).default(0), // rating given by the user for this meal preference, 0 means not rated
   priority: Primitive.safeNumber('Priority', 0).default(0), // priority of the meal preference, lower number means higher priority
   rating: Primitive.safeNumber('Rating', 0).default(0), // rating given by the user for this meal preference, 0 means not rated

@@ -10,12 +10,12 @@ export const getMealPreferenceById = (
 ): Promise<{
   data: MealPreferenceResponse[];
 }> => {
-  return api.get(`/mealPreference/${mealPreference}`);
+  return api.get(`/meal-preference/${mealPreference}`);
 };
 
 export const getMealPreferenceQueryOptions = (mealPreference: string) => {
   return queryOptions({
-    queryKey: ['mealPreference', mealPreference],
+    queryKey: ['meal-preference', mealPreference],
     queryFn: () => getMealPreferenceById(mealPreference),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

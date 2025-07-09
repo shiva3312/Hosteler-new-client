@@ -2,6 +2,7 @@
 export enum Gender {
   Male = 'Male',
   Female = 'Female',
+  Transgender = 'Transgender',
   Other = 'Other',
 }
 
@@ -27,11 +28,12 @@ export enum ScheduleStatus {
   Cancelled = 'cancelled',
 }
 
+// Schedule Type Enum
 export enum ScheduleType {
-  MEAL_BREAKFAST_CHART = 'meal_breakfast_chart',
-  MEAL_LUNCH_CHART = 'meal_lunch_chart',
-  MEAL_DINNER_CHART = 'meal_dinner_chart',
-  MEAL_SNACK_CHART = 'meal_snack_chart',
+  BreakfastChart = 'meal_breakfast_chart',
+  LunchChart = 'meal_lunch_chart',
+  DinnerChart = 'meal_dinner_chart',
+  SnackChart = 'meal_snack_chart',
 }
 
 export enum MessStatus {
@@ -53,28 +55,29 @@ export enum MenuCategory {
   Custom = 'Custom',
 }
 
+// Unit Enum
 export enum Unit {
-  GRAM = 'gram_gm',
-  KILOGRAM = 'kilogram_kg',
-  MILLIGRAM = 'milligram_mg',
-  MILLILITER = 'milliliter_ml',
-  LITER = 'liter_l',
-  CUP = 'cup_cup',
-  TEASPOON = 'teaspoon_tsp',
-  TABLESPOON = 'tablespoon_tbsp',
-  PIECE = 'piece_pcs',
-  SLICE = 'slice_slice',
-  UNIT = 'unit_unit',
-  PACKET = 'packet_pkt',
-  CAN = 'can_can',
-  BOTTLE = 'bottle_btl',
-  BOX = 'box_box',
-  SERVING = 'serving_serving',
-  PLATE = 'plate_plate',
-  BOWL = 'bowl_bowl',
-  LOAF = 'loaf_loaf',
-  BAR = 'bar_bar',
-  SCOOP = 'scoop_scoop',
+  Gram = 'gram_gm',
+  Kilogram = 'kilogram_kg',
+  Milligram = 'milligram_mg',
+  Milliliter = 'milliliter_ml',
+  Liter = 'liter_l',
+  Cup = 'cup_cup',
+  Teaspoon = 'teaspoon_tsp',
+  Tablespoon = 'tablespoon_tbsp',
+  Piece = 'piece_pcs',
+  Slice = 'slice_slice',
+  Unit = 'unit_unit',
+  Packet = 'packet_pkt',
+  Can = 'can_can',
+  Bottle = 'bottle_btl',
+  Box = 'box_box',
+  Serving = 'serving_serving',
+  Plate = 'plate_plate',
+  Bowl = 'bowl_bowl',
+  Loaf = 'loaf_loaf',
+  Bar = 'bar_bar',
+  Scoop = 'scoop_scoop',
 }
 
 export enum MenuType {
@@ -88,23 +91,7 @@ export enum MealType {
   Vegetarian = 'Vegetarian',
   NonVegetarian = 'Non-Vegetarian',
   Vegan = 'Vegan',
-  // Pescatarian = 'Pescatarian',
   Eggetarian = 'Eggetarian',
-  // LactoVegetarian = 'Lacto-Vegetarian',
-  // OvoVegetarian = 'Ovo-Vegetarian',
-  // Flexitarian = 'Flexitarian',
-  // Paleo = 'Paleo',
-  // Keto = 'Keto',
-  // Halal = 'Halal',
-  // Kosher = 'Kosher',
-  // Jain = 'Jain',
-  // RawVegan = 'Raw Vegan',
-  // Fruitarian = 'Fruitarian',
-  // GlutenFree = 'Gluten-Free',
-  // DairyFree = 'Dairy-Free',
-  // NutFree = 'Nut-Free',
-  // SeafoodFree = 'Seafood-Free',
-  // SoyFree = 'Soy-Free',
   AllEater = 'All Eater', // No restrictions
 }
 
@@ -225,24 +212,26 @@ export enum AddressType {
   Other = 'Other',
 }
 
+// Blood Group Enum
 export enum BloodGroup {
-  A_POSITIVE = 'A+',
-  A_NEGATIVE = 'A-',
-  B_POSITIVE = 'B+',
-  B_NEGATIVE = 'B-',
-  AB_POSITIVE = 'AB+',
-  AB_NEGATIVE = 'AB-',
-  O_POSITIVE = 'O+',
-  O_NEGATIVE = 'O-',
+  APositive = 'A+',
+  ANegative = 'A-',
+  BPositive = 'B+',
+  BNegative = 'B-',
+  ABPositive = 'AB+',
+  ABNegative = 'AB-',
+  OPositive = 'O+',
+  ONegative = 'O-',
 }
 
+// Device Type Enum
 export enum DeviceType {
-  PHONE = 'Phone',
-  TABLET = 'Tablet',
-  DESKTOP = 'Desktop',
-  LAPTOP = 'Laptop',
-  SMART_TV = 'Smart TV',
-  WEARABLE = 'Wearable',
-  GAME_CONSOLE = 'Game Console',
-  OTHER = 'Other',
+  Phone = 'Phone',
+  Tablet = 'Tablet',
+  Desktop = 'Desktop',
+  Laptop = 'Laptop',
+  SmartTV = 'Smart TV',
+  Wearable = 'Wearable',
+  GameConsole = 'Game Console',
+  Other = 'Other',
 }

@@ -15,7 +15,7 @@ export const getMealItems = (
 
 export const getMealItemQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['mealItems', params],
+    queryKey: ['meal-items', params],
     queryFn: getMealItems,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

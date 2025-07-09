@@ -6,7 +6,11 @@ import { isEmpty } from 'lodash';
 import { MessRequest, MessResponse } from '@/interfaces/mess/mess.interface';
 import { useCreateMess } from '@/lib/api/mess/mess/create-mess';
 import { useUpdateMess } from '@/lib/api/mess/mess/update-mess';
+import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
+import { SearchQuery } from '@/lib/api/search-query';
+import { useUnits } from '@/lib/api/unit/get-all-units';
 
+import { AsyncAutocompleteCombobox } from '../../core/dropdown';
 import { useNotifications } from '../../core/notifications';
 
 interface Props {
@@ -18,6 +22,14 @@ export function MessForm({ initialValues }: Props) {
     initialValues,
     // validate : MessRequestZodSchema
   });
+  const { data: organizations, isLoading: orgLoading } = useOrganizations({});
+  const { data: units, isLoading: unitLoading } = useUnits({
+    params: SearchQuery.unitSearchQuery({
+      organization: [form.values.organization!],
+    }),
+    enabled: !!form.values.organization,
+  });
+
   const { addNotification } = useNotifications();
 
   const updateMessMutation = useUpdateMess({
@@ -74,6 +86,38 @@ export function MessForm({ initialValues }: Props) {
         {...form.getInputProps('description')}
         required
       />
+
+      <AsyncAutocompleteCombobox
+        label="Organization"
+        placeholder="Select organization"
+        data={
+          organizations?.data?.map((user) => ({
+            label: user.name,
+            value: user._id,
+          })) || []
+        }
+        selected={form.values.organization ?? ''}
+        onChange={(value) => {
+          form.setFieldValue('organization', value);
+          form.setFieldValue('admin', '');
+        }}
+        loading={orgLoading}
+      />
+
+      <AsyncAutocompleteCombobox
+        label="Unit"
+        placeholder="Select Unit"
+        data={
+          units?.data?.map((unit) => ({
+            label: unit.name,
+            value: unit._id,
+          })) || []
+        }
+        selected={form.values.unit ?? ''}
+        onChange={(value) => form.setFieldValue('unit', value)}
+        loading={unitLoading}
+      />
+
       <Button type="submit" mt="md">
         {initialValues ? 'Update' : 'Create'}
       </Button>

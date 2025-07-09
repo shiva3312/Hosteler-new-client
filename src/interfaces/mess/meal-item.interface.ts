@@ -10,9 +10,9 @@ import { Primitive } from '../primitive.class';
 
 export const MealItemRequestZodSchema = z.object({
   name: Primitive.safeString('Name', [], 2, 20).nullish(),
-  amount: Primitive.safeNumber('Amount', 0).optional(),
+  quantity: Primitive.safeNumber('Quantity', 0).optional(),
   unitType: z.nativeEnum(Unit),
-  price: Primitive.safeNumber('Price', 0).optional(),
+  price: Primitive.safeNumber('Price', 0).nullish().default(null),
   image: Primitive.safeString('Image URL').optional(),
   description: Primitive.safeString(),
 
@@ -23,6 +23,7 @@ export const MealItemRequestZodSchema = z.object({
         quantity: Primitive.safeNumber('Quantity', 0), // quantity of the ingredient
       }),
     )
+    .nullish()
     .default([]), // array of ingredients in this meal item
 
   mealType: z.nativeEnum(MealType), // type of meal (e.g., Vegetarian, Non-Vegetarian, Vegan, etc.)
@@ -31,7 +32,7 @@ export const MealItemRequestZodSchema = z.object({
   likedByUserIds: z.array(Primitive.safeID()).default([]), // array of user ids who liked this menu
 
   // reference fields
-  unit: Primitive.safeID().nullish(), // array of unit ids
+  unit: Primitive.safeID().nullish(),
   organization: Primitive.safeID().nullish(),
 });
 
