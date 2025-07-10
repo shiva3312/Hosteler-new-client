@@ -23,8 +23,8 @@ const EnumBadge = <T extends string | number>({
   labelMap,
   ...badgeProps
 }: EnumBadgeProps<T>) => {
-  const color = colorMap?.[value] || 'gray'; // Default to gray if no color is provided
-  const label = labelMap?.[value] || value; // Default to the enum value if no label is provided
+  const color = colorMap?.[value] || 'gray';
+  const label = labelMap?.[value] || value || 'n/a';
 
   return (
     <Badge {...badgeProps} color={color} tt={'capitalize'}>

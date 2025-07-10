@@ -23,7 +23,7 @@ const GenderBadge: React.FC<GenderBadgeProps> = ({
   return (
     <EnumBadge
       {...badgeProps}
-      value={value}
+      value={value ?? 'n/a'}
       colorMap={genderColorMap}
       labelMap={Gender}
     />

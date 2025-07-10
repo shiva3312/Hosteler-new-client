@@ -30,11 +30,6 @@ export const MenuesList = () => {
         header: 'Name',
         id: 'name',
         size: 250,
-        // Footer: () => {
-        //   return (
-        //     <>{`${menuesQuery.data?.data.length ?? 0} Menues.`}</>
-        //   );
-        // },
         Cell: ({ row }) => <MenuProfileImage menu={row.original} />,
         enableEditing: true,
         enableColumnFilter: true,

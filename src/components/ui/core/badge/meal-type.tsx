@@ -33,7 +33,7 @@ const MealTypeBadge: React.FC<MealTypeBadgeProps> = ({
   return (
     <EnumBadge
       {...badgeProps}
-      value={value}
+      value={value ?? 'n/a'} // Ensure value is not null or undefined
       colorMap={mealTypeColorMap}
       labelMap={mealTypeLabelMap} // Explicitly pass the label map
     />

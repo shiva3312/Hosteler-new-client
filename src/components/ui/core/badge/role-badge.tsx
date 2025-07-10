@@ -28,7 +28,7 @@ const getColorForRole = (role: UserRole) => {
     case UserRole.GUEST:
       return { formattedRole: 'Guest', colorCode: 'gray' }; // Temporary/limited role
     default:
-      return { formattedRole: 'Unknown', colorCode: 'slate' }; // Fallback
+      return { formattedRole: role ?? 'Unknown', colorCode: 'slate' }; // Fallback
   }
 };
 

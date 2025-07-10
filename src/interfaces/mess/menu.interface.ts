@@ -31,8 +31,8 @@ export const MenuRequestZodSchema = z.object({
   tags: z.array(Primitive.safeString('Tag')).default([]), // array of tags for this menu eg : ['vegan', 'gluten-free', 'spicy']
   likedByUserIds: z.array(Primitive.safeID()).default([]), // array of user ids who liked this menu
   // reference fields
-  unit: Primitive.safeID().nullish(),
-  organization: Primitive.safeID().nullish(),
+  unit: Primitive.safeID().nullish().default(null),
+  organization: Primitive.safeID().nullish().default(null), // organization id this menu belongs to
 });
 
 export const MenuResponseZodSchema = z

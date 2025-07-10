@@ -23,6 +23,8 @@ import { DeleteUser } from './delete-user';
 import { UserForm } from './user-form';
 import UserProfileImage from './user-image';
 import { GenericDrawer } from '../core/drawer/drawer';
+import GenderBadge from '../core/badge/gender-badge';
+import EnumBadge from '../core/badge/generic-badge';
 
 export const UsersList = () => {
   const {
@@ -145,7 +147,7 @@ export const UsersList = () => {
         accessorKey: 'profile.gender',
         header: 'Gender',
         id: 'profile.gender',
-        Cell: ({ row }) => <Text>{row.original.profile?.gender}</Text>,
+        Cell: ({ row }) => <EnumBadge value={row.original.profile?.gender} />,
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {
