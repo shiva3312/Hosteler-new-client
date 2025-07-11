@@ -1,5 +1,8 @@
-import { UserRole } from '@/data/feature';
+//Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import z from 'zod';
+
+import { UserRole } from '@/data/feature';
+
 import { UserActionResponseZodSchema } from '../common.interface';
 import { UserStatus } from '../enums';
 import { Primitive } from '../primitive.class';
@@ -30,27 +33,34 @@ export const SupplierResponseZodSchema = z
   .omit({ password: true })
   .extend({
     // extended fields
-    parent: z.lazy(() => {
-      const UserResponseZodSchema = require('./user.interface').UserResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
-      return UserResponseZodSchema.optional();
-    }),
-    group: z.lazy(() => {
-      const GroupResponseZodSchema = require('./group.interface').GroupResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
-      return GroupResponseZodSchema.optional();
-    }),
-    unit: z.lazy(() => {
-      const UnitResponseZodSchema = require('./unit.interface').UnitResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
-      return UnitResponseZodSchema.optional();
-    }),
-    organization: z.lazy(() => {
-      const OrganizationResponseZodSchema = require('./organization.interface').OrganizationResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
-      return OrganizationResponseZodSchema.optional();
-    }),
+    // parent: z.lazy(() => {
+    //   const UserResponseZodSchema =
+    //     require('./user.interface').UserResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
+    //   return UserResponseZodSchema.optional();
+    // }),
+    // group: z.lazy(() => {
+    //   const GroupResponseZodSchema =
+    //     require('./group.interface').GroupResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
+    //   return GroupResponseZodSchema.optional();
+    // }),
+    // unit: z.lazy(() => {
+    //   const UnitResponseZodSchema =
+    //     require('./unit.interface').UnitResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
+    //   return UnitResponseZodSchema.optional();
+    // }),
+    // organization: z.lazy(() => {
+    //   const OrganizationResponseZodSchema =
+    //     require('./organization.interface').OrganizationResponseZodSchema; // Defers module resolution until runtime - to avoid circular dependency
+    //   return OrganizationResponseZodSchema.optional();
+    // }),
   });
 
-export const UpdateSupplierRequestZodSchema = SupplierRequestZodSchema.partial();
+export const UpdateSupplierRequestZodSchema =
+  SupplierRequestZodSchema.partial();
 
 /** Interface  */
 export type SupplierRequest = z.infer<typeof SupplierRequestZodSchema>;
 export type SupplierResponse = z.infer<typeof SupplierResponseZodSchema>;
-export type UpdateSupplierRequest = Partial<z.infer<typeof UpdateSupplierRequestZodSchema>>;
+export type UpdateSupplierRequest = Partial<
+  z.infer<typeof UpdateSupplierRequestZodSchema>
+>;

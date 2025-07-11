@@ -11,7 +11,7 @@ const createEnv = () => {
       .refine((s) => s === 'true' || s === 'false')
       .transform((s) => s === 'true')
       .optional(),
-    APP_URL: z.string().optional().default('http://localhost:3000'),
+    APP_URL: z.string().optional().default('http://localhost:9000'),
     APP_MOCK_API_PORT: z.string().optional().default('8080'),
     SECRET_KEY: z.string().default('secret-key'),
     ENVIRONMENT: z.nativeEnum(Environment).default(Environment.DEV),

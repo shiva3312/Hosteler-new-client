@@ -3,16 +3,15 @@
 import {
   createTheme,
   Button,
-  Paper,
   Title,
   Checkbox,
   NumberFormatter,
   Select,
   Tooltip,
-  Input,
   ActionIcon,
   TextInput,
   MultiSelect,
+  PasswordInput,
 } from '@mantine/core';
 
 export const theme = createTheme({
@@ -33,6 +32,12 @@ export const theme = createTheme({
       },
     }),
     TextInput: TextInput.extend({
+      defaultProps: {
+        autoComplete: 'off',
+        size: 'xs',
+      },
+    }),
+    PasswordInput: PasswordInput.extend({
       defaultProps: {
         autoComplete: 'off',
         size: 'xs',

@@ -25,6 +25,7 @@ export function GenericDrawer({
   return (
     <>
       <Drawer
+        // Apply the CSS module class for styling
         opened={opened}
         onClose={close}
         title={<DrawerTitle title={title} />}

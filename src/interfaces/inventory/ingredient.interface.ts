@@ -1,7 +1,9 @@
+//Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
-import { Primitive } from '../primitive.class';
+
 import { UserActionResponseZodSchema } from '../common.interface';
 import { Unit } from '../enums';
+import { Primitive } from '../primitive.class';
 
 export const IngredientRequestZodSchema = z.object({
   name: Primitive.safeString(),
@@ -25,10 +27,13 @@ export const IngredientResponseZodSchema = z.object({
   history: z.array(UserActionResponseZodSchema).optional(), // array of user actions on this menu
 });
 
-export const UpdateIngredientRequestZodSchema = IngredientRequestZodSchema.partial();
+export const UpdateIngredientRequestZodSchema =
+  IngredientRequestZodSchema.partial();
 
 /* ---------- TypeScript Types ---------- */
 
 export type IngredientRequest = z.infer<typeof IngredientRequestZodSchema>;
 export type IngredientResponse = z.infer<typeof IngredientResponseZodSchema>;
-export type UpdateIngredientRequest = z.infer<typeof UpdateIngredientRequestZodSchema>;
+export type UpdateIngredientRequest = z.infer<
+  typeof UpdateIngredientRequestZodSchema
+>;

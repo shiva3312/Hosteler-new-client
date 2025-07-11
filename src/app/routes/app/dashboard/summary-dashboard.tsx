@@ -7,7 +7,7 @@ import {
   IconFileText,
 } from '@tabler/icons-react';
 
-function Dashboard() {
+function SummaryDashboard() {
   return (
     <Container>
       <Title order={1}>Dashboard</Title>
@@ -70,4 +70,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default SummaryDashboard;

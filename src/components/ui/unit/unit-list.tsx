@@ -21,7 +21,7 @@ import { useUnits } from '@lib/api/unit/get-all-units';
 import { DeleteUnit } from './unit-delete';
 import { UnitForm } from './unit-form';
 import { GenericDrawer } from '../core/drawer/drawer';
-import UserProfileImage from '../user/user-image';
+import UserProfileImage from '../user/user-list-avatar';
 
 export const UnitsList = () => {
   const unitsQuery = useUnits({

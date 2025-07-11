@@ -13,18 +13,19 @@ import DateBadge from '@/components/ui/core/badge/date-badge';
 import RoleBadge from '@/components/ui/core/badge/role-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { UserResponse } from '@/interfaces/user.interface';
+import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useGroups } from '@/lib/api/group/get-all-groups';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { SearchQuery } from '@/lib/api/search-query';
 import { useUnits } from '@/lib/api/unit/get-all-units';
+import { useMe } from '@/lib/api/user/get-me';
 import { useUsers } from '@/lib/api/user/get-users';
 
 import { DeleteUser } from './delete-user';
 import { UserForm } from './user-form';
-import UserProfileImage from './user-image';
-import { GenericDrawer } from '../core/drawer/drawer';
-import GenderBadge from '../core/badge/gender-badge';
+import UserProfileImage from './user-list-avatar';
 import EnumBadge from '../core/badge/generic-badge';
+import { GenericDrawer } from '../core/drawer/drawer';
 
 export const UsersList = () => {
   const {
@@ -48,6 +49,11 @@ export const UsersList = () => {
     params: SearchQuery.unitSearchQuery({}),
     enabled: isSuccess && users?.data.length > 0,
   });
+
+  const { data: me } = useMe();
+  const isNoneAdminRoles = useMemo(() => {
+    return AuthorizationService.isNoneAdminRoles(me?.data?.roles ?? []);
+  }, [me?.data?.roles]);
 
   const columns = useMemo<MRT_ColumnDef<UserResponse>[]>(
     () => [
@@ -79,6 +85,25 @@ export const UsersList = () => {
             {`${row.original.profile?.firstName ?? ''} ${row.original.profile?.lastName ?? ''}`.trim()}
           </Text>
         ),
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        // accessorFn: (row) =>
+        //   `${row.profile?.firstName ?? ''} ${row.profile?.lastName ?? ''}`,
+        accessorKey: 'parent',
+        header: 'Parent',
+        id: 'parent',
+        size: 250,
+        Cell: ({ row }) => {
+          const parent = users?.data?.find(
+            (u) => u._id === row.original.parent,
+          );
+          return <Text>{parent?.username}</Text>;
+        },
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {
@@ -220,7 +245,7 @@ export const UsersList = () => {
         enableEditing: false,
       },
     ],
-    [groups?.data, organizations?.data, units?.data],
+    [groups?.data, organizations?.data, units?.data, users?.data],
   );
 
   const options: MRT_TableOptions<UserResponse> = useMemo(
@@ -255,13 +280,18 @@ export const UsersList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer title="Create User" trigger={<Button>Add New</Button>}>
+          <GenericDrawer
+            title={isNoneAdminRoles ? `Create Guest` : `Create User`}
+            trigger={
+              <Button>{isNoneAdminRoles ? `Add Guest` : `Add New`}</Button>
+            }
+          >
             <UserForm />
           </GenericDrawer>
         );
       },
     }),
-    [columns, users?.data],
+    [columns, isNoneAdminRoles, users?.data],
   );
 
   const state: Partial<MRT_TableState<UserResponse>> = useMemo(

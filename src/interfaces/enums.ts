@@ -235,3 +235,12 @@ export enum DeviceType {
   GameConsole = 'Game Console',
   Other = 'Other',
 }
+
+export enum ImageSize {
+  Icon = 'icon', // smaller 100x100
+  // Thumbnail = 'thumbnail', // small 150x150
+  Small = 'small', // medium 300x300
+  Medium = 'medium', // large 600x600
+  Original = 'original', // original size
+  // Large = 'large', // extra large 1200x1200
+}

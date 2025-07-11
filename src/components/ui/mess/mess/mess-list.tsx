@@ -119,7 +119,7 @@ export const MessesList = () => {
         enableEditing: false,
       },
     ],
-    [],
+    [organizations?.data, units?.data],
   );
 
   const options: MRT_TableOptions<MessResponse> = useMemo(

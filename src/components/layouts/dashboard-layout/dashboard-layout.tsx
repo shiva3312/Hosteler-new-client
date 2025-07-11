@@ -14,15 +14,19 @@ import { useState } from 'react';
 
 import { paths } from '@/config/paths';
 import { useDisclosure } from '@/hooks/use-disclosure.js';
+import { AuthorizationService } from '@/lib/api/auth/authorization';
+import { useMe } from '@/lib/api/user/get-me';
 
 import RoleBasedSelector from './rolebase-selector';
 import SidebarLinks, { Link } from './sidebar-links'; // Import the sidebar links component
 import UserProfile from './user-profile';
+
 import './layout.css';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isOpen: opened, toggle } = useDisclosure();
   const [active, setActive] = useState('Home');
+  const { data: me, isSuccess } = useMe();
 
   const mainLinks: Link[] = [
     {
@@ -116,7 +120,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     },
   ].filter(Boolean) as Link[];
 
-  const hasSublink = mainLinks?.find((link) => link.label === active)?.subLinks;
+  // Filter by authorization
+  const authorizedLinks = AuthorizationService.filterLinksByAuthorization(
+    mainLinks,
+    me?.data?.roles || [],
+    isSuccess,
+  );
+
+  console.log('Authorized Links:', authorizedLinks);
+
+  const hasSublink = authorizedLinks?.find(
+    (link) => link.label === active,
+  )?.subLinks;
 
   return (
     <AppShell
@@ -163,7 +178,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       </AppShell.Header>
       <AppShell.Navbar>
         <SidebarLinks
-          mainLinks={mainLinks}
+          mainLinks={authorizedLinks}
           active={active}
           setActive={setActive}
         />

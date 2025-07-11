@@ -4,8 +4,11 @@ import { useMemo } from 'react';
 import { createBrowserRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 
+import { env } from '@/config/env';
 import { paths } from '@/config/paths';
+import { Environment } from '@/data/feature';
 import { ProtectedRoute } from '@/lib/api/auth/auth';
+import RoleProtectedRoute from '@/lib/api/auth/rolebased-protected-route';
 
 import {
   default as AppRoot,
@@ -47,28 +50,39 @@ export const createAppRouter = (queryClient: QueryClient) =>
           <AppRoot />
         </ProtectedRoute>
       ),
-      ErrorBoundary: AppRootErrorBoundary,
+      ErrorBoundary:
+        env.ENVIRONMENT !== Environment.PROD ? AppRootErrorBoundary : undefined,
       children: [
         {
           path: paths.app.dashboard.path,
           lazy: () =>
-            import('./routes/app/dashboard/dashboard').then(
-              convert(queryClient),
-            ),
+            import('./routes/app/dashboard').then(convert(queryClient)),
         },
         {
-          path: paths.app.organization.path,
-          lazy: () =>
-            import('./routes/app/organization/organization').then(
-              convert(queryClient),
-            ),
+          element: <RoleProtectedRoute />,
+          children: [
+            {
+              path: paths.app.organization.path, // 'organization'
+              index: true,
+              lazy: () =>
+                import('./routes/app/organization/organization').then(
+                  convert(queryClient),
+                ),
+            },
+          ],
         },
         {
-          path: paths.app.unit.path,
-          lazy: () =>
-            import('./routes/app/unit/unit').then(convert(queryClient)),
+          element: <RoleProtectedRoute />,
+          children: [
+            {
+              path: paths.app.unit.path, // 'unit'
+              lazy: () =>
+                import('./routes/app/unit/unit').then(convert(queryClient)),
+            },
+          ],
         },
         {
+          element: <RoleProtectedRoute />,
           children: [
             {
               index: true,
@@ -76,7 +90,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
                 import('./routes/app/mess/mess').then(convert(queryClient)),
             },
             {
-              path: paths.app.mess.mess.path, // 'user'
+              path: paths.app.mess.mess.path, // 'mess'
               lazy: () =>
                 import('./routes/app/mess/mess').then(convert(queryClient)),
             },
@@ -123,12 +137,13 @@ export const createAppRouter = (queryClient: QueryClient) =>
         {
           path: paths.app.settings.path,
           lazy: () =>
-            import('./routes/app/settings/user-settings').then(
+            import('./routes/app/settings/user-settings/').then(
               convert(queryClient),
             ),
         },
         {
           // path: paths.app.systemSettings.path, // 'system-settings'
+          element: <RoleProtectedRoute />,
           children: [
             {
               index: true,

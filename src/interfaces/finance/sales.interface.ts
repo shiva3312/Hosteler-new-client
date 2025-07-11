@@ -1,6 +1,8 @@
+//Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
-import { Primitive } from '../primitive.class';
+
 import { UserActionResponseZodSchema } from '../common.interface';
+import { Primitive } from '../primitive.class';
 
 export const SalesRequestZodSchema = z.object({
   // reference fields

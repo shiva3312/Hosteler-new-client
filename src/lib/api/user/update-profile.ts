@@ -9,25 +9,25 @@ import { MutationConfig } from '@/lib/api/react-query';
 import { useUsers } from './get-users';
 import { SearchQuery } from '../search-query';
 
-export type UpdateProfileInput = z.infer<typeof UpdateUserRequestZodSchema>;
+export type UpdateUserInput = z.infer<typeof UpdateUserRequestZodSchema>;
 
-export const updateProfile = ({
+export const updateUser = ({
   userId,
   data,
 }: {
   userId: string;
-  data: UpdateProfileInput;
+  data: UpdateUserInput;
 }) => {
   return api.put(`/user/${userId}`, data);
 };
 
-type UseUpdateProfileOptions = {
-  mutationConfig?: MutationConfig<typeof updateProfile>;
+type UseUpdateUserOptions = {
+  mutationConfig?: MutationConfig<typeof updateUser>;
 };
 
-export const useUpdateProfile = ({
+export const useUpdateUser = ({
   mutationConfig,
-}: UseUpdateProfileOptions = {}) => {
+}: UseUpdateUserOptions = {}) => {
   const { refetch: refetchUser } = useUsers({
     params: SearchQuery.userSearchQuery({}),
   });
@@ -40,6 +40,6 @@ export const useUpdateProfile = ({
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: updateProfile,
+    mutationFn: updateUser,
   });
 };

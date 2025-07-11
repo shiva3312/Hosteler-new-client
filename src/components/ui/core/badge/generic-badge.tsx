@@ -4,7 +4,7 @@ import React from 'react';
 
 interface EnumBadgeProps<T extends string | number | symbol>
   extends BadgeProps {
-  value: T; // The enum value to display
+  value: T & any; // The enum value to display
   colorMap?: Record<T, string>; // A mapping of enum values to colors
   labelMap?: Record<T, string>; // Optional mapping of enum values to display labels
 }
@@ -23,8 +23,8 @@ const EnumBadge = <T extends string | number>({
   labelMap,
   ...badgeProps
 }: EnumBadgeProps<T>) => {
-  const color = colorMap?.[value] || 'gray';
-  const label = labelMap?.[value] || value || 'n/a';
+  const color = colorMap?.[value as T] || 'gray';
+  const label = labelMap?.[value as T] || value || 'n/a';
 
   return (
     <Badge {...badgeProps} color={color} tt={'capitalize'}>

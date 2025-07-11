@@ -90,7 +90,7 @@ export const GroupsList = () => {
         enableEditing: false,
       },
     ],
-    [],
+    [organizationQuery.data?.data],
   );
 
   const options: MRT_TableOptions<GroupResponse> = useMemo(

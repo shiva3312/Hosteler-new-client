@@ -1,6 +1,8 @@
+//Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
-import { Primitive } from '../primitive.class';
+
 import { UserActionResponseZodSchema } from '../common.interface';
+import { Primitive } from '../primitive.class';
 
 export const PaymentRequestZodSchema = z.object({
   // reference fields
@@ -21,4 +23,6 @@ export const UpdatePaymentRequestZodSchema = PaymentRequestZodSchema.partial();
 
 export type PaymentRequest = z.infer<typeof PaymentRequestZodSchema>;
 export type PaymentResponse = z.infer<typeof PaymentResponseZodSchema>;
-export type UpdatePaymentRequest = z.infer<typeof UpdatePaymentRequestZodSchema>;
+export type UpdatePaymentRequest = z.infer<
+  typeof UpdatePaymentRequestZodSchema
+>;

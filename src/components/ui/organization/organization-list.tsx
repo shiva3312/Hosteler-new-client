@@ -92,7 +92,7 @@ export const OrganizationsList = () => {
         enableEditing: false,
       },
     ],
-    [],
+    [users?.data],
   );
 
   const options: MRT_TableOptions<OrganizationResponse> = useMemo(

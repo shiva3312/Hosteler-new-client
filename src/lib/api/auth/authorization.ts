@@ -1,4 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
+import { Link } from '@/components/layouts/dashboard-layout/sidebar-links';
+import { paths } from '@/config/paths';
 import { UserRole } from '@/data/feature';
 import { UserRequest, UserResponse } from '@/interfaces/user.interface';
 
@@ -17,9 +19,150 @@ export class AuthorizationService {
     [UserRole.AUDITOR]: 0,
   };
 
+  private static roleMap: Record<
+    string,
+    { access: 'public' | 'authenticated' | 'role-based'; roles?: UserRole[] }
+  > = {
+    [paths.app.dashboard.getHref()]: { access: 'authenticated' }, // Public link
+    [paths.app.organization.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN],
+    }, // Role-based link
+    [paths.app.unit.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
+    },
+    [paths.app.member.getHref()]: {
+      access: 'authenticated',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    [paths.app.mess.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    [paths.app.mess.mealItem.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    [paths.app.mess.menu.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    [paths.app.mess.menuCycle.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    [paths.app.mess.mealChart.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    [paths.app.mess.mealPreference.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    [paths.app.settings.getHref()]: { access: 'authenticated' }, // Authenticated-only link
+    [paths.app.systemSettings.user.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
+    },
+    [paths.app.systemSettings.group.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
+    },
+    [paths.app.systemSettings.feature.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
+    },
+    [paths.app.systemSettings.system.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
+    },
+
+    // for image
+    ['uploads/686e353d136a8f4d7c868d66/medium.jpeg']: {
+      access: 'public', // Public link for image
+    },
+  };
+
+  // Function to check if a user has access to a link
+  public static hasLinkAccess = (
+    link: string,
+    userRoles: UserRole[],
+    isAuthenticated: boolean,
+  ): boolean => {
+    if (!AuthorizationService.roleMap[link]) {
+      console.error(`Access configuration for link "${link}" is not defined`);
+      return false;
+    }
+
+    const accessInfo = AuthorizationService.roleMap[link];
+
+    // Handle public links
+    if (accessInfo.access === 'public') {
+      return true;
+    }
+
+    // Handle authenticated-only links
+    if (accessInfo.access === 'authenticated') {
+      return isAuthenticated;
+    }
+
+    // Handle role-based links
+    if (accessInfo.access === 'role-based') {
+      if (!userRoles || userRoles.length === 0) {
+        console.error('User roles are not defined');
+        return false;
+      }
+
+      // Get the highest role of the user
+      const highestRole = AuthorizationService.getHightest(userRoles);
+
+      // Check if the highest role is allowed for the link
+      return accessInfo.roles?.includes(highestRole) ?? false;
+    }
+
+    // Default to no access if the access type is unknown
+    return false;
+  };
+
+  // Function to filter links based on access
+  public static filterLinksByAuthorization = (
+    links: Link[],
+    userRoles: UserRole[],
+    isAuthenticated: boolean,
+  ): Link[] => {
+    return links
+      .map((link) => {
+        // Recursively filter subLinks
+        const filteredSubLinks = link.subLinks
+          ? AuthorizationService.filterLinksByAuthorization(
+              link.subLinks,
+              userRoles,
+              isAuthenticated,
+            )
+          : undefined;
+
+        // Check if the main link or any of its subLinks are accessible
+        const hasAccess =
+          AuthorizationService.hasLinkAccess(
+            link.link,
+            userRoles,
+            isAuthenticated,
+          ) ||
+          (filteredSubLinks && filteredSubLinks.length > 0);
+
+        if (hasAccess) {
+          return { ...link, subLinks: filteredSubLinks };
+        }
+
+        return null; // Exclude links without access
+      })
+      .filter(Boolean) as Link[];
+  };
+
   public static getHightest(roles: UserRole[]): UserRole {
     if (!roles || roles.length === 0) {
-      throw new Error('Logged user or roles are not defined');
+      return UserRole.USER;
     }
 
     const highestRole = roles.reduce((highest, current) => {
@@ -71,7 +214,18 @@ export class AuthorizationService {
     const highestRole = this.getHightest(roles); // Use highestRole instead of loggedUser.roles[0]
     return this.rolePriority[highestRole] > this.rolePriority[requiredRole];
   }
-
+  /**
+   * Checks if the logged user has a role lower than the required role.
+   * @param roles
+   * @param requiredRole
+   * @returns
+   *
+   * This method compares the highest role of the logged user with the required role.
+   * If the highest role is lower than the required role, it returns true.
+   * @example
+   * hasLowerRole([UserRole.USER, UserRole.GUEST], UserRole.ADMIN) => true;
+   * returns true if the highest role is USER or GUEST, and the required role is ADMIN.
+   */
   public static hasLowerRole(
     roles: UserRole[],
     requiredRole: UserRole,
@@ -85,6 +239,19 @@ export class AuthorizationService {
       `Highest role: ${this.rolePriority[highestRole]}, Required role: ${this.rolePriority[requiredRole]}`,
     );
     return this.rolePriority[highestRole] < this.rolePriority[requiredRole];
+  }
+
+  public static isNoneAdminRoles(roles: UserRole[]): boolean {
+    if (!roles || roles.length === 0) {
+      console.error('Roles are not defined');
+      return true;
+    }
+
+    // check highest role
+    const highestRole = this.getHightest(roles);
+
+    // check if the current role is lower than ADMIN ROle
+    return AuthorizationService.hasLowerRole([highestRole], UserRole.ADMIN);
   }
 
   public static authorizeUser(

@@ -8,7 +8,7 @@ type CustomFieldsetProps = {
 
 export function Legend(props: CustomFieldsetProps) {
   return (
-    <Text fw={600} size="sm" c="blue.7">
+    <Text fw={600} size="lg" c="">
       {props.children}
     </Text>
   );

@@ -1,7 +1,9 @@
+//Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
-import { Primitive } from '../primitive.class';
+
 import { UserActionResponseZodSchema } from '../common.interface';
 import { Unit } from '../enums';
+import { Primitive } from '../primitive.class';
 
 export const SupplyRequestZodSchema = z.object({
   name: Primitive.safeString(),

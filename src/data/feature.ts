@@ -121,7 +121,6 @@ export const ApplicationFeature: AppFeature[] = [
       UserRole.MASTER_ADMIN,
       UserRole.SUPER_ADMIN,
       UserRole.ADMIN,
-      ,
       UserRole.USER,
       UserRole.GUEST,
     ],
@@ -141,7 +140,6 @@ export const ApplicationFeature: AppFeature[] = [
       UserRole.MASTER_ADMIN,
       UserRole.SUPER_ADMIN,
       UserRole.ADMIN,
-      ,
       UserRole.USER,
       UserRole.GUEST,
     ],
@@ -157,12 +155,7 @@ export const ApplicationFeature: AppFeature[] = [
       GeneralAction.UPDATE,
       GeneralAction.DELETE,
     ],
-    requiredRole: [
-      UserRole.MASTER_ADMIN,
-      UserRole.SUPER_ADMIN,
-      UserRole.ADMIN,
-      ,
-    ],
+    requiredRole: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
   },
   {
     name: Feature.DASHBOARD,
@@ -175,11 +168,6 @@ export const ApplicationFeature: AppFeature[] = [
       GeneralAction.UPDATE,
       GeneralAction.DELETE,
     ],
-    requiredRole: [
-      UserRole.MASTER_ADMIN,
-      UserRole.SUPER_ADMIN,
-      UserRole.ADMIN,
-      ,
-    ],
+    requiredRole: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
   },
 ];

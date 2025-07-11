@@ -135,7 +135,7 @@ export const MealItemsList = () => {
         enableEditing: false,
       },
     ],
-    [],
+    [organizations?.data, units?.data],
   );
 
   const options: MRT_TableOptions<MealItemResponse> = useMemo(

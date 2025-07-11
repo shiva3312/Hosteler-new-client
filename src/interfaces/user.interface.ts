@@ -42,7 +42,7 @@ export const AddressZodSchema = z.object({
   addressLine1: Primitive.safeString('Address Line 1', [], 3, 35).nullish(),
   addressLine2: Primitive.safeString('Address Line 2', [], 3, 35).nullish(),
   city: Primitive.safeString('City', [], 3, 30).nullish(),
-  district: Primitive.safeString('District', [], 3, 30),
+  district: Primitive.safeString('District', [], 3, 30).nullish(),
   subDistrict: Primitive.safeString('Sub-District', [], 3, 30).nullish(),
   post: Primitive.safeString('Post', [], 3, 30).nullish(),
   state: Primitive.safeString('State', [], 3, 30).nullish(),
@@ -145,7 +145,6 @@ export const ProfileZodSchema = z.object({
   firstName: Primitive.safeString().nullish(),
   lastName: Primitive.safeString().nullish(),
   bio: Primitive.safeString().nullish(),
-  imageUrl: Primitive.safeString().nullish(),
   dob: Primitive.safeDate().nullish(),
   gender: z.nativeEnum(Gender).nullish(),
   religion: z.nativeEnum(Religion).nullish(),
@@ -162,6 +161,7 @@ export const ProfileZodSchema = z.object({
 export const UserRequestZodSchema = z.object({
   username: Primitive.safeString('Username', [], 3, 20),
   password: Primitive.safeString('Password', [], 3, 20).optional(),
+  imageUrl: Primitive.safeString().nullish(),
   roles: z.array(z.nativeEnum(UserRole)).default([UserRole.USER]), // Default to USER role, can be extended with more roles
   profile: ProfileZodSchema.nullish(),
   status: z.nativeEnum(UserStatus).default(UserStatus.Active), // Assuming status is a UserRole for simplicity,
@@ -208,6 +208,21 @@ export const UserResponseZodSchema = z
     // }),
   });
 
+export const ImageUploadRequestZodSchema = z.object({
+  mimetype: Primitive.safeString('Image').refine(
+    (mimetype) => ['image/jpeg', 'image/png', 'image/jpg'].includes(mimetype),
+    {
+      message: 'Invalid file type. Only JPEG and PNG are allowed.',
+    },
+  ),
+  size: z
+    .number()
+    .max(5 * 1024 * 1024, { message: 'File size must not exceed 5MB.' }), // Max size: 5MB
+  originalname: Primitive.safeString('Image', [], 1, 50),
+});
+export const ImageUploadResponseZodSchema = ImageUploadRequestZodSchema.extend({
+  meta: MetaZodSchema.optional(),
+});
 export const UpdateUserRequestZodSchema = UserRequestZodSchema.partial();
 
 /** Interface  */
@@ -220,3 +235,5 @@ export type UserResponse = z.infer<typeof UserResponseZodSchema>;
 export type UpdateUserRequest = Partial<
   z.infer<typeof UpdateUserRequestZodSchema>
 >;
+export type ImageUploadRequest = z.infer<typeof ImageUploadRequestZodSchema>;
+export type ImageUploadResponse = z.infer<typeof ImageUploadResponseZodSchema>;
