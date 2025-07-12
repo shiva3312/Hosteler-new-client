@@ -1,7 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
+import { Button } from '@mantine/core';
 import { Meta, StoryObj } from '@storybook/react';
-
-import { Button } from '@/components/ui/button';
 
 import { ConfirmationDialog } from './confirmation-dialog';
 

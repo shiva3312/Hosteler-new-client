@@ -4,7 +4,9 @@ import { useForm, zodResolver } from '@mantine/form';
 import { Link, useSearchParams } from 'react-router-dom';
 
 import { paths } from '@/config/paths';
+import { UserRole } from '@/data/feature';
 import { UserRegisterRequestZodSchema } from '@/interfaces/auth.interface';
+import { MealStatus, UserStatus } from '@/interfaces/enums';
 import { useRegister } from '@/lib/api/auth/auth';
 
 type RegisterFormProps = {
@@ -29,9 +31,13 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     <Box
       component="form"
       onSubmit={form.onSubmit((values) => {
-        register.mutate({
+        return register.mutate({
           username: values.username,
           password: values.password,
+          status: UserStatus.Inactive,
+          roles: [UserRole.USER],
+          mealStatus: MealStatus.Disabled,
+          isChangePassword: false,
         });
       })}
     >

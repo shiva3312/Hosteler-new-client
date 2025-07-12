@@ -119,8 +119,8 @@ export const useAuthorization = () => {
   // const user = undefined as any; // Replace with actual user fetching logic
 
   const { roles, permissions } = user?.data ?? {
-    roles: [],
-    permissions: [],
+    roles: [] as UserRole[],
+    permissions: [] as string[],
   };
 
   const checkAccess = React.useCallback(
@@ -133,7 +133,9 @@ export const useAuthorization = () => {
         REQUIRED_ROLE_OR_PERMISSION_FOR_ACTIONS[action];
 
       // Check if user has any of the required roles
-      const hasRequiredRole = requiredRole.some((role) => roles.includes(role));
+      const hasRequiredRole = requiredRole.some((role: UserRole) =>
+        roles.includes(role as UserRole),
+      );
 
       // Check if user has any of the required permissions
       const hasRequiredPermission = (requiredPermissions ?? []).some(

@@ -4,11 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode=dev",
     "build": "tsc && vite build --base=/",
+    "build:dev": "tsc && vite build --mode=dev",
+    "build:qa": "tsc && vite build --mode=qa",
+    "build:prod": "tsc && vite build --mode=prod",
+    "build:all": "npm run build:dev && npm run build:qa && npm run build:prod",
+    "serve:dev": "vite preview --mode=dev",
+    "serve:qa": "vite preview --mode=qa ",
+    "serve:prod": "vite preview --mode=prod",
+    "serve:all": "concurrently \"npm run serve:dev\" \"npm run serve:qa\" \"npm run serve:prod\"",
     "preview": "vite preview",
     "test": "vitest",
-    "test-e2e": "pm2 start \"yarn run-mock-server\" --name server && yarn playwright test",
+    "test-e2e": "pm2 start \"npm run run-mock-server\" --name server && npm run playwright test",
     "prepare": "husky",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --ignore-path .gitignore --cache --fix",
     "check-types": "tsc --project tsconfig.json --pretty --noEmit",
@@ -102,7 +110,9 @@
     "@typescript-eslint/parser": "^7.8.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
+    "concurrently": "^9.2.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
     "eslint": "8",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -132,6 +142,7 @@
     "prettier": "^3.2.5",
     "storybook": "^8.0.9",
     "tailwindcss": "^3.4.3",
+    "terser": "^5.43.1",
     "typescript": "^5.5.4",
     "vite": "^5.2.10",
     "vite-node": "^1.6.0",
@@ -143,8 +154,8 @@
   },
   "lint-staged": {
     "*.+(ts|tsx)": [
-      "yarn lint",
-      "bash -c 'yarn check-types'"
+      "npm run lint",
+      "bash -c 'npm run check-types'"
     ]
   }
 }

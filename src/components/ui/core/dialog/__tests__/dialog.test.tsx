@@ -1,7 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
+import { Button } from '@mantine/core';
 import * as React from 'react';
 
-import { Button } from '@/components/ui/button';
 import { useDisclosure } from '@/hooks/use-disclosure';
 import { rtlRender, screen, userEvent, waitFor } from '@/testing/test-utils';
 

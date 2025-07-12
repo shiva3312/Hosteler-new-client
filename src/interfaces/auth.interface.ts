@@ -1,5 +1,4 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Request } from 'express';
 import { z } from 'zod';
 
 import { Primitive } from './primitive.class';

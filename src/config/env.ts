@@ -1,22 +1,33 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
+
 import * as z from 'zod';
 
-import { Environment } from '@/data/feature';
+// Load environment variables from .env files
+import { Environment } from '../data/feature';
 
 const createEnv = () => {
   const EnvSchema = z.object({
-    API_URL: z.string(),
+    PORT: z
+      .string()
+      .regex(/^\d+$/, 'PORT must be a valid number')
+      .transform(Number)
+      .refine((port) => ['3000', '4000', '5000'].includes(port.toString()), {
+        message:
+          'PORT must be a valid port number among ["3000", "4000", "5000"]',
+      })
+      .default('3000'),
+    API_URL: z.string().default('http://localhost:9000'),
+    SECRET_KEY: z.string().default('secret-key'),
+    ENVIRONMENT: z.nativeEnum(Environment).default(Environment.DEV),
+    ALLOWED_HOSTS: z.string().optional(),
+    // Mock API settings
+    APP_MOCK_API_PORT: z.string().optional().default('8080'),
     ENABLE_API_MOCKING: z
       .string()
       .refine((s) => s === 'true' || s === 'false')
       .transform((s) => s === 'true')
       .optional(),
-    APP_URL: z.string().optional().default('http://localhost:9000'),
-    APP_MOCK_API_PORT: z.string().optional().default('8080'),
-    SECRET_KEY: z.string().default('secret-key'),
-    ENVIRONMENT: z.nativeEnum(Environment).default(Environment.DEV),
   });
-
   const envVars = Object.entries(import.meta.env).reduce<
     Record<string, string>
   >((acc, curr) => {
@@ -39,7 +50,8 @@ const createEnv = () => {
     );
   }
 
-  return parsedEnv.data;
+  const env = parsedEnv.data;
+  return env;
 };
 
 export const env = createEnv();

@@ -25,7 +25,7 @@ const ACTIONS = {
 export type ActionEnumType = (typeof ACTIONS)[keyof typeof ACTIONS];
 
 export enum Environment {
-  PROD = 'pro',
+  PROD = 'prod',
   DEV = 'dev',
   QA = 'qa',
 }
