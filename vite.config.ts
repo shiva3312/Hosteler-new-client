@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [react(), viteTsconfigPaths()],
   server: {
     port: 3000,
+    allowedHosts: ['dev.hostelease.in' , 'qa.hostelease.in'],
   },
   preview: {
     port: 3000,
