@@ -111,7 +111,7 @@ export function DropzoneButton(props: DropzoneButtonProps) {
           <Box style={{ pointerEvents: 'none' }}>
             {props.imageUrl || preview ? (
               <UserProfileImage
-                url={props.imageUrl ?? preview ?? undefined}
+                url={preview ?? props.imageUrl ?? undefined}
                 type={props.size ?? ImageSize.Medium}
                 modifyUrl={!preview}
               />

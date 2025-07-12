@@ -50,8 +50,8 @@ export const createAppRouter = (queryClient: QueryClient) =>
           <AppRoot />
         </ProtectedRoute>
       ),
-      ErrorBoundary:
-        env.ENVIRONMENT !== Environment.PROD ? AppRootErrorBoundary : undefined,
+      // ErrorBoundary:
+      //   env.ENVIRONMENT !== Environment.PROD ? AppRootErrorBoundary : undefined,
       children: [
         {
           path: paths.app.dashboard.path,

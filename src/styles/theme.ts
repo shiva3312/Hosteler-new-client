@@ -13,6 +13,7 @@ import {
   MultiSelect,
   PasswordInput,
 } from '@mantine/core';
+import { DateInput } from '@mantine/dates';
 
 export const theme = createTheme({
   cursorType: 'pointer',
@@ -24,6 +25,14 @@ export const theme = createTheme({
         variant: 'filled',
         size: 'xs',
         radius: 'sm',
+      },
+    }),
+    DateInput: DateInput.extend({
+      defaultProps: {
+        size: 'xs',
+        clearable: true,
+        valueFormat: 'DD/MM/YYYY',
+        placeholder: 'Select a date',
       },
     }),
     ActionIcon: ActionIcon.extend({

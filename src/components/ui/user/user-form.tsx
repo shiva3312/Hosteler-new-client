@@ -97,6 +97,8 @@ export const UserForm = ({ initialValues = {} }: Props) => {
     },
   });
 
+  console.log('Form Values:', form.values.profile?.dob);
+
   useEffect(() => {
     if (me?.data) {
       // form.resetDirty();

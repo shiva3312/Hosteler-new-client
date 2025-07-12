@@ -4,7 +4,6 @@ import { UserRole } from '@/data/feature';
 import { store } from '../store';
 export class SearchQuery {
   public static getContext() {
-    console.log('SearchQuery context', store.getState());
     return store.getState().context;
   }
 
@@ -61,7 +60,7 @@ export class SearchQuery {
       query.organization = { in: organizations };
     }
 
-    console.log('organizationSearchQuery', query);
+    // console.log('organizationSearchQuery', query);
     return query;
   }
 
@@ -94,7 +93,7 @@ export class SearchQuery {
       query._id = { in: args.units };
     }
 
-    console.log('unitSearchQuery', query);
+    // console.log('unitSearchQuery', query);
     return query;
   }
 
@@ -122,7 +121,7 @@ export class SearchQuery {
     if (args.unit) {
       query.unit = args.unit;
     }
-    console.log('groupSearchQuery', query);
+    // console.log('groupSearchQuery', query);
     return query;
   }
 

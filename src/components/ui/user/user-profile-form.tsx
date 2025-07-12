@@ -56,9 +56,18 @@ const UserProfileForm = ({ form }: { form: any }) => {
           <Grid.Col span={{ base: 6, md: 4 }}>
             <DateInput
               label="Date of Birth"
-              key={form.key('dob')}
+              key={form.key('profile.dob')}
+              valueFormat="DD/MM/YYYY"
+              clearable={true}
               placeholder="Select your date of birth"
-              {...form.getInputProps('profile.dob')}
+              value={
+                form.values.profile.dob
+                  ? new Date(form.values.profile.dob)
+                  : null
+              }
+              onChange={(date) =>
+                form.setFieldValue('profile.dob', date?.toISOString() ?? null)
+              }
             />
           </Grid.Col>
           <Grid.Col span={{ base: 6, md: 4 }}>
