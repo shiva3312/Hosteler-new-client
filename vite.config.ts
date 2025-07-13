@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
   console.log('========================================');
   console.log(`Running in ${VITE_APP_ENVIRONMENT} environment`);
   console.log(`API URL: ${VITE_APP_API_URL}`);
-  console.log(`Local: ${!VITE_APP_DEPLOYED}`);
+  console.log(`Local : ${!VITE_APP_DEPLOYED}`);
   console.log('========================================');
 
   const isProd = mode === 'prod' && VITE_APP_ENVIRONMENT === 'prod';

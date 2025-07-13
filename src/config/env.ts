@@ -24,7 +24,8 @@ const createEnv = () => {
       .string()
       .refine((s) => s === 'true' || s === 'false')
       .transform((s) => s === 'true')
-      .optional(),
+      .optional()
+      .default('false'),
     // Mock API settings
     APP_MOCK_API_PORT: z.string().optional().default('8080'),
     ENABLE_API_MOCKING: z
@@ -56,6 +57,9 @@ const createEnv = () => {
   }
 
   const env = parsedEnv.data;
+
+  console.log('Environment Variables:', env.DEPLOYED, typeof env.DEPLOYED);
+
   return env;
 };
 
