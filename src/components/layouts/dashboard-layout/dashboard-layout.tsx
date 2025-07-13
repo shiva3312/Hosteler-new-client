@@ -160,6 +160,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               onClick={toggle}
               hiddenFrom="sm"
               size="sm"
+              color="blue"
             />
             <span className="logo">HostelEase</span>
           </Box>
@@ -169,7 +170,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </Flex>
         </Flex>
       </AppShell.Header>
-      <AppShell.Navbar>
+      <AppShell.Navbar w={hasSublink ? 250 : 60}>
         <SidebarLinks
           mainLinks={authorizedLinks}
           active={active}
