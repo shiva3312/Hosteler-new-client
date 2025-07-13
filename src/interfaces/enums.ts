@@ -244,3 +244,9 @@ export enum ImageSize {
   Original = 'original', // original size
   Large = 'large', // extra large 1200x1200
 }
+
+export enum TempRequestType {
+  TempLink = 'TempLink',
+  LoginAttempt = 'LoginAttempt',
+  ResetPassword = 'ResetPassword',
+}
