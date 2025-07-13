@@ -97,8 +97,6 @@ export const UserForm = ({ initialValues = {} }: Props) => {
     },
   });
 
-  console.log('Form Values:', form.values.profile?.dob);
-
   useEffect(() => {
     if (me?.data) {
       // form.resetDirty();
@@ -160,7 +158,7 @@ export const UserForm = ({ initialValues = {} }: Props) => {
     // const dirtyFields = form.getDirty();
     // const dirtyValues = UtilHelper.removeUnchangedValues(values, dirtyFields);
 
-    // console.log('Dirty Values:', dirtyValues, dirtyFields);
+    // logger.info('Dirty Values:', dirtyValues, dirtyFields);
 
     if (isEditing) {
       // Update existing user
@@ -200,7 +198,7 @@ export const UserForm = ({ initialValues = {} }: Props) => {
               >
                 <DropzoneButton
                   userId={(form.values as UserResponse)?._id ?? newUser}
-                  size={ImageSize.Medium}
+                  size={ImageSize.Large}
                   onDropAutoUpload={isEditing}
                   triggerUpload={!isEditing && !!newUser}
                   imageUrl={form.values?.imageUrl ?? undefined}

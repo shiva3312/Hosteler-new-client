@@ -3,6 +3,7 @@ import Axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 import { useNotifications } from '@/components/ui/core/notifications';
 import { env } from '@/config/env';
+import logger from '@/config/log';
 import { paths } from '@/config/paths';
 import { LocalStorage } from '@/utils/local-storage.class';
 
@@ -64,7 +65,7 @@ api.interceptors.response.use(
 
     // 🧱 Generic handling for server errors
     if (status === 500) {
-      console.error('Server error:', data);
+      logger.error('Server error:', data);
     }
 
     return Promise.reject(error);

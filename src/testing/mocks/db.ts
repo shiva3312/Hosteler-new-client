@@ -2,6 +2,10 @@
 import { factory, primaryKey } from '@mswjs/data';
 import { nanoid } from 'nanoid';
 
+import { env } from '@/config/env';
+import logger from '@/config/log';
+import { Environment } from '@/data/feature';
+
 const models = {
   user: {
     id: primaryKey(nanoid),
@@ -56,7 +60,7 @@ export const loadDb = async () => {
         await writeFile(dbFilePath, JSON.stringify(emptyDB, null, 2));
         return emptyDB;
       } else {
-        console.error('Error loading mocked DB:', error);
+        logger.error('Error loading mocked DB:', error);
         return null;
       }
     }
@@ -79,7 +83,7 @@ export const storeDb = async (data: string) => {
 };
 
 export const persistDb = async (model: Model) => {
-  if (process.env.NODE_ENV === 'test') return;
+  if (env.ENVIRONMENT === Environment.DEV) return;
   const data = await loadDb();
   data[model] = db[model].getAll();
   await storeDb(JSON.stringify(data));

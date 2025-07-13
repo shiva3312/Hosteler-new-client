@@ -3,6 +3,7 @@ import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
+import logger from '@/config/log';
 import { GroupRequest, GroupResponse } from '@/interfaces/group.interface';
 import { useCreateGroup } from '@/lib/api/group/create-group';
 import { useUpdateGroup } from '@/lib/api/group/update-group';
@@ -60,14 +61,14 @@ export function GroupForm({ initialValues }: Props) {
       createGroupMutation.mutate({
         data: values as GroupRequest,
       });
-      console.log('Creating group with values:', values);
+      logger.info('Creating group with values:', values);
     } else {
       updateGroupMutation.mutate({
         groupId: (initialValues as GroupResponse)?._id,
         data: values,
       });
 
-      console.log('Updating group with values:', values);
+      logger.info('Updating group with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

@@ -3,6 +3,7 @@ import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
+import logger from '@/config/log';
 import { UserRole } from '@/data/feature';
 import {
   OrganizationRequest,
@@ -60,14 +61,14 @@ export function OrganizationForm({ initialValues }: Props) {
       createOrganizationMutation.mutate({
         data: values as OrganizationRequest,
       });
-      console.log('Creating organization with values:', values);
+      logger.info('Creating organization with values:', values);
     } else {
       updateOrganizationMutation.mutate({
         organizationId: (initialValues as OrganizationResponse)?._id,
         data: values,
       });
 
-      console.log('Updating organization with values:', values);
+      logger.info('Updating organization with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

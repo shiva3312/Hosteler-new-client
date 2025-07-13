@@ -6,7 +6,6 @@ import { RouterProvider } from 'react-router/dom';
 
 import { env } from '@/config/env';
 import { paths } from '@/config/paths';
-import { Environment } from '@/data/feature';
 import { ProtectedRoute } from '@/lib/api/auth/auth';
 import RoleProtectedRoute from '@/lib/api/auth/rolebased-protected-route';
 
@@ -50,8 +49,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
           <AppRoot />
         </ProtectedRoute>
       ),
-      // ErrorBoundary:
-      //   env.ENVIRONMENT !== Environment.PROD ? AppRootErrorBoundary : undefined,
+      ErrorBoundary: env.DEPLOYED ? AppRootErrorBoundary : undefined,
       children: [
         {
           path: paths.app.dashboard.path,

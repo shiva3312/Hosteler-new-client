@@ -19,7 +19,7 @@ export function UserCardImage() {
       />
       <UserProfileImage
         url={user?.data.imageUrl ?? ''}
-        type={ImageSize.Original}
+        type={ImageSize.Large}
         dicebearImage={{
           id: user?.data.username,
           gender: user?.data.profile?.gender ?? undefined,

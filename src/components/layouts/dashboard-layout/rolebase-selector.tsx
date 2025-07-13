@@ -3,6 +3,7 @@ import { Flex } from '@mantine/core';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { AsyncAutocompleteCombobox } from '@/components/ui/core/dropdown';
+import logger from '@/config/log';
 import { Action, Authorization } from '@/lib/api/auth/authorization-wrapper';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { useUnits } from '@/lib/api/unit/get-all-units';
@@ -21,7 +22,7 @@ function RoleBasedSelector() {
       selected.unit = null;
     }
 
-    console.log('setting selected:', selected);
+    logger.info('setting selected:', selected);
     dispatch(
       setContext({
         data: {
@@ -33,7 +34,7 @@ function RoleBasedSelector() {
     );
   };
 
-  console.log(unitResponse?.data, organizationResponse?.data);
+  logger.info(unitResponse?.data, organizationResponse?.data);
 
   const filteredUnit =
     unitResponse?.data.filter(
@@ -41,6 +42,10 @@ function RoleBasedSelector() {
     ) ?? [];
 
   // unit and organization dropdowns
+  // show only if device is not mobile
+  const isMobile = window.innerWidth < 768;
+  if (isMobile) return <></>;
+
   return (
     <Flex gap={'xs'}>
       <Authorization action={Action.organization_select}>

@@ -59,7 +59,7 @@ export class UtilHelper {
    * @example
    * const nestedObj = { a: { b: { c: 1 } }, d: 2 };
    * const flattened = UtilHelper.flattenObject(nestedObj);
-   * console.log(flattened); // { 'a.b.c': 1, d: 2 }
+   * logger.info(flattened); // { 'a.b.c': 1, d: 2 }
    */
   public static flattenObject(obj: any, prefix = ''): Record<string, any> {
     return Object.keys(obj).reduce(
@@ -114,19 +114,19 @@ export class UtilHelper {
    *
    * @example
    * const data = { a: '', b: null, c: 0, d: {} };
-   * console.log(UtilHelper.isAllFieldsFalsy(data)); // true
+   * logger.info(UtilHelper.isAllFieldsFalsy(data)); // true
    *
    * contain nested array of objects
    * const nestedData = { a: [{ x: '', y: null }, { z: 0 }], b: {} };
-   * console.log(UtilHelper.isAllFieldsFalsy(nestedData)); // true
+   * logger.info(UtilHelper.isAllFieldsFalsy(nestedData)); // true
    *
    * contain nested array of arrays
    * const nestedArray = { a: [[0, '', null], [false, undefined, []]], b: {} };
-   * console.log(UtilHelper.isAllFieldsFalsy(nestedArray)); // true
+   * logger.info(UtilHelper.isAllFieldsFalsy(nestedArray)); // true
    *
    * contain nested array of strings
    * const nestedStrings = { a: ['', '', ''], b: {} };
-   * console.log(UtilHelper.isAllFieldsFalsy(nestedStrings)); // true
+   * logger.info(UtilHelper.isAllFieldsFalsy(nestedStrings)); // true
    */
   public static isAllFieldsFalsy(obj: any): boolean {
     if (!_.isObject(obj)) {

@@ -5,6 +5,7 @@ import React from 'react';
 
 import { useNotifications } from '@/components/ui/core/notifications';
 // import { ChangePasswordRequestZodSchema } from '@/interfaces/auth.interface';
+import logger from '@/config/log';
 import { useChangePassword } from '@/lib/api/user/change-password';
 import { useMe } from '@/lib/api/user/get-me';
 
@@ -34,7 +35,7 @@ const ChangePasswordForm: React.FC = () => {
   });
 
   const handleSubmit = (values: typeof form.values) => {
-    console.log('Form submitted:', values);
+    logger.info('Form submitted:', values);
     // Add your API call or logic here
     changePasswordMutation.mutate({
       userId: me?.data._id ?? '', // Replace with actual user ID

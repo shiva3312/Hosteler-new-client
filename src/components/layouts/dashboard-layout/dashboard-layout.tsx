@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Anchor, AppShell, Box, Burger, Flex } from '@mantine/core';
+import { AppShell, Box, Burger, Flex } from '@mantine/core';
 import {
   IconUsers,
   IconGauge,
@@ -12,6 +12,7 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
+import logger from '@/config/log';
 import { paths } from '@/config/paths';
 import { useDisclosure } from '@/hooks/use-disclosure.js';
 import { AuthorizationService } from '@/lib/api/auth/authorization';
@@ -127,7 +128,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     isSuccess,
   );
 
-  console.log('Authorized Links:', authorizedLinks);
+  logger.info('Authorized Links:', authorizedLinks);
 
   const hasSublink = authorizedLinks?.find(
     (link) => link.label === active,
@@ -160,15 +161,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               hiddenFrom="sm"
               size="sm"
             />
-            <Anchor
-              href={paths.home.getHref()}
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = paths.app.dashboard.getHref();
-              }}
-            >
-              <span className="logo">HostelEase</span>
-            </Anchor>
+            <span className="logo">HostelEase</span>
           </Box>
           <Flex gap={'xl'} align={'center'}>
             <RoleBasedSelector />

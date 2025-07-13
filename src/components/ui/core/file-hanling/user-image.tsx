@@ -30,14 +30,19 @@ export const UserProfileImage: React.FC<UserProfileImageProps> = ({
 
   const size =
     type === ImageSize.Icon
-      ? 40
+      ? 30
       : type === ImageSize.Small
-        ? 100
+        ? 45
         : type === ImageSize.Medium
-          ? 150
-          : type === ImageSize.Original
-            ? 200
-            : 200; // Default size for Avatar
+          ? 100
+          : type === ImageSize.Large
+            ? 150
+            : type === ImageSize.Original
+              ? 200
+              : 200; // Default size for Avatar
+
+  //NOTE: No large size image in backend, so we adjust the type for URL modification
+  type = type === ImageSize.Large ? ImageSize.Original : type; // Adjust type for URL modification
 
   const imageUrl = modifyUrl
     ? `${env.API_URL}${url?.replace(ImageSize.Medium, type)}`

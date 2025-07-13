@@ -40,8 +40,8 @@ function UserProfile() {
       >
         <Menu.Target>
           <UnstyledButton>
-            <Group gap={7}>
-              <Text fw={800} size="md" lh={1} mr={3}>
+            <Group gap={7} wrap="nowrap" align="center">
+              <Text fw={600} size="md" lh={1} mr={3} tt={'capitalize'}>
                 {user.name}
               </Text>
               <UserProfileImage

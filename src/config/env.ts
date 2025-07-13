@@ -20,6 +20,11 @@ const createEnv = () => {
     SECRET_KEY: z.string().default('secret-key'),
     ENVIRONMENT: z.nativeEnum(Environment).default(Environment.DEV),
     ALLOWED_HOSTS: z.string().optional(),
+    DEPLOYED: z
+      .string()
+      .refine((s) => s === 'true' || s === 'false')
+      .transform((s) => s === 'true')
+      .optional(),
     // Mock API settings
     APP_MOCK_API_PORT: z.string().optional().default('8080'),
     ENABLE_API_MOCKING: z

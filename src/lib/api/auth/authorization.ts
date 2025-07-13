@@ -1,5 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { Link } from '@/components/layouts/dashboard-layout/sidebar-links';
+import logger from '@/config/log';
 import { paths } from '@/config/paths';
 import { UserRole } from '@/data/feature';
 import { UserRequest, UserResponse } from '@/interfaces/user.interface';
@@ -91,7 +92,7 @@ export class AuthorizationService {
     isAuthenticated: boolean,
   ): boolean => {
     if (!AuthorizationService.roleMap[link]) {
-      console.error(`Access configuration for link "${link}" is not defined`);
+      logger.error(`Access configuration for link "${link}" is not defined`);
       return false;
     }
 
@@ -110,7 +111,7 @@ export class AuthorizationService {
     // Handle role-based links
     if (accessInfo.access === 'role-based') {
       if (!userRoles || userRoles.length === 0) {
-        console.error('User roles are not defined');
+        logger.error('User roles are not defined');
         return false;
       }
 
@@ -179,7 +180,7 @@ export class AuthorizationService {
     requiredRole: UserRole,
   ): boolean {
     if (!roles || roles.length === 0) {
-      console.error('Logged user or roles are not defined');
+      logger.error('Logged user or roles are not defined');
       return false;
     }
 
@@ -194,7 +195,7 @@ export class AuthorizationService {
     requiredRole: UserRole,
   ): boolean {
     if (!roles || roles.length === 0) {
-      console.error('Logged user or roles are not defined');
+      logger.error('Logged user or roles are not defined');
       return false;
     }
 
@@ -207,7 +208,7 @@ export class AuthorizationService {
     requiredRole: UserRole,
   ): boolean {
     if (!roles || roles.length === 0) {
-      console.error('Logged user or roles are not defined');
+      logger.error('Logged user or roles are not defined');
       return false;
     }
 
@@ -231,11 +232,11 @@ export class AuthorizationService {
     requiredRole: UserRole,
   ): boolean {
     if (!roles || roles.length === 0) {
-      console.error('Logged user or roles are not defined');
+      logger.error('Logged user or roles are not defined');
       return false;
     }
     const highestRole = this.getHightest(roles); // Use highestRole instead of loggedUser.roles[0]
-    console.log(
+    logger.info(
       `Highest role: ${this.rolePriority[highestRole]}, Required role: ${this.rolePriority[requiredRole]}`,
     );
     return this.rolePriority[highestRole] < this.rolePriority[requiredRole];
@@ -243,7 +244,7 @@ export class AuthorizationService {
 
   public static isNoneAdminRoles(roles: UserRole[]): boolean {
     if (!roles || roles.length === 0) {
-      console.error('Roles are not defined');
+      logger.error('Roles are not defined');
       return true;
     }
 
@@ -258,7 +259,7 @@ export class AuthorizationService {
     loggedUser: UserResponse,
     resource: string,
   ): boolean {
-    console.log(
+    logger.info(
       `Authorizing loggedUser ${loggedUser?._id} for resource ${resource}`,
     );
     return true;
@@ -267,7 +268,7 @@ export class AuthorizationService {
   public static getUserPermissions(loggedUser: UserResponse): string[] {
     // This should return a list of permissions for the loggedUser
     // For now, returning an empty array
-    console.log(`Fetching permissions for loggedUser ${loggedUser?._id}`);
+    logger.info(`Fetching permissions for loggedUser ${loggedUser?._id}`);
     return [];
   }
 

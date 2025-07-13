@@ -9,6 +9,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { MainErrorFallback } from '@/components/errors/main';
 import { Notifications } from '@/components/ui/core/notifications';
 import { Spinner } from '@/components/ui/core/spinner';
+import { env } from '@/config/env';
 import { queryConfig } from '@/lib/api/react-query';
 
 import { theme } from '../styles/theme';
@@ -37,7 +38,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
-            {import.meta.env.DEV && <ReactQueryDevtools />}
+            {!env.DEPLOYED && <ReactQueryDevtools />}
             <MantineProvider theme={theme}>
               <Notifications />
               {/* <AuthLoader

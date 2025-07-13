@@ -3,6 +3,7 @@ import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
+import logger from '@/config/log';
 import { MenuRequest, MenuResponse } from '@/interfaces/mess/menu.interface';
 import { useCreateMenu } from '@/lib/api/mess/menu/create-menu';
 import { useUpdateMenu } from '@/lib/api/mess/menu/update-menu';
@@ -48,14 +49,14 @@ export function MenuForm({ initialValues }: Props) {
       createMenuMutation.mutate({
         data: values as MenuRequest,
       });
-      console.log('Creating menu with values:', values);
+      logger.info('Creating menu with values:', values);
     } else {
       updateMenuMutation.mutate({
         menuId: (initialValues as MenuResponse)?._id,
         data: values as MenuRequest,
       });
 
-      console.log('Updating menu with values:', values);
+      logger.info('Updating menu with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

@@ -3,6 +3,7 @@ import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
+import logger from '@/config/log';
 import { MessRequest, MessResponse } from '@/interfaces/mess/mess.interface';
 import { useCreateMess } from '@/lib/api/mess/mess/create-mess';
 import { useUpdateMess } from '@/lib/api/mess/mess/update-mess';
@@ -60,14 +61,14 @@ export function MessForm({ initialValues }: Props) {
       createMessMutation.mutate({
         data: values as MessRequest,
       });
-      console.log('Creating mess with values:', values);
+      logger.info('Creating mess with values:', values);
     } else {
       updateMessMutation.mutate({
         messId: (initialValues as MessResponse)?._id,
         data: values,
       });
 
-      console.log('Updating mess with values:', values);
+      logger.info('Updating mess with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

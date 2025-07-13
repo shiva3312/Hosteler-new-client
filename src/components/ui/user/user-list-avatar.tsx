@@ -17,7 +17,7 @@ function UserListAvatar({ user }: UserProfileImageProps) {
     <Group gap="sm">
       <UserProfileImage
         url={user.imageUrl ?? ''}
-        type={ImageSize.Icon}
+        type={ImageSize.Small}
         dicebearImage={{
           id: user.username,
           gender: user.profile?.gender ?? undefined,

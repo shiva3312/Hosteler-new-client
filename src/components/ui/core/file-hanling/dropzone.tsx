@@ -4,6 +4,7 @@ import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import logger from '@/config/log';
 import { ImageSize } from '@/interfaces/enums';
 import { ImageUploadRequestZodSchema } from '@/interfaces/user.interface';
 import { useUploadImage } from '@/lib/api/user/upload-image';
@@ -86,7 +87,7 @@ export function DropzoneButton(props: DropzoneButtonProps) {
       // Store the file reference
       fileReference.current = file;
     } catch (error: any) {
-      console.error('Validation Error:', error.errors);
+      logger.error('Validation Error:', error.errors);
       alert(error.errors?.[0]?.message || 'Invalid file');
       return;
     }
@@ -112,7 +113,7 @@ export function DropzoneButton(props: DropzoneButtonProps) {
             {props.imageUrl || preview ? (
               <UserProfileImage
                 url={preview ?? props.imageUrl ?? undefined}
-                type={props.size ?? ImageSize.Medium}
+                type={props.size ?? ImageSize.Large}
                 modifyUrl={!preview}
               />
             ) : (

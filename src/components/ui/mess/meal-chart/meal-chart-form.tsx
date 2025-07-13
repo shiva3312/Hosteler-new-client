@@ -3,6 +3,7 @@ import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
+import logger from '@/config/log';
 import {
   MealChartRequest,
   MealChartResponse,
@@ -53,14 +54,14 @@ export function MealChartForm({ initialValues }: Props) {
       createMealChartMutation.mutate({
         data: values as MealChartRequest,
       });
-      console.log('Creating mealChart with values:', values);
+      logger.info('Creating mealChart with values:', values);
     } else {
       updateMealChartMutation.mutate({
         mealChartId: (initialValues as MealChartResponse)?._id,
         data: values as Partial<MealChartRequest>,
       });
 
-      console.log('Updating mealChart with values:', values);
+      logger.info('Updating mealChart with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

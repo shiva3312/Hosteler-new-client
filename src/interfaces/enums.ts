@@ -242,5 +242,5 @@ export enum ImageSize {
   Small = 'small', // medium 300x300
   Medium = 'medium', // large 600x600
   Original = 'original', // original size
-  // Large = 'large', // extra large 1200x1200
+  Large = 'large', // extra large 1200x1200
 }

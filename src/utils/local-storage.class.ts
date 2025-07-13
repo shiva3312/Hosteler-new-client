@@ -1,5 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { env } from '@/config/env';
+import logger from '@/config/log';
 import { Environment } from '@/data/feature';
 
 import { AESCipher } from './encryption.class';
@@ -37,7 +38,7 @@ export class LocalStorage {
       }
       localStorage.setItem(key, dataString);
     } catch (error) {
-      console.error('Error saving to localStorage:', error);
+      logger.error('Error saving to localStorage:', error);
     }
   }
 
@@ -61,7 +62,7 @@ export class LocalStorage {
       }
       return null;
     } catch (error) {
-      console.error('Error reading localStorage key:', error);
+      logger.error('Error reading localStorage key:', error);
       return null;
     }
   }
@@ -73,7 +74,7 @@ export class LocalStorage {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.error('Error removing from localStorage:', error);
+      logger.error('Error removing from localStorage:', error);
     }
   }
 
@@ -94,7 +95,7 @@ export class LocalStorage {
         });
       }
     } catch (error) {
-      console.error('Error clearing keys from localStorage:', error);
+      logger.error('Error clearing keys from localStorage:', error);
     }
   }
 
@@ -115,7 +116,7 @@ export class LocalStorage {
       }
       return null;
     } catch (error) {
-      console.error('Error reading lastUpdated from localStorage:', error);
+      logger.error('Error reading lastUpdated from localStorage:', error);
       return null;
     }
   }
