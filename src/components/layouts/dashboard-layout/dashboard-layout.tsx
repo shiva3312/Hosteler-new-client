@@ -63,7 +63,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         {
           link: paths.app.mess.mealItem.getHref(),
           icon: IconToolsKitchen3,
-          label: 'Meal Item',
+          label: 'Item',
         },
         {
           link: paths.app.mess.menu.getHref(),
@@ -73,17 +73,17 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         {
           link: paths.app.mess.menuCycle.getHref(),
           icon: IconToolsKitchen3,
-          label: 'Menu Cycle',
+          label: 'Cycle',
         },
         {
           link: paths.app.mess.mealChart.getHref(),
           icon: IconToolsKitchen3,
-          label: 'Meal Chart',
+          label: 'Chart',
         },
         {
           link: paths.app.mess.mealPreference.getHref(),
           icon: IconToolsKitchen3,
-          label: 'Meal Preference',
+          label: 'Preference',
         },
       ],
     },

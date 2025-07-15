@@ -273,36 +273,36 @@ export const UserForm = ({ initialValues = {} }: Props) => {
               )}
             </Grid>
 
-            {!isEditing && (
-              <MultiSelect
-                mt={'md'}
-                label="Select Roles"
-                key={form.key('roles')}
-                description="Select one or more roles for the user"
-                placeholder="Pick value"
-                data={userRoles.filter((role) => {
-                  const x = AuthorizationService.hasHigherRole(
-                    me?.data?.roles ?? [],
-                    role.value as UserRole,
-                  );
+            {/* {!isEditing && ( */}
+            <MultiSelect
+              mt={'md'}
+              label="Select Roles"
+              key={form.key('roles')}
+              description="Select one or more roles for the user"
+              placeholder="Pick value"
+              data={userRoles.filter((role) => {
+                const x = AuthorizationService.hasHigherRole(
+                  me?.data?.roles ?? [],
+                  role.value as UserRole,
+                );
 
-                  return x;
-                })}
-                {...form.getInputProps('roles')}
-                onChange={(value) => {
-                  form.setFieldValue('roles', value as UserRole[]);
+                return x;
+              })}
+              {...form.getInputProps('roles')}
+              onChange={(value) => {
+                form.setFieldValue('roles', value as UserRole[]);
 
-                  if (value.includes(UserRole.MASTER_ADMIN)) {
-                    form.setFieldValue('organization', null);
-                    form.setFieldValue('unit', null);
-                  }
-                  if (value.includes(UserRole.SUPER_ADMIN)) {
-                    form.setFieldValue('unit', null);
-                  }
-                }}
-                searchable
-              />
-            )}
+                if (value.includes(UserRole.MASTER_ADMIN)) {
+                  form.setFieldValue('organization', null);
+                  form.setFieldValue('unit', null);
+                }
+                if (value.includes(UserRole.SUPER_ADMIN)) {
+                  form.setFieldValue('unit', null);
+                }
+              }}
+              searchable
+            />
+            {/* )} */}
 
             <Select
               required={false}

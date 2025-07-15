@@ -11,10 +11,13 @@ import { useMemo } from 'react';
 
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
+import { UserRole } from '@/data/feature';
 import { MessResponse } from '@/interfaces/mess/mess.interface';
+import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { SearchQuery } from '@/lib/api/search-query';
 import { useUnits } from '@/lib/api/unit/get-all-units';
+import { useMe } from '@/lib/api/user/get-me';
 import { useMesses } from '@lib/api/mess/mess/get-all-messes';
 
 import { DeleteMess } from './mess-delete';
@@ -34,6 +37,8 @@ export const MessesList = () => {
     params: SearchQuery.unitSearchQuery({}),
     enabled: isSuccess && messes?.data.length > 0,
   });
+
+  const { data: me } = useMe();
 
   const columns = useMemo<MRT_ColumnDef<MessResponse>[]>(
     () => [
@@ -153,6 +158,14 @@ export const MessesList = () => {
       ),
 
       renderTopToolbarCustomActions: () => {
+        // show add button only to master and admin
+        const showAddButton = AuthorizationService.hasEqualOrHigherRole(
+          me?.data?.roles ?? [],
+          UserRole.SUPER_ADMIN,
+        );
+
+        if (!showAddButton) return undefined;
+
         return (
           <GenericDrawer title="Create User" trigger={<Button>Add New</Button>}>
             <MessForm />
@@ -160,7 +173,7 @@ export const MessesList = () => {
         );
       },
     }),
-    [columns, messes?.data],
+    [columns, me?.data?.roles, messes?.data],
   );
 
   const state: Partial<MRT_TableState<MessResponse>> = useMemo(

@@ -11,6 +11,8 @@ import { Primitive } from '../primitive.class';
 export const MessRequestZodSchema = z.object({
   name: Primitive.safeString('Name', [], 2, 20).nullish(),
   status: z.nativeEnum(MessStatus).default(MessStatus.Open), // status of the menu cycle
+  description: Primitive.safeString('Description').nullish(),
+  image: Primitive.safeString('Image URL').optional(),
 
   // block user to changes status before some time of chart prepration
   blockUserToChangeMealStatusBefore: Primitive.safeNumber(
@@ -22,32 +24,40 @@ export const MessRequestZodSchema = z.object({
     .object({
       startTime: Primitive.safeTime('Breakfast start time'),
       endTime: Primitive.safeTime('Breakfast end time'),
+      isActive: z.boolean().default(true), // whether breakfast is active or not
     })
-    .default({ startTime: '9:00', endTime: '11:00' }), // time when breakfast is served
+    .default({ startTime: '09:00', endTime: '11:00' }), // time when breakfast is served
   lunchTime: z
     .object({
       startTime: Primitive.safeTime('Lunch start time'),
       endTime: Primitive.safeTime('Lunch end time'),
+      isActive: z.boolean().default(true),
     })
     .default({ startTime: '13:00', endTime: '15:00' }),
   dinnerTime: z
     .object({
       startTime: Primitive.safeTime('Dinner start time'),
       endTime: Primitive.safeTime('Dinner end time'),
+      isActive: z.boolean().default(true),
     })
     .default({ startTime: '17:00', endTime: '18:00' }),
   snackTime: z
     .object({
       startTime: Primitive.safeTime('Snack start time'),
       endTime: Primitive.safeTime('Snack end time'),
+      isActive: z.boolean().default(true),
     })
     .default({ startTime: '20:00', endTime: '22:00' }),
 
-  // // chart time when the meal is available
-  // breakFastChartTime: Primitive.safeTime('Breakfast chart start time'), // time when breakfast chart is available
-  // lunchChartTime: Primitive.safeTime('Lunch chart start time'),
-  // dinnerChartTime: Primitive.safeTime('Dinner chart start time'),
-  // snackChartTime: Primitive.safeTime('Snack chart start time'),
+  // chart time when the meal is available
+  breakFastChartTime: Primitive.safeTime('Breakfast chart start time').default(
+    '08:00',
+  ),
+  lunchChartTime: Primitive.safeTime('Lunch chart start time').default('12:00'),
+  dinnerChartTime: Primitive.safeTime('Dinner chart start time').default(
+    '16:00',
+  ),
+  snackChartTime: Primitive.safeTime('Snack chart start time').default('19:00'),
 
   // restriction before in minutes
   turnOnDinnerBefore: Primitive.safeNumber('Alert before in minutes').default(
@@ -95,8 +105,8 @@ export const MessRequestZodSchema = z.object({
   extraMealCount: Primitive.safeNumber('Extra Meal Count', 0).default(0), // number of extra meals requested
 
   // reference fields
-  unit: Primitive.safeID(),
-  organization: Primitive.safeID(),
+  unit: Primitive.safeID().nullish(),
+  organization: Primitive.safeID().nullish(),
 });
 
 export const MessResponseZodSchema = z

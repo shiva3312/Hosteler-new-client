@@ -13,12 +13,19 @@ import {
   MultiSelect,
   PasswordInput,
 } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { DateInput, TimeInput } from '@mantine/dates';
 
 export const theme = createTheme({
   cursorType: 'pointer',
   components: {
     // Define your extended components with default props here
+    TimeInput: TimeInput.extend({
+      defaultProps: {
+        size: 'xs',
+        formTarget: 'time',
+        placeholder: 'Select a time',
+      },
+    }),
     Button: Button.extend({
       defaultProps: {
         // color: '#00ad73',
