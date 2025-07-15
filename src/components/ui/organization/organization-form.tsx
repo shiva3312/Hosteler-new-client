@@ -85,7 +85,6 @@ export function OrganizationForm({ initialValues }: Props) {
         label="Description"
         placeholder="Enter description"
         {...form.getInputProps('description')}
-        required
       />
       <AsyncAutocompleteCombobox
         label="Super Admin"

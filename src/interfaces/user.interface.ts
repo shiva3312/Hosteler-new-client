@@ -39,8 +39,8 @@ export const ContactZodSchema = z.object({
 });
 
 export const AddressZodSchema = z.object({
-  addressLine1: Primitive.safeString('Address Line 1', [], 3, 35).nullish(),
-  addressLine2: Primitive.safeString('Address Line 2', [], 3, 35).nullish(),
+  addressLine1: Primitive.safeString('Address Line 1', [], 3, 50).nullish(),
+  addressLine2: Primitive.safeString('Address Line 2', [], 3, 50).nullish(),
   city: Primitive.safeString('City', [], 3, 30).nullish(),
   district: Primitive.safeString('District', [], 3, 30).nullish(),
   subDistrict: Primitive.safeString('Sub-District', [], 3, 30).nullish(),

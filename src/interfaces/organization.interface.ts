@@ -7,7 +7,7 @@ import { AddressZodSchema, ContactZodSchema } from './user.interface';
 
 export const OrganizationRequestZodSchema = z.object({
   name: Primitive.safeString('Organization name', [], 3, 20),
-  description: Primitive.safeString(),
+  description: Primitive.safeString().nullish(),
   contacts: ContactZodSchema.nullish(),
   address: AddressZodSchema.nullish(),
 

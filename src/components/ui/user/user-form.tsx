@@ -226,97 +226,94 @@ export const UserForm = ({ initialValues = {} }: Props) => {
                 )}
               </Grid.Col>
             </Grid>
+
+            <Divider label="Access Details" labelPosition="center" mt="sm" />
+
+            <Grid>
+              {me?.data.roles?.includes(UserRole.MASTER_ADMIN) && (
+                <Grid.Col>
+                  <AsyncAutocompleteCombobox
+                    label="Organization"
+                    key={form.key('organization')}
+                    placeholder="Select organization"
+                    data={
+                      organizations?.data?.map((org) => ({
+                        label: org.name,
+                        value: org._id,
+                      })) || []
+                    }
+                    selected={form.values.organization ?? ''}
+                    onChange={(value) => {
+                      form.setFieldValue('organization', value);
+                      form.setFieldValue('unit', null);
+                    }}
+                    loading={orgLoading}
+                  />
+                </Grid.Col>
+              )}
+              {me?.data.roles?.some((role) =>
+                [UserRole.SUPER_ADMIN, UserRole.MASTER_ADMIN].includes(role),
+              ) && (
+                <Grid.Col>
+                  <AsyncAutocompleteCombobox
+                    label="Unit"
+                    key={form.key('unit')}
+                    placeholder="Select Unit"
+                    data={
+                      units?.data?.map((unit) => ({
+                        label: unit.name,
+                        value: unit._id,
+                      })) || []
+                    }
+                    selected={form.values.unit ?? ''}
+                    onChange={(value) => form.setFieldValue('unit', value)}
+                    loading={unitLoading}
+                  />
+                </Grid.Col>
+              )}
+            </Grid>
+
             {!isEditing && (
-              <>
-                <Divider
-                  label="Access Details"
-                  labelPosition="center"
-                  mt="sm"
-                />
+              <MultiSelect
+                mt={'md'}
+                label="Select Roles"
+                key={form.key('roles')}
+                description="Select one or more roles for the user"
+                placeholder="Pick value"
+                data={userRoles.filter((role) => {
+                  const x = AuthorizationService.hasHigherRole(
+                    me?.data?.roles ?? [],
+                    role.value as UserRole,
+                  );
 
-                <Grid>
-                  {me?.data.roles?.includes(UserRole.MASTER_ADMIN) && (
-                    <Grid.Col>
-                      <AsyncAutocompleteCombobox
-                        label="Organization"
-                        key={form.key('organization')}
-                        placeholder="Select organization"
-                        data={
-                          organizations?.data?.map((org) => ({
-                            label: org.name,
-                            value: org._id,
-                          })) || []
-                        }
-                        selected={form.values.organization ?? ''}
-                        onChange={(value) => {
-                          form.setFieldValue('organization', value);
-                          form.setFieldValue('unit', null);
-                        }}
-                        loading={orgLoading}
-                      />
-                    </Grid.Col>
-                  )}
-                  {me?.data.roles?.some((role) =>
-                    [UserRole.SUPER_ADMIN, UserRole.MASTER_ADMIN].includes(
-                      role,
-                    ),
-                  ) && (
-                    <Grid.Col>
-                      <AsyncAutocompleteCombobox
-                        label="Unit"
-                        key={form.key('unit')}
-                        placeholder="Select Unit"
-                        data={
-                          units?.data?.map((unit) => ({
-                            label: unit.name,
-                            value: unit._id,
-                          })) || []
-                        }
-                        selected={form.values.unit ?? ''}
-                        onChange={(value) => form.setFieldValue('unit', value)}
-                        loading={unitLoading}
-                      />
-                    </Grid.Col>
-                  )}
-                </Grid>
-              </>
+                  return x;
+                })}
+                {...form.getInputProps('roles')}
+                onChange={(value) => {
+                  form.setFieldValue('roles', value as UserRole[]);
+
+                  if (value.includes(UserRole.MASTER_ADMIN)) {
+                    form.setFieldValue('organization', null);
+                    form.setFieldValue('unit', null);
+                  }
+                  if (value.includes(UserRole.SUPER_ADMIN)) {
+                    form.setFieldValue('unit', null);
+                  }
+                }}
+                searchable
+              />
             )}
-
-            <MultiSelect
-              mt={'md'}
-              label="Select Roles"
-              key={form.key('roles')}
-              description="Select one or more roles for the user"
-              placeholder="Pick value"
-              data={userRoles.filter((role) => {
-                const x = AuthorizationService.hasHigherRole(
-                  me?.data?.roles ?? [],
-                  role.value as UserRole,
-                );
-
-                return x;
-              })}
-              {...form.getInputProps('roles')}
-              onChange={(value) => {
-                form.setFieldValue('roles', value as UserRole[]);
-
-                if (value.includes(UserRole.MASTER_ADMIN)) {
-                  form.setFieldValue('organization', null);
-                  form.setFieldValue('unit', null);
-                }
-                if (value.includes(UserRole.SUPER_ADMIN)) {
-                  form.setFieldValue('unit', null);
-                }
-              }}
-              searchable
-            />
 
             <Select
               required={false}
               label="Meal Status"
               key={form.key('mealStatus')}
               placeholder="Select meal status"
-              data={mealStatus}
+              data={
+                isNoneAdminRoles
+                  ? mealStatus.filter((m) => m.value !== MealStatus.Disabled)
+                  : mealStatus
+              }
               {...form.getInputProps('mealStatus')}
             />
           </Stack>
