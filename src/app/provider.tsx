@@ -1,5 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as React from 'react';
@@ -13,6 +14,7 @@ import { env } from '@/config/env';
 import { queryConfig } from '@/lib/api/react-query';
 
 import { theme } from '../styles/theme';
+
 import '@mantine/core/styles.css';
 
 type AppProviderProps = {
@@ -41,15 +43,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
             {!env.DEPLOYED && <ReactQueryDevtools />}
             <MantineProvider theme={theme}>
               <Notifications />
-              {/* <AuthLoader
+              <ModalsProvider>
+                {/* <AuthLoader
                 renderLoading={() => (
                   <div className="flex h-screen w-screen items-center justify-center">
                     <Spinner size="xl" />
                   </div>
                 )}
               > */}
-              {children}
-              {/* </AuthLoader> */}
+                {children}
+                {/* </AuthLoader> */}
+              </ModalsProvider>
             </MantineProvider>
           </QueryClientProvider>
         </HelmetProvider>

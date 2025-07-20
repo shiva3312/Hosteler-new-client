@@ -5,16 +5,18 @@ import {
   MetaZodSchema,
   UserActionResponseZodSchema,
 } from '../common.interface';
+import { MealType, MenuType } from '../enums';
 import { Primitive } from '../primitive.class';
 
 export const MealPreferenceRequestZodSchema = z.object({
-  quantity: Primitive.safeNumber('Quantity', 0).optional(),
-  interest: Primitive.safeNumber('Interest', 0).default(0), // rating given by the user for this meal preference, 0 means not rated
-  priority: Primitive.safeNumber('Priority', 0).default(0), // priority of the meal preference, lower number means higher priority
-  rating: Primitive.safeNumber('Rating', 0).default(0), // rating given by the user for this meal preference, 0 means not rated
-
+  quantity: Primitive.safeNumber('Quantity', 0).nullish(),
+  interest: Primitive.safeNumber('Interest', 0).nullish(), // rating given by the user for this meal preference, 0 means not rated
+  priority: Primitive.safeNumber('Priority', 0).nullish(), // priority of the meal preference, lower number means higher priority
+  rating: Primitive.safeNumber('Rating', 0).nullish(), // rating given by the user for this meal preference, 0 means not rated
+  mealType: z.nativeEnum(MealType), // type of the menu, e.g. vegetarian, non-vegetarian, vegan, etc.
+  menuType: z.nativeEnum(MenuType), // type of the menu, e.g. breakfast, lunch, dinner, snack, etc.
   // reference fields
-  meal: Primitive.safeID().nullish(), // id of the meal item
+  mealItem: Primitive.safeID().nullish(), // id of the meal item
   user: Primitive.safeID().nullish(), // array of user ids
   unit: Primitive.safeID().nullish(), // array of unit ids
   organization: Primitive.safeID().nullish(), // organization id

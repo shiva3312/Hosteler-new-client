@@ -130,7 +130,7 @@ export const PreferencesZodSchema = z.object({
     2,
     20,
   ).nullish(),
-  MealType: z.nativeEnum(MealType).nullish(),
+  mealType: z.nativeEnum(MealType).nullish(),
 });
 
 export const TechInfoZodSchema = z.object({

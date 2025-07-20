@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Button, Drawer, UnstyledButton } from '@mantine/core';
+import { Box, Button, Drawer, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { ReactNode } from 'react';
 
@@ -32,8 +32,11 @@ export function GenericDrawer({
         size={size}
         position={position}
         // closeOnClickOutside={false}
+        // p={'sm'}
+        // withinPortal={false}
+        // withOverlay={false}
       >
-        {children}
+        <Box p={'sm'}>{children}</Box>
       </Drawer>
 
       {trigger ? (

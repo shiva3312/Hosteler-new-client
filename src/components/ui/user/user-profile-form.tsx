@@ -85,10 +85,10 @@ const UserProfileForm = ({ form }: { form: any }) => {
             <Select
               required={false}
               label="Meal Preference"
-              key={form.key('profile.mealType')}
+              key={form.key('profile.preferences.mealType')}
               placeholder="Select your meal preference"
               data={foodOptions}
-              {...form.getInputProps('profile.mealType')}
+              {...form.getInputProps('profile.preferences.mealType')}
             />
           </Grid.Col>
         </Grid>

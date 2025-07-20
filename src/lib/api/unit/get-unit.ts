@@ -8,7 +8,7 @@ import { QueryConfig } from '@/lib/api/react-query';
 export const getUnitById = (
   unit: string,
 ): Promise<{
-  data: UnitResponse[];
+  data: UnitResponse;
 }> => {
   return api.get(`/unit/${unit}`);
 };

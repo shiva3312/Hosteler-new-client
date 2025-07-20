@@ -28,12 +28,13 @@ export const MetaZodSchema = z.object({
 });
 
 export const UserActionZodSchema = z.object({
-  user: Primitive.safeID(),
-  action: z.nativeEnum(GeneralAction),
-  oldValue: Primitive.safeString(),
-  newValue: Primitive.safeString(),
-  comment: Primitive.safeString().optional(),
-  timestamp: Primitive.safeDate('Action Date').default(() => new Date()),
+  user: Primitive.safeID().nullish(),
+  success: z.boolean().nullish(),
+  action: z.nativeEnum(GeneralAction).nullish(),
+  oldValue: z.any().nullish(),
+  newValue: z.any().nullish(),
+  comment: Primitive.safeString().nullish(),
+  timestamp: Primitive.safeDate('Action Date').nullish(),
 });
 
 export const UserActionResponseZodSchema = UserActionZodSchema.extend({

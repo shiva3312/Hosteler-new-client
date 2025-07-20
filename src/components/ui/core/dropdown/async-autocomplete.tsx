@@ -23,6 +23,7 @@ interface AsyncAutocompleteProps {
   loading: boolean;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   required?: boolean; // Optional prop to indicate if the field is required
+  noResultsText?: string; // Optional prop for no results text
 }
 
 export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
@@ -129,7 +130,9 @@ export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
         <Combobox.Options>
           {options}
           {filteredData.length === 0 && (
-            <Combobox.Empty>No results found</Combobox.Empty>
+            <Combobox.Empty>
+              {props.noResultsText ?? 'No results found'}
+            </Combobox.Empty>
           )}
         </Combobox.Options>
       </Combobox.Dropdown>

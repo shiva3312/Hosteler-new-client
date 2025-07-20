@@ -12,17 +12,65 @@ import { useMemo } from 'react';
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { MealPreferenceResponse } from '@/interfaces/mess/meal-preference.interface';
+import { SearchQuery } from '@/lib/api/search-query';
+import { useMe } from '@/lib/api/user/get-me';
 import { useMealPreferences } from '@lib/api/mess/meal-preference/get-all-meal-preferences';
 
 import { DeleteMealPreference } from './meal-preference-delete';
 import { MealPreferenceForm } from './meal-preference-form';
+import { MenuTypeBadge, MealTypeBadge } from '../../core/badge/enum-badage';
 import { GenericDrawer } from '../../core/drawer/drawer';
+import UserAvatar from '../../user/user-list-avatar';
 
 export const MealPreferencesList = () => {
-  const mealPreferencesQuery = useMealPreferences();
+  const mealPreferencesQuery = useMealPreferences({
+    params: SearchQuery.mealPreferenceSearchQuery(),
+  });
 
   const columns = useMemo<MRT_ColumnDef<MealPreferenceResponse>[]>(
     () => [
+      {
+        accessorFn: (row) => row.user,
+        accessorKey: 'username',
+        header: 'Username',
+        id: 'username',
+        size: 250,
+        // Footer: () => {
+        //   return <>{`${users?.data.length ?? 0} Users.`}</>;
+        // },
+        Cell: ({ row }) => <UserAvatar user={row.original?.user ?? ''} />,
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.mealType,
+        accessorKey: 'mealType',
+        header: 'Meal Type',
+        id: 'mealType',
+        Cell: ({ row }) => (
+          <MealTypeBadge
+            value={row.original.mealType}
+            key={row.original.mealType}
+          />
+        ),
+        enableEditing: false,
+      },
+      {
+        accessorFn: (row) => row.menuType,
+        accessorKey: 'menuType',
+        header: 'Menu',
+        id: 'menuType',
+        Cell: ({ row }) => (
+          <MenuTypeBadge
+            value={row.original.menuType}
+            key={row.original.menuType}
+          />
+        ),
+        enableEditing: false,
+      },
       {
         accessorFn: (row) => new Date(row.updatedAt).getTime(),
         accessorKey: 'updatedAt',

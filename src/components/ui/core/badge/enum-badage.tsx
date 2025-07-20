@@ -7,6 +7,7 @@ import {
   DeviceType,
   MealCategory,
   MealStatus,
+  MealType,
   MenuCategory,
   MenuType,
   MessStatus,
@@ -15,6 +16,7 @@ import {
   ScheduleType,
   SnackCategory,
   Unit,
+  UserStatus,
 } from '@/interfaces/enums';
 
 import { createBadgeComponent } from './generic-badge';
@@ -24,8 +26,27 @@ const enums = {
     enumObj: MealStatus,
     colorMap: {
       [MealStatus.Active]: 'green',
-      [MealStatus.Inactive]: 'yellow',
+      [MealStatus.Inactive]: 'gray',
       [MealStatus.Disabled]: 'red',
+    },
+  },
+  MealType: {
+    enumObj: MealType,
+    colorMap: {
+      [MealType.Vegetarian]: 'green',
+      [MealType.NonVegetarian]: 'red',
+      [MealType.Vegan]: 'yellow',
+      [MealType.AllEater]: 'blue',
+      [MealType.Eggetarian]: 'orange',
+    },
+  },
+  UserStatus: {
+    enumObj: UserStatus,
+    colorMap: {
+      [UserStatus.Active]: 'green',
+      [UserStatus.Inactive]: 'gray',
+      [UserStatus.Disabled]: 'red',
+      [UserStatus.Banned]: 'black',
     },
   },
   ScheduleStatus: {
@@ -42,10 +63,12 @@ const enums = {
   ScheduleType: {
     enumObj: ScheduleType,
     colorMap: {
-      [ScheduleType.BreakfastChart]: 'orange',
-      [ScheduleType.LunchChart]: 'blue',
-      [ScheduleType.DinnerChart]: 'purple',
-      [ScheduleType.SnackChart]: 'yellow',
+      [ScheduleType.Daily]: 'blue',
+      [ScheduleType.Weekly]: 'green',
+      [ScheduleType.Monthly]: 'purple',
+      [ScheduleType.Yearly]: 'orange',
+      [ScheduleType.OneTime]: 'yellow',
+      [ScheduleType.Custom]: 'gray', // Custom cron expression
     },
   },
   MessStatus: {
@@ -252,6 +275,7 @@ export const badges = Object.entries(enums).reduce(
 
 export const {
   MealStatusBadge,
+  MealTypeBadge,
   ScheduleStatusBadge,
   ScheduleTypeBadge,
   MessStatusBadge,
@@ -266,4 +290,5 @@ export const {
   AddressTypeBadge,
   BloodGroupBadge,
   DeviceTypeBadge,
+  UserStatusBadge,
 } = badges;

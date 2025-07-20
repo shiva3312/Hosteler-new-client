@@ -5,7 +5,7 @@ import {
   MetaZodSchema,
   UserActionResponseZodSchema,
 } from '../common.interface';
-import { MenuType } from '../enums';
+import { MealChartType, MealType, MenuType } from '../enums';
 import { Primitive } from '../primitive.class';
 
 export const MealChartRequestZodSchema = z.object({
@@ -16,15 +16,36 @@ export const MealChartRequestZodSchema = z.object({
   userWithMealPreference: z
     .array(
       z.object({
+        verify: Primitive.safeBoolean('Verify').default(false), // whether to verify the meal preference or not
         user: Primitive.safeID(),
+        mealType: z.nativeEnum(MealType).nullish(), // type of the menu, e.g. breakfast, lunch, dinner, snack, etc.
         items: z.array(Primitive.safeID()).default([]), // array of meal item ids preferred by the user
       }),
     )
     .default([]),
-  serveTime: Primitive.safeDate('Serve Time').nullish(), // time when the meal is served
+  serveTime: z.object({
+    startTime: Primitive.safeTime('Start Time'), // time when the meal is served
+    endTime: Primitive.safeTime('End Time'), // time when the meal is served
+  }),
   notes: Primitive.safeString('Notes').nullish(), // additional notes for the meal chart
   alert: Primitive.safeString('Alert').nullish(), // alert message for the meal chart
   extraMealCount: Primitive.safeNumber('Extra Meal Count', 0).default(0), // number of extra meals requested
+
+  /**
+   * Meal Chart Type
+   * This field defines the type of the meal chart, which can be Pre, Main,
+   * or Post. It is useful for categorizing meal charts based on their purpose.
+   * The meal chart type is set to Main by default, meaning it is the main meal chart
+   * for the meal cycle.
+   * The Pre type is used for meal charts that are prepared before the main meal,
+   * and the Post type is used for meal charts that are prepared after the main meal.
+   * This allows for flexibility in meal planning and preparation, as different types of meal charts
+   * can be created based on the needs of the users and the availability of resources.
+   * Default is Main, meaning it is the main meal chart for the meal cycle.
+   * @example
+   * type: MealChartType.Pre // will create a pre meal chart
+   */
+  type: z.nativeEnum(MealChartType).default(MealChartType.Main), // type of the meal chart, e.g., Regular, Special, etc.
 
   maintainerId: Primitive.safeID().nullish(), // id of the user who maintains this meal chart eg: admin in unit or any specific role in unit /org
   menu: Primitive.safeID().nullish(), // array of menu ids
@@ -67,6 +88,13 @@ export const MealChartResponseZodSchema = z
     // }),
   });
 
+export const CreateToViewMealChartZodSchema = z.object({
+  unit: Primitive.safeID(),
+  organization: Primitive.safeID(),
+  menuType: z.nativeEnum(MenuType),
+  mealChartType: z.nativeEnum(MealChartType).default(MealChartType.Main), // default to Main
+});
+
 export const UpdateMealChartRequestZodSchema =
   MealChartRequestZodSchema.partial();
 
@@ -76,4 +104,7 @@ export type MealChartRequest = z.infer<typeof MealChartRequestZodSchema>;
 export type MealChartResponse = z.infer<typeof MealChartResponseZodSchema>;
 export type UpdateMealChartRequest = z.infer<
   typeof UpdateMealChartRequestZodSchema
+>;
+export type CreateToViewMealChart = z.infer<
+  typeof CreateToViewMealChartZodSchema
 >;

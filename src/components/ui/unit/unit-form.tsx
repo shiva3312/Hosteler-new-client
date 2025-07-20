@@ -27,12 +27,10 @@ export function UnitForm({ initialValues }: Props) {
   const { addNotification } = useNotifications();
 
   const { data: users, isLoading } = useUsers({
-    params: SearchQuery.userSearchQuery({
-      hasAllRoles: [UserRole.ADMIN],
-      organization: form.values.organization,
-    }),
+    params: SearchQuery.userSearchQuery({}),
     enabled: !!form.values.organization,
   });
+
   const { data: organizations, isLoading: orgLoading } = useOrganizations();
 
   const updateUnitMutation = useUpdateUnit({
@@ -78,8 +76,8 @@ export function UnitForm({ initialValues }: Props) {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <TextInput
-        label="Unit Name"
-        placeholder="Enter unit name"
+        label="Hostel Name"
+        placeholder="Enter hostel name"
         {...form.getInputProps('name')}
         required
       />
@@ -110,10 +108,12 @@ export function UnitForm({ initialValues }: Props) {
         label="Admin"
         placeholder="Select Admin"
         data={
-          users?.data?.map((user) => ({
-            label: user.username,
-            value: user._id,
-          })) || []
+          users?.data
+            ?.filter((u) => u.roles.includes(UserRole.ADMIN))
+            .map((user) => ({
+              label: user.username,
+              value: user._id,
+            })) || []
         }
         selected={form.values.admin ?? ''}
         onChange={(value) => form.setFieldValue('admin', value)}

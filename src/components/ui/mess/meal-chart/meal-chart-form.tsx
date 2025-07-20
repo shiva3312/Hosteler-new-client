@@ -1,9 +1,10 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button } from '@mantine/core';
+import { Divider, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
 import logger from '@/config/log';
+import { MealChartType, MenuType } from '@/interfaces/enums';
 import {
   MealChartRequest,
   MealChartResponse,
@@ -11,6 +12,8 @@ import {
 import { useCreateMealChart } from '@/lib/api/mess/meal-chart/create-meal-chart';
 import { useUpdateMealChart } from '@/lib/api/mess/meal-chart/update-meal-chart';
 
+import MealChartView from './meal-chart-view';
+import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
 import { useNotifications } from '../../core/notifications';
 
 interface Props {
@@ -19,7 +22,7 @@ interface Props {
 
 export function MealChartForm({ initialValues }: Props) {
   const form = useForm({
-    initialValues,
+    initialValues: { menuType: MenuType.Dinner, ...initialValues },
     // validate : MealChartRequestZodSchema
   });
   const { addNotification } = useNotifications();
@@ -68,21 +71,32 @@ export function MealChartForm({ initialValues }: Props) {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <TextInput
-        label="MealChart Name"
-        placeholder="Enter mealChart name"
-        {...form.getInputProps('name')}
-        required
-      />
-      <TextInput
-        label="Description"
-        placeholder="Enter description"
-        {...form.getInputProps('description')}
-        required
-      />
-      <Button type="submit" mt="md">
+      <OrganizationUnitDropdown form={form} />
+      {/* <Button type="submit" mt="md">
         {initialValues ? 'Update' : 'Create'}
-      </Button>
+      </Button> */}
+
+      {/** Only show scheduled menu's */}
+      <Select
+        required={false}
+        label="Select Menu Type"
+        key={form.key('menuType')}
+        placeholder="Select your menu type"
+        data={Object.values(MenuType).map((value) => ({
+          value,
+          label: value,
+        }))}
+        {...form.getInputProps('menuType')}
+      />
+
+      <Divider label="MealChart Details" labelPosition="center" my="lg" />
+
+      <MealChartView
+        unit={form.values.unit ?? ''}
+        organization={form.values.organization ?? ''}
+        menuType={form.values.menuType}
+        mealChartType={MealChartType.Main}
+      />
     </form>
   );
 }

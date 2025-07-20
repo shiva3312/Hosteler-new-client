@@ -1,16 +1,21 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button } from '@mantine/core';
+import { Box, Button, Grid, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
 import logger from '@/config/log';
+import { MealType, MenuType } from '@/interfaces/enums';
 import {
   MealPreferenceRequest,
   MealPreferenceResponse,
 } from '@/interfaces/mess/meal-preference.interface';
+import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useCreateMealPreference } from '@/lib/api/mess/meal-preference/create-meal-preference';
 import { useUpdateMealPreference } from '@/lib/api/mess/meal-preference/update-meal-preference';
+import { useMe } from '@/lib/api/user/get-me';
 
+import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
+import UserDropdown from '../../core/dropdown/user-selector';
 import { useNotifications } from '../../core/notifications';
 
 interface Props {
@@ -23,6 +28,7 @@ export function MealPreferenceForm({ initialValues }: Props) {
     // validate : MealPreferenceRequestZodSchema
   });
   const { addNotification } = useNotifications();
+  const { data: me } = useMe();
 
   const updateMealPreferenceMutation = useUpdateMealPreference({
     mutationConfig: {
@@ -66,20 +72,39 @@ export function MealPreferenceForm({ initialValues }: Props) {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <TextInput
-        label="MealPreference Name"
-        placeholder="Enter mealPreference name"
-        {...form.getInputProps('name')}
-        required
-      />
-      <TextInput
-        label="Description"
-        placeholder="Enter description"
-        {...form.getInputProps('description')}
-        required
-      />
+      <OrganizationUnitDropdown form={form} />
+
+      <UserDropdown form={form} />
+      <Grid>
+        <Grid.Col span={{ base: 12, md: 6 }}>
+          <Select
+            required={false}
+            label="Menu Type"
+            key={form.key('menuType')}
+            placeholder="Select your menu type"
+            data={Object.values(MenuType).map((value) => ({
+              value,
+              label: value,
+            }))}
+            {...form.getInputProps('menuType')}
+          />
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6 }}>
+          <Select
+            required={false}
+            label="Meal Preference"
+            key={form.key('mealType')}
+            placeholder="Select your meal preference"
+            data={Object.values(MealType).map((value) => ({
+              value,
+              label: value,
+            }))}
+            {...form.getInputProps('mealType')}
+          />
+        </Grid.Col>
+      </Grid>
       <Button type="submit" mt="md">
-        {initialValues ? 'Edit MealPreference' : 'Create MealPreference'}
+        {initialValues ? 'Update' : 'Create'}
       </Button>
     </form>
   );

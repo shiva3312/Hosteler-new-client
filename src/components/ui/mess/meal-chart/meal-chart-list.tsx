@@ -12,11 +12,11 @@ import { useMemo } from 'react';
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { MealChartResponse } from '@/interfaces/mess/meal-chart.interface';
+import { SearchQuery } from '@/lib/api/search-query';
 import { useMealCharts } from '@lib/api/mess/meal-chart/get-all-meal-charts';
 
 import { DeleteMealChart } from './meal-chart-delete';
 import { MealChartForm } from './meal-chart-form';
-import MealChartProfileImage from './meal-chart-view';
 import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MealChartsList = () => {
@@ -24,24 +24,6 @@ export const MealChartsList = () => {
 
   const columns = useMemo<MRT_ColumnDef<MealChartResponse>[]>(
     () => [
-      {
-        accessorFn: (row) => row.name,
-        accessorKey: 'name',
-        header: 'Name',
-        id: 'name',
-        size: 250,
-        // Footer: () => {
-        //   return (
-        //     <>{`${mealChartsQuery.data?.data.length ?? 0} MealCharts.`}</>
-        //   );
-        // },
-        Cell: ({ row }) => <MealChartProfileImage mealChart={row.original} />,
-        enableEditing: true,
-        enableColumnFilter: true,
-        mantineEditTextInputProps: {
-          type: 'text',
-        },
-      },
       {
         accessorFn: (row) => new Date(row.updatedAt).getTime(),
         accessorKey: 'updatedAt',
@@ -106,7 +88,7 @@ export const MealChartsList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer title="View" trigger={<Button>View</Button>}>
             <MealChartForm />
           </GenericDrawer>
         );

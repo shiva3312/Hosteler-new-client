@@ -6,6 +6,7 @@ import {
   MetaZodSchema,
   UserActionResponseZodSchema,
 } from '../common.interface';
+import { MenuType } from '../enums';
 import { Primitive } from '../primitive.class';
 
 export const MenuCycleRequestZodSchema = z.object({
@@ -20,6 +21,7 @@ export const MenuCycleRequestZodSchema = z.object({
   tags: z.array(Primitive.safeString('Tag')).optional().default([]), // array of tags for this menuCycle
   likedByUserIds: z.array(Primitive.safeID()).optional().default([]), // array of user ids who liked this menuCycle
   isActive: z.boolean().default(true), // whether this menuCycle is active or not
+  cycleFor: z.nativeEnum(MenuType), // type of the menu, e.g. breakfast, lunch, dinner, snack, etc.
   // reference fields
   unit: Primitive.safeID().nullish(),
   organization: Primitive.safeID().nullish(),

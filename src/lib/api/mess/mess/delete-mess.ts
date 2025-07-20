@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
 
-import { getMessQueryOptions } from './get-all-messes';
+import { getMessQueryOptions, useMesses } from './get-all-messes';
 
 export type DeleteMessDTO = {
   messId: string;
@@ -22,11 +22,13 @@ export const useDeleteMess = ({
   mutationConfig,
 }: UseDeleteMessOptions = {}) => {
   const queryClient = useQueryClient();
+  const { refetch: refetchMess } = useMesses();
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
     onSuccess: (...args) => {
+      refetchMess();
       queryClient.invalidateQueries({
         queryKey: getMessQueryOptions().queryKey,
       });

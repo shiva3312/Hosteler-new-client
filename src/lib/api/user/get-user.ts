@@ -8,7 +8,7 @@ import { QueryConfig } from '@/lib/api/react-query';
 export const getUserById = (
   user: string,
 ): Promise<{
-  data: UserResponse[];
+  data: UserResponse;
 }> => {
   return api.get(`/user/${user}`);
 };

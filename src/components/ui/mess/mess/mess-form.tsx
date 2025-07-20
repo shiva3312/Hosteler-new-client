@@ -1,12 +1,15 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button, Grid, Select, Switch, Box } from '@mantine/core';
+import { TextInput, Button, Grid, Select, Box } from '@mantine/core';
 import { TimeInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
+import { modals } from '@mantine/modals';
+import { IconClock } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
 import logger from '@/config/log';
 import { UserRole } from '@/data/feature';
-import { MessStatus } from '@/interfaces/enums';
+import { useScreenType } from '@/hooks/use-scree-type';
+import { MessStatus, ScheduleFor } from '@/interfaces/enums';
 import { MessRequest, MessResponse } from '@/interfaces/mess/mess.interface';
 import { useCreateMess } from '@/lib/api/mess/mess/create-mess';
 import { useUpdateMess } from '@/lib/api/mess/mess/update-mess';
@@ -18,6 +21,8 @@ import { useMe } from '@/lib/api/user/get-me';
 import { AsyncAutocompleteCombobox } from '../../core/dropdown';
 import { GenericFieldset } from '../../core/fieldset/fieldset';
 import { useNotifications } from '../../core/notifications';
+import { ScheduleJobForm } from '../../schedule/schedule-form';
+import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
 
 interface Props {
   initialValues?: Partial<MessRequest>;
@@ -28,6 +33,7 @@ export function MessForm({ initialValues = {} }: Props) {
     initialValues,
     // validate : MessRequestZodSchema
   });
+  const { screenType } = useScreenType();
   const { data: me } = useMe();
   const { data: organizations, isLoading: orgLoading } = useOrganizations({});
   const { data: units, isLoading: unitLoading } = useUnits({
@@ -106,49 +112,7 @@ export function MessForm({ initialValues = {} }: Props) {
           {...form.getInputProps('status')}
         />
 
-        <Grid>
-          {me?.data?.roles?.includes(UserRole.MASTER_ADMIN) && (
-            <Grid.Col>
-              <AsyncAutocompleteCombobox
-                label="Organization"
-                key={form.key('organization')}
-                placeholder="Select organization"
-                data={
-                  organizations?.data?.map((org) => ({
-                    label: org?.name,
-                    value: org?._id,
-                  })) || []
-                }
-                selected={form.values?.organization ?? ''}
-                onChange={(value) => {
-                  form.setFieldValue('organization', value);
-                  form.setFieldValue('unit', null);
-                }}
-                loading={orgLoading}
-              />
-            </Grid.Col>
-          )}
-          {me?.data.roles?.some((role) =>
-            [UserRole.SUPER_ADMIN, UserRole.MASTER_ADMIN].includes(role),
-          ) && (
-            <Grid.Col>
-              <AsyncAutocompleteCombobox
-                label="Unit"
-                key={form.key('unit')}
-                placeholder="Select Unit"
-                data={
-                  units?.data?.map((unit) => ({
-                    label: unit.name,
-                    value: unit._id,
-                  })) || []
-                }
-                selected={form.values?.unit ?? ''}
-                onChange={(value) => form.setFieldValue('unit', value)}
-                loading={unitLoading}
-              />
-            </Grid.Col>
-          )}
-        </Grid>
+        <OrganizationUnitDropdown form={form} />
       </GenericFieldset>
 
       <GenericFieldset legend={'Meal Times'} radius="md" p="md" mt={'md'}>
@@ -163,41 +127,41 @@ export function MessForm({ initialValues = {} }: Props) {
                 : meal === 'dinnerTime'
                   ? 'Dinner'
                   : 'Snack';
-          const chartKey =
-            meal === 'breakFastTime'
-              ? 'breakFastChartTime'
-              : meal === 'lunchTime'
-                ? 'lunchChartTime'
-                : meal === 'dinnerTime'
-                  ? 'dinnerChartTime'
-                  : 'snackChartTime';
+          // const chartKey =
+          //   meal === 'breakFastTime'
+          //     ? 'breakFastChartTime'
+          //     : meal === 'lunchTime'
+          //       ? 'lunchChartTime'
+          //       : meal === 'dinnerTime'
+          //         ? 'dinnerChartTime'
+          //         : 'snackChartTime';
 
           return (
             <Box key={meal} mb="md">
               <Grid align="center" justify="space-between">
-                <Grid.Col span={3}>
+                <Grid.Col span={4}>
                   <TimeInput
                     label={`${label} Start Time`}
                     value={form.values?.[meal]?.startTime}
                     {...form.getInputProps(`${meal}.startTime`)}
                   />
                 </Grid.Col>
-                <Grid.Col span={3}>
+                <Grid.Col span={4}>
                   <TimeInput
                     label={`${label} End Time`}
                     value={form.values?.[meal]?.endTime}
                     {...form.getInputProps(`${meal}.endTime`)}
                   />
                 </Grid.Col>
-                <Grid.Col span={3}>
+                {/* <Grid.Col span={3}>
                   <TimeInput
                     label={`${label} Chart Time`}
                     value={form.values?.[chartKey]}
                     placeholder="Select chart time"
                     {...form.getInputProps(chartKey)}
                   />
-                </Grid.Col>
-                <Grid.Col span={3} pt={'xl'}>
+                </Grid.Col> */}
+                {/* <Grid.Col span={3} pt={'xl'}>
                   <Switch
                     label="Is Active"
                     checked={form.values?.[meal]?.isActive}
@@ -208,6 +172,28 @@ export function MessForm({ initialValues = {} }: Props) {
                       );
                     }}
                   />
+                </Grid.Col> */}
+                <Grid.Col span={4} pt={'xl'}>
+                  <Button
+                    leftSection={<IconClock size={'16'} />}
+                    onClick={() => {
+                      modals.open({
+                        title: `Edit ${label} Time`,
+                        children: (
+                          <ScheduleJobForm
+                            name={`Schedule ${label} chart time`}
+                            unit={form.values?.unit ?? ''}
+                            organization={form.values?.organization ?? ''}
+                            scheduleFor={`${label} Chart` as ScheduleFor}
+                          />
+                        ),
+                        size: 'lg',
+                        fullScreen: screenType === 'small',
+                      });
+                    }}
+                  >
+                    Schedule
+                  </Button>
                 </Grid.Col>
               </Grid>
             </Box>

@@ -128,7 +128,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     isSuccess,
   );
 
-  logger.info('Authorized Links:', authorizedLinks);
+  // logger.info('Authorized Links:', authorizedLinks);
 
   const hasSublink = authorizedLinks?.find(
     (link) => link.label === active,

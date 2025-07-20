@@ -63,6 +63,7 @@ export const createBadgeComponent = <T extends EnumType>(
         value={value}
         colorMap={colorMap}
         labelMap={enumObj}
+        variant="light" // Default variant
       />
     );
   };

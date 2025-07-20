@@ -24,6 +24,7 @@ import { useUsers } from '@/lib/api/user/get-users';
 import { DeleteUser } from './delete-user';
 import { UserForm } from './user-form';
 import UserProfileImage from './user-list-avatar';
+import { MealStatusBadge, MealTypeBadge } from '../core/badge/enum-badage';
 import EnumBadge from '../core/badge/generic-badge';
 import { GenericDrawer } from '../core/drawer/drawer';
 
@@ -92,25 +93,6 @@ export const UsersList = () => {
         },
       },
       {
-        // accessorFn: (row) =>
-        //   `${row.profile?.firstName ?? ''} ${row.profile?.lastName ?? ''}`,
-        accessorKey: 'parent',
-        header: 'Parent',
-        id: 'parent',
-        size: 250,
-        Cell: ({ row }) => {
-          const parent = users?.data?.find(
-            (u) => u._id === row.original.parent,
-          );
-          return <Text>{parent?.username}</Text>;
-        },
-        enableEditing: true,
-        enableColumnFilter: true,
-        mantineEditTextInputProps: {
-          type: 'text',
-        },
-      },
-      {
         accessorFn: (row) => row.unit,
         accessorKey: 'unit',
         header: 'Unit',
@@ -149,6 +131,58 @@ export const UsersList = () => {
         mantineEditTextInputProps: {
           type: 'text',
         },
+      },
+      {
+        accessorFn: (row) => row.status,
+        accessorKey: 'status',
+        header: 'Status',
+        id: 'status',
+        Cell: ({ row }) => (
+          <Flex gap="xs" wrap={'wrap'}>
+            <MealStatusBadge
+              key={row.original.status}
+              value={row.original.status}
+            />
+          </Flex>
+        ),
+        enableSorting: false,
+        enableEditing: true,
+        enableColumnFilter: true,
+      },
+      {
+        accessorFn: (row) => row.profile?.preferences?.mealType,
+        accessorKey: 'profile?.preferences?.MealType',
+        header: 'Meal Type',
+        id: 'profile.preferences.MealType',
+        Cell: ({ row }) => (
+          <Flex gap="xs" wrap={'wrap'}>
+            <MealTypeBadge
+              key={row.original.profile?.preferences?.mealType}
+              value={row.original.profile?.preferences?.mealType}
+            />
+          </Flex>
+        ),
+        enableSorting: false,
+        enableEditing: true,
+        enableColumnFilter: true,
+      },
+      {
+        accessorFn: (row) => row.mealStatus,
+        accessorKey: 'mealStatus',
+        header: 'Meal Status',
+        id: 'mealStatus',
+        // size: 250,
+        Cell: ({ row }) => (
+          <Flex gap="xs" wrap={'wrap'}>
+            <MealStatusBadge
+              key={row.original.mealStatus}
+              value={row.original.mealStatus}
+            />
+          </Flex>
+        ),
+        enableSorting: false,
+        enableEditing: true,
+        enableColumnFilter: true,
       },
       {
         accessorFn: (row) => row.roles,
@@ -215,7 +249,25 @@ export const UsersList = () => {
         enableEditing: true,
         enableColumnFilter: true,
       },
-
+      {
+        // accessorFn: (row) =>
+        //   `${row.profile?.firstName ?? ''} ${row.profile?.lastName ?? ''}`,
+        accessorKey: 'parent',
+        header: 'Parent',
+        id: 'parent',
+        size: 250,
+        Cell: ({ row }) => {
+          const parent = users?.data?.find(
+            (u) => u._id === row.original.parent,
+          );
+          return <Text>{parent?.username}</Text>;
+        },
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
       {
         accessorFn: (row) => new Date(row.updatedAt).getTime(),
         accessorKey: 'updatedAt',

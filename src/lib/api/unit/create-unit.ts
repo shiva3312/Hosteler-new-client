@@ -1,7 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { useMutation } from '@tanstack/react-query';
 
-import { UserRole } from '@/data/feature';
 import { UnitRequest } from '@/interfaces/unit.interface';
 import { api } from '@/lib/api/api-client';
 import { MutationConfig } from '@/lib/api/react-query';
@@ -21,9 +20,7 @@ export const useCreateUnit = ({
   mutationConfig,
 }: UseCreateUnitOptions = {}) => {
   const { refetch: refetchUnit } = useUnits({
-    params: SearchQuery.userSearchQuery({
-      hasAllRoles: [UserRole.ADMIN],
-    }),
+    params: SearchQuery.unitSearchQuery({}),
   });
 
   const { onSuccess, ...restConfig } = mutationConfig || {};

@@ -38,28 +38,28 @@ export class AuthorizationService {
       roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.mess.getHref()]: {
-      access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+      access: 'authenticated',
+      // roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.mess.mealItem.getHref()]: {
-      access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+      access: 'authenticated',
+      // roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.mess.menu.getHref()]: {
-      access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+      access: 'authenticated',
+      // roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.mess.menuCycle.getHref()]: {
-      access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+      access: 'authenticated',
+      // roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.mess.mealChart.getHref()]: {
-      access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+      access: 'authenticated',
+      // roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.mess.mealPreference.getHref()]: {
-      access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+      access: 'authenticated',
+      // roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.settings.getHref()]: { access: 'authenticated' }, // Authenticated-only link
     [paths.app.systemSettings.user.getHref()]: {

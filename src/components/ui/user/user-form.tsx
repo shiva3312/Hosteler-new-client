@@ -23,16 +23,13 @@ import {
   UserResponse,
 } from '@/interfaces/user.interface';
 import { AuthorizationService } from '@/lib/api/auth/authorization';
-import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
-import { SearchQuery } from '@/lib/api/search-query';
-import { useUnits } from '@/lib/api/unit/get-all-units';
 import { useMe } from '@/lib/api/user/get-me';
 import { UtilHelper } from '@/utils/cn';
 
 import UserProfileForm from './user-profile-form';
 import { useUpdateUser } from '../../../lib/api/user/update-profile';
 import { useCreateUser } from '../../../lib/api/user/user-create';
-import { AsyncAutocompleteCombobox } from '../core/dropdown';
+import OrganizationUnitDropdown from '../core/dropdown/organization-unit-selector';
 import { GenericFieldset } from '../core/fieldset/fieldset';
 import { DropzoneButton } from '../core/file-hanling/dropzone';
 
@@ -62,9 +59,14 @@ const defaultInitialValues: Partial<UserRequest> = {
 };
 
 export const UserForm = ({ initialValues = {} }: Props) => {
+  const profile = initialValues.profile || {};
+
   const form = useForm<Partial<UserRequest>>({
     validate: zodResolver(UserRequestZodSchema),
-    initialValues: { ...defaultInitialValues, ...initialValues },
+    initialValues: {
+      ...initialValues,
+      profile: { ...defaultInitialValues.profile, ...profile },
+    },
   });
 
   const { data: me } = useMe();
@@ -77,13 +79,6 @@ export const UserForm = ({ initialValues = {} }: Props) => {
     return AuthorizationService.isNoneAdminRoles(me?.data?.roles ?? []);
   }, [me?.data?.roles]);
   const { addNotification } = useNotifications();
-  const { data: organizations, isLoading: orgLoading } = useOrganizations({});
-  const { data: units, isLoading: unitLoading } = useUnits({
-    params: SearchQuery.unitSearchQuery({
-      organization: [form.values.organization!],
-    }),
-    enabled: !!form.values.organization,
-  });
 
   const updateProfileMutation = useUpdateUser({
     mutationConfig: {
@@ -108,6 +103,8 @@ export const UserForm = ({ initialValues = {} }: Props) => {
           // ...initialValues,
           organization: me.data?.organization,
         });
+
+        form.resetDirty();
       }
 
       if (me?.data?.roles?.includes(UserRole.ADMIN) && !form.values.unit) {
@@ -116,8 +113,9 @@ export const UserForm = ({ initialValues = {} }: Props) => {
           organization: me.data?.organization,
           unit: me.data?.unit,
         });
+        form.resetDirty();
       } else if (
-        isNoneAdminRoles &&
+        (isNoneAdminRoles || form.values.roles?.includes(UserRole.GUEST)) &&
         !form.values.username &&
         !form.values.password
       ) {
@@ -130,6 +128,7 @@ export const UserForm = ({ initialValues = {} }: Props) => {
           password: Math.random().toString(36).substring(2, 15),
           parent: me.data?._id,
         });
+        form.resetDirty();
       }
     }
 
@@ -155,8 +154,8 @@ export const UserForm = ({ initialValues = {} }: Props) => {
   });
 
   const onSubmit = (values: Partial<UserRequest>): void => {
-    // const dirtyFields = form.getDirty();
-    // const dirtyValues = UtilHelper.removeUnchangedValues(values, dirtyFields);
+    const dirtyFields = form.getDirty();
+    const dirtyValues = UtilHelper.removeUnchangedValues(values, dirtyFields);
 
     // logger.info('Dirty Values:', dirtyValues, dirtyFields);
 
@@ -164,7 +163,7 @@ export const UserForm = ({ initialValues = {} }: Props) => {
       // Update existing user
       updateProfileMutation.mutate({
         userId: initialValues._id!,
-        data: values,
+        data: dirtyValues,
       });
     } else {
       // Create new user
@@ -228,97 +227,58 @@ export const UserForm = ({ initialValues = {} }: Props) => {
             </Grid>
 
             <Divider label="Access Details" labelPosition="center" mt="sm" />
+            <OrganizationUnitDropdown form={form} />
 
-            <Grid>
-              {me?.data.roles?.includes(UserRole.MASTER_ADMIN) && (
-                <Grid.Col>
-                  <AsyncAutocompleteCombobox
-                    label="Organization"
-                    key={form.key('organization')}
-                    placeholder="Select organization"
-                    data={
-                      organizations?.data?.map((org) => ({
-                        label: org.name,
-                        value: org._id,
-                      })) || []
-                    }
-                    selected={form.values.organization ?? ''}
-                    onChange={(value) => {
-                      form.setFieldValue('organization', value);
-                      form.setFieldValue('unit', null);
-                    }}
-                    loading={orgLoading}
-                  />
-                </Grid.Col>
-              )}
-              {me?.data.roles?.some((role) =>
-                [UserRole.SUPER_ADMIN, UserRole.MASTER_ADMIN].includes(role),
-              ) && (
-                <Grid.Col>
-                  <AsyncAutocompleteCombobox
-                    label="Unit"
-                    key={form.key('unit')}
-                    placeholder="Select Unit"
-                    data={
-                      units?.data?.map((unit) => ({
-                        label: unit.name,
-                        value: unit._id,
-                      })) || []
-                    }
-                    selected={form.values.unit ?? ''}
-                    onChange={(value) => form.setFieldValue('unit', value)}
-                    loading={unitLoading}
-                  />
-                </Grid.Col>
-              )}
-            </Grid>
+            {/* // user can't change it's own role */}
+            {me?.data._id !== (form.values as UserResponse)?._id && (
+              <MultiSelect
+                mt={'md'}
+                label="Select Roles"
+                key={form.key('roles')}
+                description="Select one or more roles for the user"
+                placeholder="Pick value"
+                data={userRoles.filter((role) => {
+                  const x = AuthorizationService.hasHigherRole(
+                    me?.data?.roles ?? [],
+                    role.value as UserRole,
+                  );
 
-            {/* {!isEditing && ( */}
-            <MultiSelect
-              mt={'md'}
-              label="Select Roles"
-              key={form.key('roles')}
-              description="Select one or more roles for the user"
-              placeholder="Pick value"
-              data={userRoles.filter((role) => {
-                const x = AuthorizationService.hasHigherRole(
-                  me?.data?.roles ?? [],
-                  role.value as UserRole,
-                );
+                  return x;
+                })}
+                {...form.getInputProps('roles')}
+                onChange={(value) => {
+                  form.setFieldValue('roles', value as UserRole[]);
 
-                return x;
-              })}
-              {...form.getInputProps('roles')}
-              onChange={(value) => {
-                form.setFieldValue('roles', value as UserRole[]);
-
-                if (value.includes(UserRole.MASTER_ADMIN)) {
-                  form.setFieldValue('organization', null);
-                  form.setFieldValue('unit', null);
-                }
-                if (value.includes(UserRole.SUPER_ADMIN)) {
-                  form.setFieldValue('unit', null);
-                }
-              }}
-              searchable
-            />
+                  if (value.includes(UserRole.MASTER_ADMIN)) {
+                    form.setFieldValue('organization', null);
+                    form.setFieldValue('unit', null);
+                  }
+                  if (value.includes(UserRole.SUPER_ADMIN)) {
+                    form.setFieldValue('unit', null);
+                  }
+                }}
+                searchable
+              />
+            )}
             {/* )} */}
-
-            <Select
-              required={false}
-              label="Meal Status"
-              key={form.key('mealStatus')}
-              placeholder="Select meal status"
-              data={
-                isNoneAdminRoles
-                  ? mealStatus.filter((m) => m.value !== MealStatus.Disabled)
-                  : mealStatus
-              }
-              {...form.getInputProps('mealStatus')}
-            />
           </Stack>
         </GenericFieldset>
       )}
+
+      <Select
+        required={false}
+        label="Meal Status"
+        key={form.key('mealStatus')}
+        placeholder="Select meal status"
+        data={mealStatus.filter(
+          (m) =>
+            !(
+              m.value === MealStatus.Disabled &&
+              me?.data._id === (form.values as UserResponse)?._id
+            ),
+        )}
+        {...form.getInputProps('mealStatus')}
+      />
 
       <UserProfileForm form={form} />
 

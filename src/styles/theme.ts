@@ -66,7 +66,6 @@ export const theme = createTheme({
     }),
     Checkbox: Checkbox.extend({
       defaultProps: {
-        color: 'teal',
         labelPosition: 'right',
         size: 'xs',
       },

@@ -2,7 +2,7 @@
 import { z } from 'zod';
 
 import { Primitive } from './primitive.class';
-import { UserRequestZodSchema, UserResponse } from './user.interface';
+import { UserRequestZodSchema } from './user.interface';
 
 export const DataStoredInTokenZodSchema = z.object({
   _id: z.string(),
@@ -53,7 +53,3 @@ export type UserLoginRequest = z.infer<typeof UserLoginRequestZodSchema>;
 export type ChangePasswordRequest = z.infer<
   typeof ChangePasswordRequestZodSchema
 >;
-
-export interface RequestWithUser extends Request {
-  user: UserResponse;
-}

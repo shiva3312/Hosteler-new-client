@@ -84,13 +84,13 @@ export class SearchQuery {
         context?.user?.organization ??
         undefined;
     } else {
-      query.organization = { in: args.organization };
+      query.organization = { in: args?.organization };
     }
 
-    if (!args?.units || args.units.length === 0) {
+    if (!args?.units || args?.units.length === 0) {
       query._id = context?.selectedUnit ?? context?.user?.unit ?? undefined;
     } else {
-      query._id = { in: args.units };
+      query._id = { in: args?.units };
     }
 
     // logger.info('unitSearchQuery', query);
@@ -116,10 +116,10 @@ export class SearchQuery {
       args.organization = context?.user?.organization ?? undefined;
     if (!args?.unit) args.unit = context?.user?.unit ?? undefined;
     else {
-      query.organization = args.organization;
+      query.organization = args?.organization;
     }
-    if (args.unit) {
-      query.unit = args.unit;
+    if (args?.unit) {
+      query.unit = args?.unit;
     }
     // logger.info('groupSearchQuery', query);
     return query;
@@ -132,33 +132,131 @@ export class SearchQuery {
    * This is useful for filtering users that are associated with a particular organization and unit.
    * @returns
    */
-  public static userSearchQuery(args: {
+  public static userSearchQuery(args?: {
     organization?: string;
     unit?: string;
     hasAllRoles?: UserRole[];
     anyRoles?: UserRole[];
+    usersId?: string[];
   }): Record<string, any> {
     const context = this.getContext();
+    const query: Record<string, any> = {};
     // If no organization or unit is provided, return an empty query
     if (!args?.organization)
-      args.organization =
+      query.organization =
         context?.selectedOrganization ??
         context?.user?.organization ??
         undefined;
     if (!args?.unit)
-      args.unit = context?.selectedUnit ?? context?.user?.unit ?? undefined;
+      query.unit = context?.selectedUnit ?? context?.user?.unit ?? undefined;
 
-    const query: Record<string, any> = {
-      organization: args.organization,
-      unit: args.unit,
-    };
+    query.organization = args?.organization;
+    query.unit = args?.unit;
 
-    if (args.hasAllRoles && args.hasAllRoles.length > 0) {
-      query.roles = { all: args.hasAllRoles };
+    if (args?.hasAllRoles && args?.hasAllRoles.length > 0) {
+      query.roles = { all: args?.hasAllRoles };
     }
 
-    if (args.anyRoles && args.anyRoles.length > 0) {
-      query.roles = { in: args.anyRoles };
+    if (args?.anyRoles && args?.anyRoles.length > 0) {
+      query.roles = { in: args?.anyRoles };
+    }
+
+    if (args?.anyRoles && args?.anyRoles.length > 0) {
+      query.roles = { in: args?.anyRoles };
+    }
+
+    if (args?.usersId && args?.usersId.length > 0) {
+      query._id = { in: args?.usersId };
+    }
+
+    return query;
+  }
+
+  public static scheduleSearchQuery(args?: {
+    organization?: string[];
+    unit?: string[];
+    scheduleFor?: string[];
+  }): Record<string, any> {
+    const context = this.getContext();
+    const query: Record<string, any> = {};
+
+    if (!args?.organization || args?.organization.length === 0) {
+      query.organization =
+        context?.selectedOrganization ??
+        context?.user?.organization ??
+        undefined;
+    } else {
+      query.organization = { in: args?.organization };
+    }
+
+    if (!args?.unit || args?.unit.length === 0) {
+      query.unit = context?.selectedUnit ?? context?.user?.unit ?? undefined;
+    } else {
+      query.unit = { in: args?.unit };
+    }
+
+    if (args?.scheduleFor && args?.scheduleFor.length > 0) {
+      query.scheduleFor = { in: args?.scheduleFor };
+    }
+
+    return query;
+  }
+
+  public static mealChartSearchQuery(args?: {
+    organization?: string[];
+    unit?: string[];
+    mealType?: string[];
+  }): Record<string, any> {
+    const context = this.getContext();
+    const query: Record<string, any> = {};
+
+    if (!args?.organization || args?.organization.length === 0) {
+      query.organization =
+        context?.selectedOrganization ??
+        context?.user?.organization ??
+        undefined;
+    } else {
+      query.organization = { in: args?.organization };
+    }
+
+    if (!args?.unit || args?.unit.length === 0) {
+      query.unit = context?.selectedUnit ?? context?.user?.unit ?? undefined;
+    } else {
+      query.unit = { in: args?.unit };
+    }
+
+    if (args?.mealType && args?.mealType.length > 0) {
+      query.mealType = { in: args?.mealType };
+    }
+
+    return query;
+  }
+
+  public static mealPreferenceSearchQuery(args?: {
+    organization?: string[];
+    unit?: string[];
+    users?: string[];
+  }): Record<string, any> {
+    const context = this.getContext();
+    const query: Record<string, any> = {};
+
+    if (!args?.organization || args?.organization.length === 0) {
+      query.organization =
+        context?.selectedOrganization ??
+        context?.user?.organization ??
+        undefined;
+    } else {
+      query.organization = { in: args?.organization };
+    }
+
+    if (!args?.unit || args?.unit.length === 0) {
+      query.unit = context?.selectedUnit ?? context?.user?.unit ?? undefined;
+    } else {
+      query.unit = { in: args?.unit };
+    }
+
+    if (args?.users && args?.users.length > 0) {
+      query.user = { in: args?.users };
     }
 
     return query;

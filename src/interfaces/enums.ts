@@ -28,12 +28,20 @@ export enum ScheduleStatus {
   Cancelled = 'cancelled',
 }
 
-// Schedule Type Enum
 export enum ScheduleType {
-  BreakfastChart = 'meal_breakfast_chart',
-  LunchChart = 'meal_lunch_chart',
-  DinnerChart = 'meal_dinner_chart',
-  SnackChart = 'meal_snack_chart',
+  Daily = 'daily',
+  Weekly = 'weekly',
+  Monthly = 'monthly',
+  Yearly = 'yearly',
+  OneTime = 'one-time',
+  Custom = 'custom', // Custom cron expression
+}
+
+export enum ScheduleFor {
+  MEAL_BREAKFAST_CHART = 'Breakfast Chart',
+  MEAL_LUNCH_CHART = 'Lunch Chart',
+  MEAL_DINNER_CHART = 'Dinner Chart',
+  MEAL_SNACK_CHART = 'Snack Chart',
 }
 
 export enum MessStatus {
@@ -87,12 +95,25 @@ export enum MenuType {
   Snack = 'Snack',
 }
 
+export enum MealChartType {
+  Pre = 'Pre',
+  Main = 'Main',
+  Post = 'Post',
+}
+
 export enum MealType {
   Vegetarian = 'Vegetarian',
   NonVegetarian = 'Non-Vegetarian',
   Vegan = 'Vegan',
   Eggetarian = 'Eggetarian',
   AllEater = 'All Eater', // No restrictions
+}
+
+export enum ScreenType {
+  Small = 'small', // Mobile
+  Medium = 'medium', // Tablet
+  Large = 'large', // PC
+  ExtraLarge = 'extraLarge', // Monitors
 }
 
 export enum MealCategory {
