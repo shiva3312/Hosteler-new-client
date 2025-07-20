@@ -39,6 +39,10 @@ export const MessesList = () => {
   });
 
   const { data: me } = useMe();
+  const isNonAdmin = AuthorizationService.hasLowerRole(
+    me?.data?.roles ?? [],
+    UserRole.ADMIN,
+  );
 
   const columns = useMemo<MRT_ColumnDef<MessResponse>[]>(
     () => [
@@ -135,36 +139,31 @@ export const MessesList = () => {
       rowCount: messes?.data?.length ?? 0,
       editDisplayMode: 'custom',
       // onEditingRowSave: handleSaveMess,
-      renderRowActions: ({ row, table }) => (
-        <Flex gap="md">
-          <Tooltip label="Edit">
-            <ActionIcon
-              color="blue"
-              onClick={() => {
-                table.setEditingRow(row);
-              }}
-            >
-              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
-                <MessForm initialValues={row.original!} />
-              </GenericDrawer>
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label="Delete">
-            <ActionIcon color="red">
-              <DeleteMess mess={row.original} />
-            </ActionIcon>
-          </Tooltip>
-        </Flex>
-      ),
+      renderRowActions: ({ row, table }) =>
+        isNonAdmin ? undefined : (
+          <Flex gap="md">
+            <Tooltip label="Edit">
+              <ActionIcon
+                color="blue"
+                onClick={() => {
+                  table.setEditingRow(row);
+                }}
+              >
+                <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                  <MessForm initialValues={row.original!} />
+                </GenericDrawer>
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Delete">
+              <ActionIcon color="red">
+                <DeleteMess mess={row.original} />
+              </ActionIcon>
+            </Tooltip>
+          </Flex>
+        ),
 
       renderTopToolbarCustomActions: () => {
-        // show add button only to master and admin
-        const showAddButton = AuthorizationService.hasEqualOrHigherRole(
-          me?.data?.roles ?? [],
-          UserRole.SUPER_ADMIN,
-        );
-
-        if (!showAddButton) return undefined;
+        if (isNonAdmin) return undefined;
 
         return (
           <GenericDrawer title="Create User" trigger={<Button>Add New</Button>}>
@@ -173,7 +172,7 @@ export const MessesList = () => {
         );
       },
     }),
-    [columns, me?.data?.roles, messes?.data],
+    [columns, isNonAdmin, messes?.data],
   );
 
   const state: Partial<MRT_TableState<MessResponse>> = useMemo(

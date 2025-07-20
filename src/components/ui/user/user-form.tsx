@@ -280,6 +280,12 @@ export const UserForm = ({ initialValues = {} }: Props) => {
         {...form.getInputProps('mealStatus')}
       />
 
+      <TextInput
+        label="room"
+        key={form.key('room')}
+        placeholder="Enter room number"
+        {...form.getInputProps('room')}
+      />
       <UserProfileForm form={form} />
 
       {/* Submit */}

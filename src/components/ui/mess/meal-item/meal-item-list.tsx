@@ -11,10 +11,13 @@ import { useMemo } from 'react';
 
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
+import { UserRole } from '@/data/feature';
 import { MealItemResponse } from '@/interfaces/mess/meal-item.interface';
+import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
 import { SearchQuery } from '@/lib/api/search-query';
 import { useUnits } from '@/lib/api/unit/get-all-units';
+import { useMe } from '@/lib/api/user/get-me';
 import { useMealItems } from '@lib/api/mess/meal-item/get-all-meal-items';
 
 import { DeleteMealItem } from './meal-item-delete';
@@ -31,10 +34,17 @@ export const MealItemsList = () => {
     enabled: isSuccess && mealItem?.data.length > 0,
   });
 
+  const { data: me } = useMe();
+
   const { data: units } = useUnits({
     params: SearchQuery.unitSearchQuery({}),
     enabled: isSuccess && mealItem?.data.length > 0,
   });
+
+  const isNonAdmin = AuthorizationService.hasLowerRole(
+    me?.data?.roles ?? [],
+    UserRole.ADMIN,
+  );
 
   const columns = useMemo<MRT_ColumnDef<MealItemResponse>[]>(
     () => [
@@ -146,29 +156,31 @@ export const MealItemsList = () => {
       rowCount: mealItem?.data?.length ?? 0,
       editDisplayMode: 'custom',
       // onEditingRowSave: handleSaveMealItem,
-      renderRowActions: ({ row, table }) => (
-        <Flex gap="md">
-          <Tooltip label="Edit">
-            <ActionIcon
-              color="blue"
-              onClick={() => {
-                table.setEditingRow(row);
-              }}
-            >
-              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
-                <MealItemForm initialValues={row.original!} />
-              </GenericDrawer>
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label="Delete">
-            <ActionIcon color="red">
-              <DeleteMealItem mealItem={row.original} />
-            </ActionIcon>
-          </Tooltip>
-        </Flex>
-      ),
+      renderRowActions: ({ row, table }) =>
+        isNonAdmin ? undefined : (
+          <Flex gap="md">
+            <Tooltip label="Edit">
+              <ActionIcon
+                color="blue"
+                onClick={() => {
+                  table.setEditingRow(row);
+                }}
+              >
+                <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                  <MealItemForm initialValues={row.original!} />
+                </GenericDrawer>
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Delete">
+              <ActionIcon color="red">
+                <DeleteMealItem mealItem={row.original} />
+              </ActionIcon>
+            </Tooltip>
+          </Flex>
+        ),
 
       renderTopToolbarCustomActions: () => {
+        if (isNonAdmin) return undefined;
         return (
           <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
             <MealItemForm />
@@ -176,7 +188,7 @@ export const MealItemsList = () => {
         );
       },
     }),
-    [columns, mealItem?.data],
+    [columns, isNonAdmin, mealItem?.data],
   );
 
   const state: Partial<MRT_TableState<MealItemResponse>> = useMemo(

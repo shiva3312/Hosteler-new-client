@@ -1,5 +1,14 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Card, Grid, Text, Table, Group, Button, Center } from '@mantine/core';
+import {
+  Card,
+  Grid,
+  Text,
+  Table,
+  Group,
+  Button,
+  Center,
+  Checkbox,
+} from '@mantine/core';
 
 import { LoaderWrapper } from '@/components/layouts/loader-wrapper';
 import { CreateToViewMealChart } from '@/interfaces/mess/meal-chart.interface';
@@ -7,6 +16,8 @@ import { useMealChartsToView } from '@/lib/api/mess/meal-chart/create-to-view-me
 
 import { MealTypeBadge } from '../../core/badge/enum-badage';
 import UserAvatar from '../../user/user-list-avatar';
+import { useUsers } from '@/lib/api/user/get-users';
+import { useMemo } from 'react';
 
 const MealChartView = ({
   mealChartType,
@@ -36,6 +47,18 @@ const MealChartView = ({
     extraMealCount,
     userWithMealPreference = [],
   } = mealChart?.data || {};
+
+  const { data: users } = useUsers();
+
+  const userIdMap: Record<string, any> = useMemo(() => {
+    return users?.data.reduce(
+      (acc: Record<string, any>, user) => {
+        acc[user._id] = user;
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
+  }, [users?.data]);
 
   return (
     <LoaderWrapper isLoading={isLoading}>
@@ -74,30 +97,34 @@ const MealChartView = ({
           </Grid>
 
           {/* Bottom: List of Students */}
-          <Table mt="md" striped highlightOnHover>
+          <Table m="md" striped highlightOnHover>
             <thead>
               <tr>
-                <th>User</th>
-                <th>Meal Type</th>
-                <th>Items</th>
-                <th>Verified</th>
+                <th align="left">Verified</th>
+                <th align="left">User</th>
+                <th align="left">Room</th>
+                <th align="left">Meal Type</th>
+                {/* <th align="left">Items</th> */}
               </tr>
             </thead>
             <tbody>
               {userWithMealPreference.length > 0 ? (
                 userWithMealPreference.map((data, index) => (
                   <tr key={index}>
-                    <td>{<UserAvatar user={data.user} />}</td>
+                    <td align="center">
+                      <Checkbox onClick={() => {}} />
+                    </td>
+                    <td>{<UserAvatar user={userIdMap[data.user]} />}</td>
+                    <td>{userIdMap[data.user]?.room || 'N/A'}</td>
                     <td>
                       <MealTypeBadge
                         key={data.mealType}
                         value={data.mealType}
                       />
                     </td>
-                    <td>
+                    {/* <td>
                       {data.items.length > 0 ? data.items.join(', ') : 'None'}
-                    </td>
-                    <td>{data.verify ? 'Yes' : 'No'}</td>
+                    </td> */}
                   </tr>
                 ))
               ) : (

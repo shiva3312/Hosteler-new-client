@@ -167,6 +167,7 @@ export const UserRequestZodSchema = z.object({
   status: z.nativeEnum(UserStatus).default(UserStatus.Active), // Assuming status is a UserRole for simplicity,
   mealStatus: z.nativeEnum(MealStatus).default(MealStatus.Active), // Assuming mealStatus is a UserRole for simplicity,
   isChangePassword: z.boolean().default(false), // Indicates if the user is changing their password
+  room: Primitive.safeString('Room').nullish(),
 
   // reference fields
   parent: Primitive.safeID().nullish(), // Parent user ID for hierarchical relationships, Guest user mush have a parent

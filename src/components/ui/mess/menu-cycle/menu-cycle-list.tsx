@@ -11,7 +11,10 @@ import { useMemo } from 'react';
 
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
+import { UserRole } from '@/data/feature';
 import { MenuCycleResponse } from '@/interfaces/mess/menu-cycle.interface';
+import { AuthorizationService } from '@/lib/api/auth/authorization';
+import { useMe } from '@/lib/api/user/get-me';
 import { useMenuCycles } from '@lib/api/mess/menu-cycle/get-all-menu-cycles';
 
 import { DeleteMenuCycle } from './menu-cycle-delete';
@@ -21,6 +24,11 @@ import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MenuCyclesList = () => {
   const menuCyclesQuery = useMenuCycles();
+  const { data: me } = useMe();
+  const isNonAdmin = AuthorizationService.hasLowerRole(
+    me?.data?.roles ?? [],
+    UserRole.ADMIN,
+  );
 
   const columns = useMemo<MRT_ColumnDef<MenuCycleResponse>[]>(
     () => [
@@ -82,29 +90,31 @@ export const MenuCyclesList = () => {
       rowCount: menuCyclesQuery.data?.data?.length ?? 0,
       editDisplayMode: 'custom',
       // onEditingRowSave: handleSaveMenuCycle,
-      renderRowActions: ({ row, table }) => (
-        <Flex gap="md">
-          <Tooltip label="Edit">
-            <ActionIcon
-              color="blue"
-              onClick={() => {
-                table.setEditingRow(row);
-              }}
-            >
-              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
-                <MenuCycleForm initialValues={row.original!} />
-              </GenericDrawer>
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip label="Delete">
-            <ActionIcon color="red">
-              <DeleteMenuCycle menuCycle={row.original} />
-            </ActionIcon>
-          </Tooltip>
-        </Flex>
-      ),
+      renderRowActions: ({ row, table }) =>
+        isNonAdmin ? undefined : (
+          <Flex gap="md">
+            <Tooltip label="Edit">
+              <ActionIcon
+                color="blue"
+                onClick={() => {
+                  table.setEditingRow(row);
+                }}
+              >
+                <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                  <MenuCycleForm initialValues={row.original!} />
+                </GenericDrawer>
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Delete">
+              <ActionIcon color="red">
+                <DeleteMenuCycle menuCycle={row.original} />
+              </ActionIcon>
+            </Tooltip>
+          </Flex>
+        ),
 
       renderTopToolbarCustomActions: () => {
+        if (isNonAdmin) return undefined;
         return (
           <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
             <MenuCycleForm />
@@ -112,7 +122,7 @@ export const MenuCyclesList = () => {
         );
       },
     }),
-    [columns, menuCyclesQuery.data?.data],
+    [columns, isNonAdmin, menuCyclesQuery.data?.data],
   );
 
   const state: Partial<MRT_TableState<MenuCycleResponse>> = useMemo(

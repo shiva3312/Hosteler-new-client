@@ -93,6 +93,12 @@ export const UsersList = () => {
         },
       },
       {
+        accessorFn: (row) => row.room,
+        accessorKey: 'room',
+        header: 'Room',
+        id: 'room',
+      },
+      {
         accessorFn: (row) => row.unit,
         accessorKey: 'unit',
         header: 'Unit',

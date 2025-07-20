@@ -3,6 +3,8 @@ import { type ClassValue, clsx } from 'clsx';
 import _ from 'lodash';
 import { twMerge } from 'tailwind-merge';
 
+import { Link } from '@/components/layouts/dashboard-layout/sidebar-links';
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -197,5 +199,34 @@ export class UtilHelper {
     }
 
     return processObject(obj);
+  }
+
+  public static getPathByLabel(pathname: string, links: Link[]): string {
+    for (const link of links) {
+      // Check if the pathname matches the main link
+      if (link.link === pathname) {
+        // If the link has subLinks, append the first subLink label
+        if (link.subLinks && link.subLinks.length > 0) {
+          return `${link.label}:${link.subLinks[0].label}`; // ParentLabel:FirstChildLabel
+        }
+        return link.label; // Return the main label
+      }
+
+      // Check if the pathname matches any sublink
+      if (link.subLinks) {
+        for (const subLink of link.subLinks) {
+          if (subLink.link === pathname) {
+            // If the subLink has subLinks, append the first subLink label
+            if (subLink.subLinks && subLink.subLinks.length > 0) {
+              return `${link.label}:${subLink.label}:${subLink.subLinks[0].label}`; // ParentLabel:SubLabel:FirstChildLabel
+            }
+            return `${link.label}:${subLink.label}`; // ParentLabel:SubLabel
+          }
+        }
+      }
+    }
+
+    // If no match is found, return an empty string or a default value
+    return '';
   }
 }
