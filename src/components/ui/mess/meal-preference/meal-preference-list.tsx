@@ -13,7 +13,6 @@ import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { MealPreferenceResponse } from '@/interfaces/mess/meal-preference.interface';
 import { SearchQuery } from '@/lib/api/search-query';
-import { useMe } from '@/lib/api/user/get-me';
 import { useMealPreferences } from '@lib/api/mess/meal-preference/get-all-meal-preferences';
 
 import { DeleteMealPreference } from './meal-preference-delete';

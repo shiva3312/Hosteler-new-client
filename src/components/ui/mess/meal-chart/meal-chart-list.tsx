@@ -12,7 +12,6 @@ import { useMemo } from 'react';
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { MealChartResponse } from '@/interfaces/mess/meal-chart.interface';
-import { SearchQuery } from '@/lib/api/search-query';
 import { useMealCharts } from '@lib/api/mess/meal-chart/get-all-meal-charts';
 
 import { DeleteMealChart } from './meal-chart-delete';

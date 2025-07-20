@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Card, Center, Divider, Select, Text } from '@mantine/core';
+import { Center, Divider, Select, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 import { useMemo } from 'react';

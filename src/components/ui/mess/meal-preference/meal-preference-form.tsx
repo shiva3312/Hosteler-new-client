@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Box, Button, Grid, Select } from '@mantine/core';
+import { Button, Grid, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
@@ -9,10 +9,8 @@ import {
   MealPreferenceRequest,
   MealPreferenceResponse,
 } from '@/interfaces/mess/meal-preference.interface';
-import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useCreateMealPreference } from '@/lib/api/mess/meal-preference/create-meal-preference';
 import { useUpdateMealPreference } from '@/lib/api/mess/meal-preference/update-meal-preference';
-import { useMe } from '@/lib/api/user/get-me';
 
 import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
 import UserDropdown from '../../core/dropdown/user-selector';
@@ -28,7 +26,6 @@ export function MealPreferenceForm({ initialValues }: Props) {
     // validate : MealPreferenceRequestZodSchema
   });
   const { addNotification } = useNotifications();
-  const { data: me } = useMe();
 
   const updateMealPreferenceMutation = useUpdateMealPreference({
     mutationConfig: {

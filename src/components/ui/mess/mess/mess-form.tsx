@@ -7,22 +7,16 @@ import { IconClock } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
 import logger from '@/config/log';
-import { UserRole } from '@/data/feature';
 import { useScreenType } from '@/hooks/use-scree-type';
 import { MessStatus, ScheduleFor } from '@/interfaces/enums';
 import { MessRequest, MessResponse } from '@/interfaces/mess/mess.interface';
 import { useCreateMess } from '@/lib/api/mess/mess/create-mess';
 import { useUpdateMess } from '@/lib/api/mess/mess/update-mess';
-import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
-import { SearchQuery } from '@/lib/api/search-query';
-import { useUnits } from '@/lib/api/unit/get-all-units';
-import { useMe } from '@/lib/api/user/get-me';
 
-import { AsyncAutocompleteCombobox } from '../../core/dropdown';
+import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
 import { GenericFieldset } from '../../core/fieldset/fieldset';
 import { useNotifications } from '../../core/notifications';
 import { ScheduleJobForm } from '../../schedule/schedule-form';
-import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
 
 interface Props {
   initialValues?: Partial<MessRequest>;
@@ -34,15 +28,6 @@ export function MessForm({ initialValues = {} }: Props) {
     // validate : MessRequestZodSchema
   });
   const { screenType } = useScreenType();
-  const { data: me } = useMe();
-  const { data: organizations, isLoading: orgLoading } = useOrganizations({});
-  const { data: units, isLoading: unitLoading } = useUnits({
-    params: SearchQuery?.unitSearchQuery({
-      organization: [form.values.organization!],
-    }),
-    enabled: !!form.values.organization,
-  });
-
   const { addNotification } = useNotifications();
 
   const updateMessMutation = useUpdateMess({

@@ -12,7 +12,6 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
-import logger from '@/config/log';
 import { paths } from '@/config/paths';
 import { useDisclosure } from '@/hooks/use-disclosure.js';
 import { AuthorizationService } from '@/lib/api/auth/authorization';

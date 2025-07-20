@@ -9,15 +9,16 @@ import {
   Center,
   Checkbox,
 } from '@mantine/core';
+import { useMemo } from 'react';
 
 import { LoaderWrapper } from '@/components/layouts/loader-wrapper';
 import { CreateToViewMealChart } from '@/interfaces/mess/meal-chart.interface';
+import { UserResponse } from '@/interfaces/user.interface';
 import { useMealChartsToView } from '@/lib/api/mess/meal-chart/create-to-view-meal-chart';
+import { useUsers } from '@/lib/api/user/get-users';
 
 import { MealTypeBadge } from '../../core/badge/enum-badage';
 import UserAvatar from '../../user/user-list-avatar';
-import { useUsers } from '@/lib/api/user/get-users';
-import { useMemo } from 'react';
 
 const MealChartView = ({
   mealChartType,
@@ -50,13 +51,15 @@ const MealChartView = ({
 
   const { data: users } = useUsers();
 
-  const userIdMap: Record<string, any> = useMemo(() => {
-    return users?.data.reduce(
-      (acc: Record<string, any>, user) => {
-        acc[user._id] = user;
-        return acc;
-      },
-      {} as Record<string, any>,
+  const userIdMap: Record<string, UserResponse> = useMemo(() => {
+    return (
+      users?.data.reduce(
+        (acc: Record<string, UserResponse>, user) => {
+          acc[user._id] = user;
+          return acc;
+        },
+        {} as Record<string, UserResponse>,
+      ) || {}
     );
   }, [users?.data]);
 
