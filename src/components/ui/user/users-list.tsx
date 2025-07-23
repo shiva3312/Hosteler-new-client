@@ -1,6 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon, Text, Button } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Text, Button, Badge } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import RoleBadge from '@/components/ui/core/badge/role-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
+import { UserRole } from '@/data/feature';
 import { UserResponse } from '@/interfaces/user.interface';
 import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useGroups } from '@/lib/api/group/get-all-groups';
@@ -63,7 +64,8 @@ export const UsersList = () => {
         accessorKey: 'username',
         header: 'Username',
         id: 'username',
-        size: 250,
+        // size: 250,
+        maxSize: 300,
         // Footer: () => {
         //   return <>{`${users?.data.length ?? 0} Users.`}</>;
         // },
@@ -80,7 +82,7 @@ export const UsersList = () => {
         accessorKey: 'profile.fullName',
         header: 'Full Name',
         id: 'profile.fullName',
-        size: 250,
+        size: 200,
         Cell: ({ row }) => (
           <Text>
             {`${row.original.profile?.firstName ?? ''} ${row.original.profile?.lastName ?? ''}`.trim()}
@@ -93,55 +95,38 @@ export const UsersList = () => {
         },
       },
       {
+        accessorFn: (row) => row.isVerified,
+        accessorKey: 'isVerified',
+        header: 'Verified',
+        size: 80,
+        id: 'isVerified',
+        Cell: ({ row }) => (
+          <Badge
+            tt={'capitalize'}
+            color={row.original.isVerified ? 'green' : 'red'}
+            variant="light"
+          >
+            {row.original.isVerified ? 'Yes' : 'No'}
+          </Badge>
+        ),
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
         accessorFn: (row) => row.room,
         accessorKey: 'room',
         header: 'Room',
+        size: 80,
         id: 'room',
-      },
-      {
-        accessorFn: (row) => row.unit,
-        accessorKey: 'unit',
-        header: 'Unit',
-        id: 'unit',
-        Cell: ({ row }) => {
-          // const unit = row.original.unit;
-          return (
-            <Text>
-              {units?.data?.find((u) => u._id === row.original.unit)?.name ??
-                'N/A'}
-            </Text>
-          );
-        },
-        enableEditing: true,
-        enableColumnFilter: true,
-        mantineEditTextInputProps: {
-          type: 'text',
-        },
-      },
-      {
-        accessorFn: (row) => row.organization,
-        accessorKey: 'organization',
-        header: 'Organization',
-        id: 'organization',
-        Cell: ({ row }) => {
-          return (
-            <Text>
-              {organizations?.data?.find(
-                (org) => org._id === row.original.organization,
-              )?.name ?? 'N/A'}
-            </Text>
-          );
-        },
-        enableEditing: true,
-        enableColumnFilter: true,
-        mantineEditTextInputProps: {
-          type: 'text',
-        },
       },
       {
         accessorFn: (row) => row.status,
         accessorKey: 'status',
         header: 'Status',
+        size: 80,
         id: 'status',
         Cell: ({ row }) => (
           <Flex gap="xs" wrap={'wrap'}>
@@ -159,6 +144,7 @@ export const UsersList = () => {
         accessorFn: (row) => row.profile?.preferences?.mealType,
         accessorKey: 'profile?.preferences?.MealType',
         header: 'Meal Type',
+        size: 90,
         id: 'profile.preferences.MealType',
         Cell: ({ row }) => (
           <Flex gap="xs" wrap={'wrap'}>
@@ -177,7 +163,7 @@ export const UsersList = () => {
         accessorKey: 'mealStatus',
         header: 'Meal Status',
         id: 'mealStatus',
-        // size: 250,
+        size: 80,
         Cell: ({ row }) => (
           <Flex gap="xs" wrap={'wrap'}>
             <MealStatusBadge
@@ -195,7 +181,7 @@ export const UsersList = () => {
         accessorKey: 'roles',
         header: 'Roles',
         id: 'roles',
-        // size: 250,
+        // size: 80,
         Cell: ({ row }) => (
           <Flex gap="xs" wrap={'wrap'}>
             {row.original.roles?.map((role) => (
@@ -211,6 +197,7 @@ export const UsersList = () => {
         accessorFn: (row) => row.profile?.gender,
         accessorKey: 'profile.gender',
         header: 'Gender',
+        size: 80,
         id: 'profile.gender',
         Cell: ({ row }) => <EnumBadge value={row.original.profile?.gender} />,
         enableEditing: true,
@@ -224,6 +211,7 @@ export const UsersList = () => {
         accessorKey: 'group',
         header: 'Group',
         id: 'group',
+        size: 80,
         Cell: ({ row }) => {
           const group = groups?.data?.find((g) => g._id === row.original.group);
           return <Text>{group?.name ?? ''}</Text>;
@@ -261,12 +249,52 @@ export const UsersList = () => {
         accessorKey: 'parent',
         header: 'Parent',
         id: 'parent',
-        size: 250,
+        // size: 250,
         Cell: ({ row }) => {
           const parent = users?.data?.find(
             (u) => u._id === row.original.parent,
           );
           return <Text>{parent?.username}</Text>;
+        },
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.unit,
+        accessorKey: 'unit',
+        header: 'Unit',
+        id: 'unit',
+        Cell: ({ row }) => {
+          // const unit = row.original.unit;
+          return (
+            <Text>
+              {units?.data?.find((u) => u._id === row.original.unit)?.name ??
+                'N/A'}
+            </Text>
+          );
+        },
+        enableEditing: true,
+        enableColumnFilter: true,
+        mantineEditTextInputProps: {
+          type: 'text',
+        },
+      },
+      {
+        accessorFn: (row) => row.organization,
+        accessorKey: 'organization',
+        header: 'Organization',
+        id: 'organization',
+        Cell: ({ row }) => {
+          return (
+            <Text>
+              {organizations?.data?.find(
+                (org) => org._id === row.original.organization,
+              )?.name ?? 'N/A'}
+            </Text>
+          );
         },
         enableEditing: true,
         enableColumnFilter: true,
@@ -313,6 +341,11 @@ export const UsersList = () => {
       getRowId: (row) => row._id ?? '',
       rowCount: users?.data?.length ?? 0,
       editDisplayMode: 'custom',
+      enableRowSelection: AuthorizationService.hasEqualOrHigherRole(
+        me?.data?.roles ?? [],
+        UserRole.ADMIN,
+      ),
+      // positionToolbarAlertBanner: 'top',
       // onEditingRowSave: handleSaveUser,
       renderRowActions: ({ row, table }) => (
         <Flex gap="md">
@@ -349,7 +382,7 @@ export const UsersList = () => {
         );
       },
     }),
-    [columns, isNoneAdminRoles, users?.data],
+    [columns, isNoneAdminRoles, me?.data?.roles, users?.data],
   );
 
   const state: Partial<MRT_TableState<UserResponse>> = useMemo(

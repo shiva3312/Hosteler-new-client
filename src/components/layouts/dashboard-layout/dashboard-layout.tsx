@@ -9,6 +9,7 @@ import {
   IconToolsKitchen3,
   IconBed,
   IconSitemap,
+  IconLink,
 } from '@tabler/icons-react';
 import { useState } from 'react';
 
@@ -110,6 +111,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           link: paths.app.systemSettings.feature.getHref(),
           icon: IconUser,
           label: 'Feature',
+        },
+        {
+          link: paths.app.systemSettings.tempLink.getHref(),
+          icon: IconLink,
+          label: 'Link',
         },
         {
           link: paths.app.systemSettings.system.getHref(),

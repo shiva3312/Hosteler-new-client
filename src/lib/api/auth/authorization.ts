@@ -64,24 +64,23 @@ export class AuthorizationService {
     [paths.app.settings.getHref()]: { access: 'authenticated' }, // Authenticated-only link
     [paths.app.systemSettings.user.getHref()]: {
       access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.systemSettings.group.getHref()]: {
       access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.systemSettings.feature.getHref()]: {
       access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+    },
+    [paths.app.systemSettings.tempLink.getHref()]: {
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.systemSettings.system.getHref()]: {
       access: 'role-based',
-      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN],
-    },
-
-    // for image
-    ['uploads/686e353d136a8f4d7c868d66/medium.jpeg']: {
-      access: 'public', // Public link for image
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
   };
 

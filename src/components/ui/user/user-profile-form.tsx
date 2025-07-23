@@ -8,6 +8,7 @@ import {
   Stack,
   Textarea,
   Grid,
+  BoxProps,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 
@@ -25,18 +26,13 @@ const foodOptions = Object.values(MealType).map((value) => ({
   label: value,
 }));
 
-const UserProfileForm = ({ form }: { form: any }) => {
+const UserProfileForm = ({ form, ...props }: { form: any } & BoxProps) => {
   if (!form) return <>Props Required to pass</>;
 
   return (
-    <Box mx="auto">
+    <Box mx="auto" {...props}>
       {/* Personal Information */}
-      <GenericFieldset
-        legend={'Personal Information'}
-        radius="md"
-        p="md"
-        mb="xl"
-      >
+      <GenericFieldset legend={'Personal Information'} p="md" mb="xl">
         <Group grow>
           <TextInput
             label="First Name"

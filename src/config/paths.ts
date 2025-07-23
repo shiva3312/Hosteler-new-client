@@ -20,6 +20,13 @@ export const paths = {
       getHref: (redirectTo?: string | null | undefined) =>
         `/auth/login${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`,
     },
+    registerNewUser: {
+      path: '/auth/register/new-user/:unitName/:token',
+      getHref: (token?: string | null | undefined) =>
+        token
+          ? `/auth/register/new-user/${encodeURIComponent(token)}`
+          : '/auth/register/new-user',
+    },
   },
 
   app: {
@@ -61,6 +68,10 @@ export const paths = {
       feature: {
         path: 'system-settings/feature',
         getHref: () => '/app/system-settings/feature',
+      },
+      tempLink: {
+        path: 'system-settings/temp-link',
+        getHref: () => '/app/system-settings/temp-link',
       },
       system: {
         path: 'system-settings/system',

@@ -156,10 +156,53 @@ export const ProfileZodSchema = z.object({
   finance: FinanceZodSchema.nullish(),
   identity: IdentityZodSchema.nullish(),
   techInfo: TechInfoZodSchema.nullish(),
+  education: z
+    .array(
+      z.object({
+        institution: Primitive.safeString('Institution', [], 3, 50).nullish(),
+        degree: Primitive.safeString('Degree', [], 3, 50).nullish(),
+        fieldOfStudy: Primitive.safeString(
+          'Field of Study',
+          [],
+          3,
+          50,
+        ).nullish(),
+        startDate: Primitive.safeDate('Start Date').nullish(),
+        endDate: Primitive.safeDate('End Date').nullish(),
+        grade: Primitive.safeString('Grade', [], 3, 10).nullish(),
+        description: Primitive.safeString('Description', [], 3, 200).nullish(),
+      }),
+    )
+    .nullish(),
+  workExperience: z
+    .array(
+      z.object({
+        company: Primitive.safeString('Company', [], 3, 50).nullish(),
+        position: Primitive.safeString('Position', [], 3, 50).nullish(),
+        startDate: Primitive.safeDate('Start Date').nullish(),
+        endDate: Primitive.safeDate('End Date').nullish(),
+        responsibilities: Primitive.safeString(
+          'Responsibilities',
+          [],
+          3,
+          200,
+        ).nullish(),
+      }),
+    )
+    .nullish(),
+});
+
+export const UsernameZodSchema = Primitive.safeString(
+  'Username',
+  [],
+  3,
+  20,
+).refine((val) => /^[a-zA-Z0-9_.]+$/.test(val), {
+  message: 'Username can only contain letters, numbers, dot, and underscores',
 });
 
 export const UserRequestZodSchema = z.object({
-  username: Primitive.safeString('Username', [], 3, 20),
+  username: z.union([UsernameZodSchema, Primitive.safeEmail()]),
   password: Primitive.safeString('Password', [], 3, 20).optional(),
   imageUrl: Primitive.safeString().nullish(),
   roles: z.array(z.nativeEnum(UserRole)).default([UserRole.USER]), // Default to USER role, can be extended with more roles
@@ -168,6 +211,7 @@ export const UserRequestZodSchema = z.object({
   mealStatus: z.nativeEnum(MealStatus).default(MealStatus.Active), // Assuming mealStatus is a UserRole for simplicity,
   isChangePassword: z.boolean().default(false), // Indicates if the user is changing their password
   room: Primitive.safeString('Room').nullish(),
+  isVerified: z.boolean().default(false), // Indicates if the user is verified
 
   // reference fields
   parent: Primitive.safeID().nullish(), // Parent user ID for hierarchical relationships, Guest user mush have a parent
@@ -219,11 +263,13 @@ export const ImageUploadRequestZodSchema = z.object({
   size: z
     .number()
     .max(5 * 1024 * 1024, { message: 'File size must not exceed 5MB.' }), // Max size: 5MB
-  originalname: Primitive.safeString('Image', [], 1, 50),
+  originalname: Primitive.safeString('Image', [], 1, 20),
 });
+
 export const ImageUploadResponseZodSchema = ImageUploadRequestZodSchema.extend({
   meta: MetaZodSchema.optional(),
 });
+
 export const UpdateUserRequestZodSchema = UserRequestZodSchema.partial();
 
 /** Interface  */

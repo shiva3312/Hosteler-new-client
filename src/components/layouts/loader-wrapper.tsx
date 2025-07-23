@@ -1,8 +1,8 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Center, Loader, Stack, Text } from '@mantine/core';
+import { Center, CenterProps, Loader, Stack, Text } from '@mantine/core';
 import React from 'react';
 
-interface LoaderWrapperProps {
+interface LoaderWrapperProps extends CenterProps {
   isLoading: boolean;
   children: React.ReactNode;
   loadingText?: string; // Optional text to display while loading
@@ -14,6 +14,7 @@ export function LoaderWrapper({
   children,
   loadingText = 'Loading, please wait...', // Default loading text
   loaderType = 'default', // Default loader type
+  ...props
 }: LoaderWrapperProps) {
   const avatarLoader = {
     css: {
@@ -33,7 +34,7 @@ export function LoaderWrapper({
 
   if (isLoading) {
     return (
-      <Center style={{ height: '100%' }}>
+      <Center style={{ height: '100%' }} {...props}>
         <Stack align="center" gap="sm">
           <Loader {...style.css} /> {/* Apply the loader style here */}
           {!!style.loaderText && (

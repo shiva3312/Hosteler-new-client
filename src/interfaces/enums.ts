@@ -267,7 +267,7 @@ export enum ImageSize {
 }
 
 export enum TempRequestType {
-  TempLink = 'TempLink',
-  LoginAttempt = 'LoginAttempt',
-  ResetPassword = 'ResetPassword',
+  RegisterUserFormLink = 'Register user form',
+  LoginAttempt = 'Login attempt',
+  ResetPassword = 'Reset Password',
 }

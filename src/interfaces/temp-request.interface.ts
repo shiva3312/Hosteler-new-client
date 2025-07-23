@@ -8,10 +8,12 @@ import { Primitive } from './primitive.class';
 
 export const TempRequestRequestZodSchema = z.object({
   name: Primitive.safeString('TempRequest name', [], 3, 20),
-  type: z.nativeEnum(TempRequestType).nullish(),
+  type: z.nativeEnum(TempRequestType),
   description: Primitive.safeString('TempRequest description').nullish(),
-  data: z.any().nullish(), // additional data for the request, can be anything
-  expiresAt: Primitive.safeDate('TempRequest expiry date').nullish(), // when the temp request expires
+  data: z.any().nullish(),
+  expiresAt: Primitive.safeDate('TempRequest expiry date').nullish(),
+  unit: Primitive.safeID().nullish(),
+  organization: Primitive.safeID().nullish(),
 });
 
 export const TempRequestResponseZodSchema = z

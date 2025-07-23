@@ -45,7 +45,7 @@ function UserAvatar({ user }: UserAvatarProps) {
 
   return (
     <LoaderWrapper isLoading={isLoading} loaderType="avatar">
-      <Group gap="sm">
+      <Group gap="sm" wrap="nowrap">
         <UserProfileImage
           url={data.imageUrl}
           type={data.imageType}

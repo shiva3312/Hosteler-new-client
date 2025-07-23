@@ -30,9 +30,14 @@ export const createAppRouter = (queryClient: QueryClient) =>
       path: paths.home.path,
       lazy: () => import('./routes/public/landing').then(convert(queryClient)),
     },
+    // {
+    //   path: paths.auth.register.path,
+    //   lazy: () => import('./routes/auth/register').then(convert(queryClient)),
+    // },
     {
-      path: paths.auth.register.path,
-      lazy: () => import('./routes/auth/register').then(convert(queryClient)),
+      path: paths.auth.registerNewUser.path, // 'register/new-user/:token'
+      lazy: () =>
+        import('./routes/auth/register-new-user').then(convert(queryClient)),
     },
     {
       path: paths.auth.login.path,
@@ -169,6 +174,13 @@ export const createAppRouter = (queryClient: QueryClient) =>
               lazy: () =>
                 import(
                   './routes/app/settings/system-settings/system-setting/system-management'
+                ).then(convert(queryClient)),
+            },
+            {
+              path: paths.app.systemSettings.tempLink.path, // 'system'
+              lazy: () =>
+                import(
+                  './routes/app/settings/system-settings/temp-link-management/temp-link-management'
                 ).then(convert(queryClient)),
             },
             {

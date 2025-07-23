@@ -281,7 +281,8 @@ export const UserForm = ({ initialValues = {} }: Props) => {
       />
 
       <TextInput
-        label="room"
+        label="Room Number"
+        description="Enter the room number for the user"
         key={form.key('room')}
         placeholder="Enter room number"
         {...form.getInputProps('room')}
