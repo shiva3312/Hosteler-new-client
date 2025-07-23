@@ -38,6 +38,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           roles: [UserRole.USER],
           mealStatus: MealStatus.Disabled,
           isChangePassword: false,
+          isVerified: false,
         });
       })}
     >
