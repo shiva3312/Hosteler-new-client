@@ -32,6 +32,7 @@ import { useCreateUser } from '../../../lib/api/user/user-create';
 import OrganizationUnitDropdown from '../core/dropdown/organization-unit-selector';
 import { GenericFieldset } from '../core/fieldset/fieldset';
 import { DropzoneButton } from '../core/file-hanling/dropzone';
+import UsernameInput from '../core/username-input';
 
 const userRoles = Object.entries(UserRole).map(([key, value]) => ({
   value,
@@ -207,11 +208,7 @@ export const UserForm = ({ initialValues = {} }: Props) => {
                 {!isEditing && (
                   <Grid>
                     <Grid.Col>
-                      <TextInput
-                        key={form.key('username')}
-                        label="Username"
-                        {...form.getInputProps('username')}
-                      />
+                      <UsernameInput form={form} required />
                     </Grid.Col>
                     <Grid.Col>
                       <PasswordInput

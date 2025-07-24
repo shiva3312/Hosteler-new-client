@@ -83,8 +83,6 @@ export function TempRequestForm({ initialValues }: Props) {
     [me?.data?.roles],
   );
 
-  console.log('TempRequest Types:', tempRequestTypes);
-
   const handleSubmit = (values: typeof form.values) => {
     if (isEmpty(initialValues)) {
       // Handle create tempRequest logic

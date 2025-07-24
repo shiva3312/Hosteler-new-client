@@ -41,12 +41,13 @@ api.interceptors.response.use(
       'Something went wrong. Please try again.';
 
     // 🔔 Notify user
-    useNotifications.getState().addNotification({
-      type: 'error',
-      title: getTitleByStatus(status),
-      message,
-    });
-
+    if (!data.silentError) {
+      useNotifications.getState().addNotification({
+        type: 'error',
+        title: getTitleByStatus(status),
+        message,
+      });
+    }
     // 🔒 Unauthorized (force redirect)
     if (status === 401) {
       const searchParams = new URLSearchParams();

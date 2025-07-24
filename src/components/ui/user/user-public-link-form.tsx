@@ -11,11 +11,8 @@ import {
   Title,
   Text,
   Divider,
-  Loader,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
-import { useDebouncedValue } from '@mantine/hooks';
-import { IconCircleCheck } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 
@@ -26,13 +23,13 @@ import {
   UserRequestZodSchema,
   UserResponse,
 } from '@/interfaces/user.interface';
-import { useUsername } from '@/lib/api/auth/check-username';
 import { useRegisterUserByLink } from '@/lib/api/auth/register-user-by-link';
 import { UtilHelper } from '@/utils/cn';
 
 import UserProfileForm from './user-profile-form';
 import { GenericFieldset } from '../core/fieldset/fieldset';
 import { DropzoneButton } from '../core/file-hanling/dropzone';
+import UsernameInput from '../core/username-input';
 
 const defaultInitialValues: Partial<UserRequest> = {
   profile: {
@@ -60,15 +57,7 @@ export const RegisterUserByLink = () => {
   const [newUser, setNewUser] = useState<string | null>(null);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [debounced] = useDebouncedValue(form.values.username, 200, {
-    leading: true,
-  });
-
   const { addNotification } = useNotifications();
-  const { data: username, isLoading } = useUsername({
-    username: debounced || '',
-    enabled: !!debounced,
-  });
 
   const createProfileMutation = useRegisterUserByLink({
     mutationConfig: {
@@ -130,31 +119,12 @@ export const RegisterUserByLink = () => {
         <GenericFieldset legend={'Credentials'} p="md" mb="xl">
           <Grid>
             <Grid.Col>
-              <TextInput
-                rightSection={
-                  isLoading ? (
-                    <Loader />
-                  ) : !username?.data && form.values.username ? (
-                    <IconCircleCheck size={'18'} color="green" />
-                  ) : null
-                }
-                placeholder="Enter username or email"
-                description="Username must be unique"
-                required
-                key={form.key('username')}
-                label="Username or Email"
-                {...form.getInputProps('username')}
-                error={
-                  username?.data === true && !isLoading
-                    ? 'Username is already taken'
-                    : null
-                }
-              />
+              <UsernameInput form={form} required />
             </Grid.Col>
             <Grid.Col>
               <PasswordInput
                 placeholder="Enter password"
-                description="Password must be at least 6 characters long"
+                description="Password must be at least 8 characters long"
                 required
                 key={form.key('password')}
                 label="Password"
