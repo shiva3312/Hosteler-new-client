@@ -43,11 +43,9 @@ export const TempRequestsList = () => {
         Cell: ({ row }) => {
           // write logic to generate a temp link
           const data = row.original?.data;
-          const unitName = data?.unit?.name?.trim() || '';
+          const unitName = encodeURIComponent(data?.unit?.name?.trim() || '');
           const origin = window.location.origin;
-          const tempLink = encodeURIComponent(
-            `${origin}/auth/register/new-user/${unitName}/${row.original.token}`,
-          );
+          const tempLink = `${origin}/auth/register/new-user/${unitName}/${row.original.token}`;
 
           return (
             <Flex gap={'md'}>
