@@ -11,11 +11,11 @@ import {
   Title,
   Text,
   Divider,
+  Loader,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconCircleCheck } from '@tabler/icons-react';
-import { Loader } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 
