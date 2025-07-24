@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
 
+import { PasswordZodSchema, UsernameZodSchema } from './common.interface';
 import { Primitive } from './primitive.class';
 import { UserRequestZodSchema } from './user.interface';
 
@@ -14,14 +15,8 @@ export const TokenDataZodSchema = z.object({
 });
 
 export const UserLoginRequestZodSchema = z.object({
-  username: z
-    .string()
-    .min(2, 'Username must be at least 2 characters long')
-    .max(20, 'Username must be at most 20 characters long'),
-  password: z
-    .string()
-    .min(2, 'Password must be at least 2 characters long')
-    .max(20, 'Password must be at most 20 characters long'),
+  username: UsernameZodSchema,
+  password: PasswordZodSchema,
   rememberMe: z.boolean().optional(),
 });
 

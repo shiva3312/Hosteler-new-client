@@ -45,6 +45,28 @@ export const UserActionResponseZodSchema = UserActionZodSchema.extend({
     return UserResponseZodSchema.optional();
   }),
 });
+
+export const UsernameZodSchema = Primitive.safeString('Username', [], 3, 20)
+  .transform((val) => val.toLowerCase()) // Convert all characters to lowercase
+  .refine((val) => /^[a-z0-9_.]+$/.test(val), {
+    message: 'Username can only contain letters, numbers, dot, and underscores',
+  });
+
+export const PasswordZodSchema = Primitive.safeString(
+  'Password',
+  [],
+  8,
+  20,
+).refine(
+  (val) =>
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/.test(
+      val,
+    ),
+  {
+    message:
+      'Password must be 8-20 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character',
+  },
+);
 /* ---------- TypeScript Types ---------- */
 export type ResponseData<T> = z.infer<ReturnType<typeof ResponseDataSchema<T>>>;
 export type Meta = z.infer<typeof MetaZodSchema>;

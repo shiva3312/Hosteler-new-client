@@ -3,7 +3,12 @@ import { z } from 'zod';
 
 import { UserRole } from '@/data/feature';
 
-import { MetaZodSchema, UserActionResponseZodSchema } from './common.interface';
+import {
+  MetaZodSchema,
+  PasswordZodSchema,
+  UserActionResponseZodSchema,
+  UsernameZodSchema,
+} from './common.interface';
 import {
   Religion,
   CasteCategory,
@@ -192,18 +197,9 @@ export const ProfileZodSchema = z.object({
     .nullish(),
 });
 
-export const UsernameZodSchema = Primitive.safeString(
-  'Username',
-  [],
-  3,
-  20,
-).refine((val) => /^[a-zA-Z0-9_.]+$/.test(val), {
-  message: 'Username can only contain letters, numbers, dot, and underscores',
-});
-
 export const UserRequestZodSchema = z.object({
-  username: z.union([UsernameZodSchema, Primitive.safeEmail()]),
-  password: Primitive.safeString('Password', [], 3, 20).optional(),
+  username: UsernameZodSchema.nullish(),
+  password: PasswordZodSchema.nullish(),
   imageUrl: Primitive.safeString().nullish(),
   roles: z.array(z.nativeEnum(UserRole)).default([UserRole.USER]), // Default to USER role, can be extended with more roles
   profile: ProfileZodSchema.nullish(),
