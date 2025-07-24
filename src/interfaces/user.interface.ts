@@ -198,7 +198,7 @@ export const ProfileZodSchema = z.object({
 });
 
 export const UserRequestZodSchema = z.object({
-  username: UsernameZodSchema.nullish(),
+  username: UsernameZodSchema,
   password: PasswordZodSchema.nullish(),
   imageUrl: Primitive.safeString().nullish(),
   roles: z.array(z.nativeEnum(UserRole)).default([UserRole.USER]), // Default to USER role, can be extended with more roles
