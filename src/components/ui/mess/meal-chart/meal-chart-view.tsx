@@ -1,151 +1,178 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import {
-  Card,
-  Grid,
-  Text,
-  Table,
-  Group,
-  Button,
-  Center,
-  Checkbox,
-} from '@mantine/core';
-import { useMemo } from 'react';
+import { Card, Text, Badge, Title, Flex, Divider, Box } from '@mantine/core';
+import React from 'react';
 
 import { LoaderWrapper } from '@/components/layouts/loader-wrapper';
+import { MenuType } from '@/interfaces/enums';
 import { CreateToViewMealChart } from '@/interfaces/mess/meal-chart.interface';
-import { UserResponse } from '@/interfaces/user.interface';
 import { useMealChartsToView } from '@/lib/api/mess/meal-chart/create-to-view-meal-chart';
+import { useMesses } from '@/lib/api/mess/mess/get-all-messes';
+import { useOrganization } from '@/lib/api/organization/get-organization';
+import { SearchQuery } from '@/lib/api/search-query';
+import { useUnit } from '@/lib/api/unit/get-unit';
 import { useUsers } from '@/lib/api/user/get-users';
 
-import { MealTypeBadge } from '../../core/badge/enum-badage';
-import UserAvatar from '../../user/user-list-avatar';
+import { ChartUserList } from './chart/chart-user-list';
 
-const MealChartView = ({
+const MealChartDetails: React.FC<CreateToViewMealChart> = ({
   mealChartType,
   menuType,
-  unit,
-  organization,
+  ...props
 }: CreateToViewMealChart) => {
-  const {
-    data: mealChart,
-    isLoading,
-    refetch,
-  } = useMealChartsToView({
+  const { data: mealChart, isLoading } = useMealChartsToView({
     params: {
-      unit,
-      organization,
+      unit: props.unit,
+      organization: props.organization,
       menuType,
       mealChartType,
     },
-    enabled: !!unit && !!organization,
+    enabled: !!props.unit && !!props.organization,
   });
 
   const {
-    name,
-    description,
-    type,
-    // serveTime,
-    extraMealCount,
+    extraMealCount = 0,
     userWithMealPreference = [],
+    createdAt,
+    notes,
   } = mealChart?.data || {};
 
-  const { data: users } = useUsers();
+  const { data: users, isLoading: userLoading } = useUsers({
+    params: SearchQuery.userSearchQuery({
+      usersId: userWithMealPreference.map((u) => u.user),
+    }),
+  });
 
-  const userIdMap: Record<string, UserResponse> = useMemo(() => {
-    return (
-      users?.data.reduce(
-        (acc: Record<string, UserResponse>, user) => {
-          acc[user._id] = user;
-          return acc;
-        },
-        {} as Record<string, UserResponse>,
-      ) || {}
-    );
-  }, [users?.data]);
+  const { data: organizations } = useOrganization({
+    organization: props.organization,
+    enabled: !!props.organization,
+  });
+
+  const { data: unit } = useUnit({
+    unit: props.unit,
+    enabled: !!props.unit,
+  });
+
+  const { data: messes } = useMesses({
+    params: { unit: props.unit, organization: props.organization },
+    enabled: !!props.unit && !!props.organization,
+  });
+
+  const totalGuests = users?.data.filter((user) => user?.parent).length;
+  const totalUsers = users?.data.length;
+
+  //   const totalInactive = totalUsers ? totalUsers - totalGuests : 0;
+  const organizationName = organizations?.data.name ?? 'NA';
+  const unitName = unit?.data.name ?? 'NA';
+  const createdAtFormatted = createdAt
+    ? new Date(createdAt).toString().slice(0, 25)
+    : 'N/A';
+
+  const mess = messes?.data[0];
+  const messName = mess?.name ?? 'N/A';
+
+  const serveTimeObj =
+    menuType === MenuType.Breakfast
+      ? mess?.breakFastTime
+      : menuType === MenuType.Lunch
+        ? mess?.lunchTime
+        : menuType === MenuType.Dinner
+          ? mess?.dinnerTime
+          : mess?.snackTime;
+
+  const serveTime = `${serveTimeObj?.startTime} - ${serveTimeObj?.endTime}`;
 
   return (
-    <LoaderWrapper isLoading={isLoading}>
+    <LoaderWrapper
+      isLoading={isLoading}
+      loadingText="Hold a minute, Getting you meal chart..."
+    >
       <Card shadow="sm" padding="lg" radius="md" withBorder>
         {/* Header */}
-        <Card.Section>
-          <Group mb="md">
-            <Text fw={700} size="lg">
-              {name}
-            </Text>
-            <Text color="dimmed">{type}</Text>
-          </Group>
-          <Text size="sm" color="dimmed">
-            {description || 'No description available'}
+        <Flex direction={'column'} justify={'center'} align={'center'} mb="lg">
+          <Title order={3} mb={'xs'}>
+            {messName}
+          </Title>
+          <Text size="xs" color="dimmed">
+            {unitName}
           </Text>
+          <Text size="xs" color="dimmed">
+            {organizationName}
+          </Text>
+        </Flex>
+        <Flex direction={'row-reverse'}>
+          <Badge tt={'capitalize'} variant="white" c={'black'}>
+            {createdAtFormatted}
+          </Badge>
+        </Flex>
+        <Divider my={'md'} />
+        {notes && (
+          <Box>
+            <Text size="sm">
+              <Text fw={'bold'}>Note:</Text>
+              <Text>{notes}</Text>
+            </Text>
+          </Box>
+        )}
 
-          <Button onClick={() => refetch()} loading={isLoading}>
-            Refresh
-          </Button>
-        </Card.Section>
+        <Divider variant="dashed" my={'md'} />
+        {/* Menu */}
+        {/* {menu && (
+          <Box>
+            <Box>Todays menu</Box>
+            <Divider variant="dashed" my={'md'} />
+          </Box>
+        )} */}
 
-        {/* Body */}
-        <Card.Section mt="md">
-          {/* Top: Summary */}
-          <Grid>
-            <Grid.Col span={6}>
-              <Text fw={500}>Serve Time:</Text>
-              {/* <Text size="sm">
-              {startTime} - {endTime}
-            </Text> */}
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Text fw={500}>Extra Meal Count:</Text>
-              <Text size="sm">{extraMealCount}</Text>
-            </Grid.Col>
-          </Grid>
+        {/* Category */}
+        {/* {category && (
+          <Box>
+            <Box>Category</Box>
+            <Divider variant="dashed" my={'md'} />
+          </Box>
+        )} */}
 
-          {/* Bottom: List of Students */}
-          <Table m="md" striped highlightOnHover>
-            <thead>
-              <tr>
-                <th align="left">Verified</th>
-                <th align="left">User</th>
-                <th align="left">Room</th>
-                <th align="left">Meal Type</th>
-                {/* <th align="left">Items</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {userWithMealPreference.length > 0 ? (
-                userWithMealPreference.map((data, index) => (
-                  <tr key={index}>
-                    <td align="center">
-                      <Checkbox onClick={() => {}} />
-                    </td>
-                    <td>{<UserAvatar user={userIdMap[data.user]} />}</td>
-                    <td>{userIdMap[data.user]?.room || 'N/A'}</td>
-                    <td>
-                      <MealTypeBadge
-                        key={data.mealType}
-                        value={data.mealType}
-                      />
-                    </td>
-                    {/* <td>
-                      {data.items.length > 0 ? data.items.join(', ') : 'None'}
-                    </td> */}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={4}>
-                    <Center color="dimmed" w={'100%'} h={'200px'}>
-                      No students found. Meal Type: {menuType}
-                    </Center>
-                    {/* {children} */}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
-        </Card.Section>
+        {/* Summary */}
+        <Flex justify={'space-between'} align={'center'} px={'md'}>
+          <Box>
+            <Text size="sm" fw={500} m={'xs'}>
+              Total Active: {totalUsers}
+            </Text>
+
+            <Text size="sm" fw={500} m={'xs'}>
+              Total Guest: {totalGuests}
+            </Text>
+
+            <Text size="sm" fw={500} m={'xs'}>
+              Extra Meal: {extraMealCount}
+            </Text>
+
+            {/* <Text size="sm" fw={500} m={'xs'}>
+            Total InActive: {totalGuests}
+          </Text> */}
+          </Box>
+
+          <Box>
+            <Text size="sm" fw={500} m={'xs'}>
+              Menu Type: {menuType}
+            </Text>
+            <Text size="sm" fw={500} m={'xs'}>
+              Serve Time: {serveTime}
+            </Text>
+          </Box>
+        </Flex>
+
+        {/* User List */}
+        <Divider variant="solid" my={'md'} />
+
+        <Divider variant="dashed" my={'md'} />
+        <ChartUserList
+          userWithMealPreference={userWithMealPreference}
+          users={users?.data}
+          isLoading={userLoading}
+        />
       </Card>
     </LoaderWrapper>
   );
 };
 
-export default MealChartView;
+export default MealChartDetails;

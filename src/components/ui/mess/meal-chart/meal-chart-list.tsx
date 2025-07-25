@@ -1,6 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon, Button } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Button, Box } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
@@ -11,6 +12,8 @@ import { useMemo } from 'react';
 
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
+import { useScreenType } from '@/hooks/use-scree-type';
+import { ScreenType } from '@/interfaces/enums';
 import { MealChartResponse } from '@/interfaces/mess/meal-chart.interface';
 import { useMealCharts } from '@lib/api/mess/meal-chart/get-all-meal-charts';
 
@@ -20,6 +23,7 @@ import { GenericDrawer } from '../../core/drawer/drawer';
 
 export const MealChartsList = () => {
   const mealChartsQuery = useMealCharts();
+  const { screenType } = useScreenType();
 
   const columns = useMemo<MRT_ColumnDef<MealChartResponse>[]>(
     () => [
@@ -87,13 +91,26 @@ export const MealChartsList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer title="View" trigger={<Button>View</Button>}>
-            <MealChartForm />
-          </GenericDrawer>
+          <Button
+            onClick={() => {
+              modals.open({
+                title: 'Meal Chart',
+                children: (
+                  <Box mt={'lg'}>
+                    <MealChartForm />,
+                  </Box>
+                ),
+                size: 'xl',
+                fullScreen: screenType === ScreenType.Small,
+              });
+            }}
+          >
+            View Chart
+          </Button>
         );
       },
     }),
-    [columns, mealChartsQuery.data?.data],
+    [columns, mealChartsQuery.data?.data, screenType],
   );
 
   const state: Partial<MRT_TableState<MealChartResponse>> = useMemo(

@@ -36,6 +36,7 @@ interface ScheduleJobFormProps {
   unit: string;
   organization: string;
   scheduleFor: ScheduleFor;
+  time?: string; // Default time for the schedule
 }
 
 export function ScheduleJobForm(props: ScheduleJobFormProps) {
@@ -51,6 +52,7 @@ export function ScheduleJobForm(props: ScheduleJobFormProps) {
       unit: props.unit || '',
       organization: props.organization || '',
       type: ScheduleType.Daily, // Add the 'type' property to initialValues
+      time: props.time ?? '08:00', // Default time
     },
   });
 

@@ -14,7 +14,7 @@ import { useCreateMealChart } from '@/lib/api/mess/meal-chart/create-meal-chart'
 import { useUpdateMealChart } from '@/lib/api/mess/meal-chart/update-meal-chart';
 import { useSchedules } from '@/lib/api/schedule/get-all-schedules';
 
-import MealChartView from './meal-chart-view';
+import MealChartDetails from './meal-chart-view';
 import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
 import { useNotifications } from '../../core/notifications';
 
@@ -131,10 +131,10 @@ export function MealChartForm({ initialValues }: Props) {
       <Divider label="MealChart Details" labelPosition="center" my="lg" />
 
       {Object.keys(filteredMenuTypeOptions).length > 0 ? (
-        <MealChartView
+        <MealChartDetails
           unit={form.values.unit ?? ''}
           organization={form.values.organization ?? ''}
-          menuType={form.values.menuType}
+          menuType={filteredMenuTypeOptions[0].value}
           mealChartType={MealChartType.Main}
         />
       ) : (

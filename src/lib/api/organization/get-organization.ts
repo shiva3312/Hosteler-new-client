@@ -8,7 +8,7 @@ import { QueryConfig } from '@/lib/api/react-query';
 export const getOrganizationById = (
   organization: string,
 ): Promise<{
-  data: OrganizationResponse[];
+  data: OrganizationResponse;
 }> => {
   return api.get(`/organization/${organization}`);
 };

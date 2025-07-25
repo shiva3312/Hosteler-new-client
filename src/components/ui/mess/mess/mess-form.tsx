@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { TextInput, Button, Grid, Select, Box } from '@mantine/core';
+import { TextInput, Button, Grid, Select, Box, Text } from '@mantine/core';
 import { TimeInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { modals } from '@mantine/modals';
@@ -158,7 +158,8 @@ export function MessForm({ initialValues = {} }: Props) {
                     }}
                   />
                 </Grid.Col> */}
-                <Grid.Col span={4} pt={'xl'}>
+                <Grid.Col span={4}>
+                  <Text size="xs">{`${label} Chart Time`}</Text>
                   <Button
                     leftSection={<IconClock size={'16'} />}
                     onClick={() => {
@@ -177,7 +178,7 @@ export function MessForm({ initialValues = {} }: Props) {
                       });
                     }}
                   >
-                    Schedule
+                    {`Schedule Chart`}
                   </Button>
                 </Grid.Col>
               </Grid>
