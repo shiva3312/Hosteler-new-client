@@ -1,14 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import {
-  Box,
-  Card,
-  ColorSwatch,
-  Divider,
-  Flex,
-  Group,
-  Switch,
-  Text,
-} from '@mantine/core';
+import { Box, Card, Divider, Flex, Group, Switch, Text } from '@mantine/core';
 
 import { MealStatus, UserStatus } from '@/interfaces/enums';
 import { useMe } from '@/lib/api/user/get-me';

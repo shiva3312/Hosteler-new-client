@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { twMerge } from 'tailwind-merge';
 
 import { Link } from '@/components/layouts/dashboard-layout/sidebar-links';
+import { ScheduleType } from '@/interfaces/enums';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
