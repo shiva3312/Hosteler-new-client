@@ -110,7 +110,10 @@ export const GroupsList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+              <GenericDrawer
+                title="Update Group"
+                trigger={<IconEdit size={25} />}
+              >
                 <GroupForm initialValues={row.original!} />
               </GenericDrawer>
             </ActionIcon>
@@ -125,7 +128,10 @@ export const GroupsList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer
+            title="Create Group"
+            trigger={<Button>Add New</Button>}
+          >
             <GroupForm />
           </GenericDrawer>
         );

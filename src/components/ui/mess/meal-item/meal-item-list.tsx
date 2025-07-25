@@ -166,7 +166,10 @@ export const MealItemsList = () => {
                   table.setEditingRow(row);
                 }}
               >
-                <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <GenericDrawer
+                  title="Update Item"
+                  trigger={<IconEdit size={25} />}
+                >
                   <MealItemForm initialValues={row.original!} />
                 </GenericDrawer>
               </ActionIcon>
@@ -182,7 +185,7 @@ export const MealItemsList = () => {
       renderTopToolbarCustomActions: () => {
         if (isNonAdmin) return undefined;
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer title="Create Item" trigger={<Button>Add New</Button>}>
             <MealItemForm />
           </GenericDrawer>
         );

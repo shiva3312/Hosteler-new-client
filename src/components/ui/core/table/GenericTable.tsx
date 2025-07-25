@@ -10,13 +10,16 @@ import {
   type MRT_RowData,
   type MRT_TableState,
   type MRT_TableOptions,
+  MRT_TableInstance,
 } from 'mantine-react-table';
+import { useEffect } from 'react';
 
 interface GenericTableProps<TData extends MRT_RowData> {
   data: TData[];
   columns: MRT_ColumnDef<TData>[];
   state?: Partial<MRT_TableState<TData>>;
   options?: MRT_TableOptions<TData>;
+  setTable?: (table: MRT_TableInstance<TData>) => void;
 }
 
 const GenericTable = <TData extends object>({
@@ -24,6 +27,7 @@ const GenericTable = <TData extends object>({
   columns,
   state,
   options,
+  setTable,
 }: GenericTableProps<TData>) => {
   const table = useMantineReactTable({
     columns: columns ?? [],
@@ -95,6 +99,12 @@ const GenericTable = <TData extends object>({
       ...state,
     },
   });
+
+  useEffect(() => {
+    if (setTable) {
+      setTable(table);
+    }
+  }, [setTable, table]);
 
   return <MantineReactTable table={table} />;
 };

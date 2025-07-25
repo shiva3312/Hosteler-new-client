@@ -229,4 +229,113 @@ export class UtilHelper {
     // If no match is found, return an empty string or a default value
     return '';
   }
+  public static generateCronExpression = ({
+    occurrence,
+    time,
+    dayOfWeeks,
+    daysOfMonth,
+    monthsOfYear,
+  }: {
+    occurrence: ScheduleType; // e.g., 'daily', 'weekly', 'monthly', etc.
+    time?: string; // Time in HH:mm format
+    dayOfWeeks?: number[]; // Days of the week (0 = Sunday, 6 = Saturday)
+    daysOfMonth?: number[]; // Days of the month (1-31)
+    monthsOfYear?: number[]; // Months of the year (1-12)
+  }): string => {
+    // Default cron parts
+    let minute = '*';
+    let hour = '*';
+    let dayOfMonth = '*';
+    let month = '*';
+    let dayOfWeek = '*';
+
+    // Parse time (HH:mm)
+    if (time) {
+      const [parsedHour, parsedMinute] = time.split(':');
+      hour = parsedHour || '*';
+      minute = parsedMinute || '*';
+    }
+
+    // Adjust cron parts based on the occurrence
+    switch (occurrence) {
+      case ScheduleType.Daily:
+        // Runs every day at the specified time
+        dayOfMonth = '*';
+        month = '*';
+        dayOfWeek = '*';
+        break;
+
+      case ScheduleType.Weekly:
+        // Runs on specific days of the week at the specified time
+        dayOfMonth = '*';
+        month = '*';
+        dayOfWeek =
+          dayOfWeeks && dayOfWeeks.length > 0 ? dayOfWeeks.join(',') : '*';
+        break;
+
+      case ScheduleType.Monthly:
+        // Runs on specific days of the month at the specified time
+        dayOfMonth =
+          daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.join(',') : '*';
+        month = '*';
+        dayOfWeek = '*';
+        break;
+
+      case ScheduleType.Yearly:
+        // Runs on specific months and days of the month at the specified time
+        dayOfMonth =
+          daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.join(',') : '*';
+        month =
+          monthsOfYear && monthsOfYear.length > 0
+            ? monthsOfYear.join(',')
+            : '*';
+        dayOfWeek = '*';
+        break;
+
+      case ScheduleType.Custom:
+        // Custom cron expression (use all provided fields)
+        dayOfMonth =
+          daysOfMonth && daysOfMonth.length > 0 ? daysOfMonth.join(',') : '*';
+        month =
+          monthsOfYear && monthsOfYear.length > 0
+            ? monthsOfYear.join(',')
+            : '*';
+        dayOfWeek =
+          dayOfWeeks && dayOfWeeks.length > 0 ? dayOfWeeks.join(',') : '*';
+        break;
+
+      default:
+        throw new Error(`Unsupported occurrence type: ${occurrence}`);
+    }
+
+    // Construct the cron expression
+    return `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`;
+  };
+
+  public static generatePassword = (): string => {
+    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+    const numbers = '0123456789';
+    const specialCharacters = '@$!%*?&';
+    const allCharacters = uppercase + lowercase + numbers + specialCharacters;
+
+    const getRandomChar = (chars: string) =>
+      chars[Math.floor(Math.random() * chars.length)];
+
+    // Ensure the password contains at least one of each required character type
+    const password = [
+      getRandomChar(uppercase),
+      getRandomChar(lowercase),
+      getRandomChar(numbers),
+      getRandomChar(specialCharacters),
+    ];
+
+    // Fill the rest of the password with random characters to meet the length requirement
+    while (password.length < 8) {
+      password.push(getRandomChar(allCharacters));
+    }
+
+    // Shuffle the password to randomize character positions
+    return password.sort(() => Math.random() - 0.5).join('');
+  };
 }

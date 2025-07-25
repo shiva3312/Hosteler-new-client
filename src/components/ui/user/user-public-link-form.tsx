@@ -14,9 +14,9 @@ import {
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
-import { useNotifications } from '@/components/ui/core/notifications';
+import { paths } from '@/config/paths';
 import { ImageSize } from '@/interfaces/enums';
 import {
   UserRequest,
@@ -27,6 +27,7 @@ import { useRegisterUserByLink } from '@/lib/api/auth/register-user-by-link';
 import { UtilHelper } from '@/utils/cn';
 
 import UserProfileForm from './user-profile-form';
+import { CelebrationModal } from '../core/celebration-modal';
 import { GenericFieldset } from '../core/fieldset/fieldset';
 import { DropzoneButton } from '../core/file-hanling/dropzone';
 import UsernameInput from '../core/username-input';
@@ -47,6 +48,8 @@ const defaultInitialValues: Partial<UserRequest> = {
 export const RegisterUserByLink = () => {
   const { token: encodedToken, unitName: encodedUnitName } = useParams();
   const unitName = encodedUnitName ? decodeURIComponent(encodedUnitName) : null;
+  const navigate = useNavigate();
+  const [celebrate, setCelebrate] = useState(false);
 
   const form = useForm<Partial<UserRequest>>({
     validate: zodResolver(UserRequestZodSchema),
@@ -57,7 +60,6 @@ export const RegisterUserByLink = () => {
   const [newUser, setNewUser] = useState<string | null>(null);
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const { addNotification } = useNotifications();
 
   const createProfileMutation = useRegisterUserByLink({
     mutationConfig: {
@@ -68,10 +70,13 @@ export const RegisterUserByLink = () => {
           setNewUser(null);
         }, 100);
         form.reset();
-        addNotification({
-          type: 'success',
-          title: 'Form submitted successfully',
-        });
+        setCelebrate(true);
+
+        // after 2 second redirect to login page
+        setTimeout(() => {
+          setCelebrate(false);
+          navigate(paths.auth.login.getHref(), { replace: true });
+        }, 7000);
       },
     },
   });
@@ -183,6 +188,11 @@ export const RegisterUserByLink = () => {
           </Button>
         </Group>
       </Card>
+      <CelebrationModal
+        open={celebrate}
+        text="Registration successful!"
+        onClose={() => setCelebrate(false)}
+      />
     </Paper>
   );
 };

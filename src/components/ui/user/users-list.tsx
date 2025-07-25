@@ -1,13 +1,22 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon, Text, Button, Badge } from '@mantine/core';
+import {
+  Flex,
+  Tooltip,
+  ActionIcon,
+  Text,
+  Button,
+  Badge,
+  Group,
+} from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
+  MRT_TableInstance,
   MRT_TableOptions,
   MRT_TableState,
 } from 'mantine-react-table';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 
 import DateBadge from '@/components/ui/core/badge/date-badge';
 import RoleBadge from '@/components/ui/core/badge/role-badge';
@@ -23,6 +32,7 @@ import { useMe } from '@/lib/api/user/get-me';
 import { useUsers } from '@/lib/api/user/get-users';
 
 import { DeleteUser } from './delete-user';
+import { BulkActions } from './user-bulk-action';
 import { UserForm } from './user-form';
 import UserProfileImage from './user-list-avatar';
 import { MealStatusBadge, MealTypeBadge } from '../core/badge/enum-badage';
@@ -30,6 +40,7 @@ import EnumBadge from '../core/badge/generic-badge';
 import { GenericDrawer } from '../core/drawer/drawer';
 
 export const UsersList = () => {
+  const tableRef = useRef<MRT_TableInstance<UserResponse>>(null);
   const {
     data: users,
     isSuccess,
@@ -341,12 +352,8 @@ export const UsersList = () => {
       getRowId: (row) => row._id ?? '',
       rowCount: users?.data?.length ?? 0,
       editDisplayMode: 'custom',
-      enableRowSelection: AuthorizationService.hasEqualOrHigherRole(
-        me?.data?.roles ?? [],
-        UserRole.ADMIN,
-      ),
-      // positionToolbarAlertBanner: 'top',
-      // onEditingRowSave: handleSaveUser,
+      enableRowSelection: (row) => row.original._id !== me?.data._id,
+
       renderRowActions: ({ row, table }) => (
         <Flex gap="md">
           <Tooltip label="Edit">
@@ -371,18 +378,35 @@ export const UsersList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer
-            title={isNoneAdminRoles ? `Create Guest` : `Create User`}
-            trigger={
-              <Button>{isNoneAdminRoles ? `Add Guest` : `Add New`}</Button>
-            }
-          >
-            <UserForm />
-          </GenericDrawer>
+          <Group>
+            <GenericDrawer
+              title={isNoneAdminRoles ? `Create Guest` : `Create User`}
+              trigger={
+                <Button>{isNoneAdminRoles ? `Add Guest` : `Add New`}</Button>
+              }
+            >
+              <UserForm />
+            </GenericDrawer>
+            {AuthorizationService.hasEqualOrHigherRole(
+              me?.data.roles ?? [],
+              UserRole.ADMIN,
+            ) && (
+              <BulkActions
+                onSuccess={() => {
+                  tableRef.current?.resetRowSelection();
+                }}
+                selectedRows={
+                  tableRef.current
+                    ?.getSelectedRowModel()
+                    .flatRows.map((row) => row.original) ?? []
+                }
+              />
+            )}
+          </Group>
         );
       },
     }),
-    [columns, isNoneAdminRoles, me?.data?.roles, users?.data],
+    [columns, isNoneAdminRoles, me?.data._id, me?.data?.roles, users?.data],
   );
 
   const state: Partial<MRT_TableState<UserResponse>> = useMemo(
@@ -402,6 +426,9 @@ export const UsersList = () => {
       columns={columns}
       options={options}
       state={state}
+      setTable={(table) => {
+        (tableRef as any).current = table;
+      }}
     />
   );
 };

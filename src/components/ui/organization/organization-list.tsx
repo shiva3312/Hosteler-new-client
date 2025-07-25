@@ -111,7 +111,10 @@ export const OrganizationsList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+              <GenericDrawer
+                title="Update Organization"
+                trigger={<IconEdit size={25} />}
+              >
                 <OrganizationForm initialValues={row.original!} />
               </GenericDrawer>
             </ActionIcon>
@@ -126,7 +129,10 @@ export const OrganizationsList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer
+            title="Create Organization"
+            trigger={<Button>Add New</Button>}
+          >
             <OrganizationForm />
           </GenericDrawer>
         );

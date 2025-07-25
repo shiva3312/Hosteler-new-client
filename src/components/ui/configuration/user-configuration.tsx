@@ -1,7 +1,16 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Box, Card, Divider, Flex, Group, Switch, Text } from '@mantine/core';
+import {
+  Box,
+  Card,
+  ColorSwatch,
+  Divider,
+  Flex,
+  Group,
+  Switch,
+  Text,
+} from '@mantine/core';
 
-import { MealStatus } from '@/interfaces/enums';
+import { MealStatus, UserStatus } from '@/interfaces/enums';
 import { useMe } from '@/lib/api/user/get-me';
 import { useUpdateUser } from '@/lib/api/user/update-profile';
 
@@ -15,6 +24,13 @@ const data = [
     type: 'checkBox',
     description: 'On/Off meal status will include/exclude in daily chart',
   },
+  {
+    id: 'user-status',
+    title: 'User Status',
+    type: 'checkBox',
+    description:
+      'On/Off user status will mark user as active/inactive in the hostel',
+  },
 ];
 
 export function SwitchesCard() {
@@ -27,7 +43,7 @@ export function SwitchesCard() {
         refetch();
         addNotification({
           type: 'success',
-          title: 'Meal Status Updated',
+          title: 'Status Updated',
         });
       },
     },
@@ -50,8 +66,34 @@ export function SwitchesCard() {
     });
   };
 
+  const updateUserStatus = (status: UserStatus) => {
+    if (
+      user?.data.status === UserStatus.Disabled ||
+      user?.data.status === UserStatus.Banned
+    ) {
+      addNotification({
+        type: 'warning',
+        title: 'User Status is Disabled/Banned',
+        message: 'Please ask your Admin to enable user status.',
+      });
+
+      return;
+    }
+
+    updateProfileMutation.mutate({
+      userId: user?.data?._id ?? '',
+      data: { status },
+    });
+  };
+
   const items = data.map((item) => (
-    <Group justify="space-between" wrap="nowrap" gap="xl" key={item.title}>
+    <Group
+      justify="space-between"
+      wrap="nowrap"
+      gap="xl"
+      key={item.title}
+      mb={'md'}
+    >
       <div>
         <Text>{item.title}</Text>
         <Text size="xs" c="dimmed">
@@ -59,16 +101,40 @@ export function SwitchesCard() {
         </Text>
       </div>
       <Switch
-        onLabel="ON"
-        offLabel={
-          user?.data.mealStatus === MealStatus.Disabled ? 'Disabled' : 'OFF'
+        onLabel={
+          item.id === 'meal-status'
+            ? user?.data.mealStatus
+            : item.id === 'user-status'
+              ? user?.data.status
+              : ''
         }
-        checked={user?.data.mealStatus === MealStatus.Active}
+        offLabel={
+          item.id === 'meal-status'
+            ? user?.data.mealStatus
+            : item.id === 'user-status'
+              ? user?.data.status
+              : ''
+        }
+        checked={
+          item.id === 'meal-status'
+            ? user?.data.mealStatus === MealStatus.Active
+            : item.id === 'user-status'
+              ? user?.data.status === UserStatus.Active
+              : false
+        }
         onChange={(e) => {
-          if (e.target.checked) {
-            updateMealStatus(MealStatus.Active);
-          } else {
-            updateMealStatus(MealStatus.Inactive);
+          if (item.id === 'meal-status') {
+            if (e.target.checked) {
+              updateMealStatus(MealStatus.Active);
+            } else {
+              updateMealStatus(MealStatus.Inactive);
+            }
+          } else if (item.id === 'user-status') {
+            if (e.target.checked) {
+              updateUserStatus(UserStatus.Active);
+            } else {
+              updateUserStatus(UserStatus.Inactive);
+            }
           }
         }}
         size="lg"

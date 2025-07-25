@@ -6,22 +6,17 @@ import {
   Box,
   Divider,
   Stack,
-  MultiSelect,
   Grid,
   PasswordInput,
   Select,
 } from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { useEffect, useMemo, useState } from 'react';
 
 import { useNotifications } from '@/components/ui/core/notifications';
 import { UserRole } from '@/data/feature';
-import { ImageSize, MealStatus } from '@/interfaces/enums';
-import {
-  UserRequest,
-  UserRequestZodSchema,
-  UserResponse,
-} from '@/interfaces/user.interface';
+import { ImageSize, MealStatus, UserStatus } from '@/interfaces/enums';
+import { UserRequest, UserResponse } from '@/interfaces/user.interface';
 import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useMe } from '@/lib/api/user/get-me';
 import { UtilHelper } from '@/utils/cn';
@@ -30,15 +25,16 @@ import UserProfileForm from './user-profile-form';
 import { useUpdateUser } from '../../../lib/api/user/update-profile';
 import { useCreateUser } from '../../../lib/api/user/user-create';
 import OrganizationUnitDropdown from '../core/dropdown/organization-unit-selector';
+import UserRoleDropdown from '../core/dropdown/user-role-selector';
 import { GenericFieldset } from '../core/fieldset/fieldset';
 import { DropzoneButton } from '../core/file-hanling/dropzone';
 import UsernameInput from '../core/username-input';
 
-const userRoles = Object.entries(UserRole).map(([key, value]) => ({
+const mealStatus = Object.entries(MealStatus).map(([key, value]) => ({
   value,
   label: key,
 }));
-const mealStatus = Object.entries(MealStatus).map(([key, value]) => ({
+const userStatus = Object.entries(UserStatus).map(([key, value]) => ({
   value,
   label: key,
 }));
@@ -63,7 +59,7 @@ export const UserForm = ({ initialValues = {} }: Props) => {
   const profile = initialValues.profile || {};
 
   const form = useForm<Partial<UserRequest>>({
-    validate: zodResolver(UserRequestZodSchema),
+    // validate: zodResolver(UserRequestZodSchema),
     initialValues: {
       ...initialValues,
       profile: { ...defaultInitialValues.profile, ...profile },
@@ -126,7 +122,7 @@ export const UserForm = ({ initialValues = {} }: Props) => {
           unit: me.data?.unit,
           roles: [UserRole.GUEST],
           username: Math.random().toString(36).substring(2, 15),
-          password: Math.random().toString(36).substring(2, 15),
+          password: UtilHelper.generatePassword(),
           parent: me.data?._id,
         });
         form.resetDirty();
@@ -228,62 +224,81 @@ export const UserForm = ({ initialValues = {} }: Props) => {
 
             {/* // user can't change it's own role */}
             {me?.data._id !== (form.values as UserResponse)?._id && (
-              <MultiSelect
-                mt={'md'}
-                label="Select Roles"
-                key={form.key('roles')}
-                description="Select one or more roles for the user"
-                placeholder="Pick value"
-                data={userRoles.filter((role) => {
-                  const x = AuthorizationService.hasHigherRole(
-                    me?.data?.roles ?? [],
-                    role.value as UserRole,
-                  );
-
-                  return x;
-                })}
-                {...form.getInputProps('roles')}
-                onChange={(value) => {
-                  form.setFieldValue('roles', value as UserRole[]);
-
-                  if (value.includes(UserRole.MASTER_ADMIN)) {
-                    form.setFieldValue('organization', null);
-                    form.setFieldValue('unit', null);
-                  }
-                  if (value.includes(UserRole.SUPER_ADMIN)) {
-                    form.setFieldValue('unit', null);
-                  }
-                }}
-                searchable
-              />
+              <UserRoleDropdown form={form} />
             )}
             {/* )} */}
           </Stack>
         </GenericFieldset>
       )}
 
-      <Select
-        required={false}
-        label="Meal Status"
-        key={form.key('mealStatus')}
-        placeholder="Select meal status"
-        data={mealStatus.filter(
-          (m) =>
-            !(
-              m.value === MealStatus.Disabled &&
-              me?.data._id === (form.values as UserResponse)?._id
-            ),
-        )}
-        {...form.getInputProps('mealStatus')}
-      />
+      <GenericFieldset
+        legend={'Preferences and Status'}
+        radius="md"
+        p="md"
+        mb="xl"
+      >
+        <TextInput
+          label="Room Number"
+          required
+          description="Room number of the user"
+          key={form.key('room')}
+          placeholder="Enter room number"
+          {...form.getInputProps('room')}
+        />
 
-      <TextInput
-        label="Room Number"
-        description="Enter the room number for the user"
-        key={form.key('room')}
-        placeholder="Enter room number"
-        {...form.getInputProps('room')}
-      />
+        <Select
+          required
+          label="Meal Status"
+          description="Meal status indicates if the user is allowed to have meals"
+          key={form.key('mealStatus')}
+          placeholder={
+            form.values.mealStatus === MealStatus.Disabled
+              ? 'Disabled'
+              : 'Select meal status'
+          }
+          disabled={
+            me?.data._id === (form.values as UserResponse)?._id &&
+            form.values.mealStatus === MealStatus.Disabled
+          }
+          data={mealStatus.filter(
+            (m) =>
+              !(
+                m.value === MealStatus.Disabled &&
+                me?.data._id === (form.values as UserResponse)?._id
+              ),
+          )}
+          {...form.getInputProps('mealStatus')}
+        />
+
+        <Select
+          required
+          label="Status"
+          description="User status indicates if the user is active or not"
+          key={form.key('status')}
+          placeholder={
+            form.values.mealStatus === MealStatus.Disabled
+              ? 'Disabled'
+              : form.values.status === UserStatus.Banned
+                ? 'Banned'
+                : 'Select status'
+          }
+          disabled={
+            (me?.data._id === (form.values as UserResponse)?._id &&
+              form.values.status === UserStatus.Disabled) ||
+            form.values.status === UserStatus.Banned
+          }
+          data={userStatus.filter(
+            (m) =>
+              !(
+                (m.value === UserStatus.Disabled ||
+                  m.value === UserStatus.Banned) &&
+                me?.data._id === (form.values as UserResponse)?._id
+              ),
+          )}
+          {...form.getInputProps('status')}
+        />
+      </GenericFieldset>
+
       <UserProfileForm form={form} />
 
       {/* Submit */}

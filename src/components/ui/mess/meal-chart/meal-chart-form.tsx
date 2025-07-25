@@ -134,7 +134,7 @@ export function MealChartForm({ initialValues }: Props) {
         <MealChartDetails
           unit={form.values.unit ?? ''}
           organization={form.values.organization ?? ''}
-          menuType={filteredMenuTypeOptions[0].value}
+          menuType={form.values.menuType ?? filteredMenuTypeOptions[0].value}
           mealChartType={MealChartType.Main}
         />
       ) : (

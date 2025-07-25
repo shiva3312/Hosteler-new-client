@@ -1,6 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Flex, Tooltip, ActionIcon, Button, Text } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon, Text } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import {
   MRT_ColumnDef,
@@ -149,7 +149,10 @@ export const MessesList = () => {
                   table.setEditingRow(row);
                 }}
               >
-                <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <GenericDrawer
+                  title="Update Mess"
+                  trigger={<IconEdit size={25} />}
+                >
                   <MessForm initialValues={row.original!} />
                 </GenericDrawer>
               </ActionIcon>
@@ -162,15 +165,15 @@ export const MessesList = () => {
           </Flex>
         ),
 
-      renderTopToolbarCustomActions: () => {
-        if (isNonAdmin) return undefined;
+      // renderTopToolbarCustomActions: () => {
+      //   if (isNonAdmin) return undefined;
 
-        return (
-          <GenericDrawer title="Create User" trigger={<Button>Add New</Button>}>
-            <MessForm />
-          </GenericDrawer>
-        );
-      },
+      //   return (
+      //     <GenericDrawer title="Create Mess" trigger={<Button>Add New</Button>}>
+      //       <MessForm />
+      //     </GenericDrawer>
+      //   );
+      // },
     }),
     [columns, isNonAdmin, messes?.data],
   );

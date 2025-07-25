@@ -96,7 +96,10 @@ export const MenuesList = () => {
                   table.setEditingRow(row);
                 }}
               >
-                <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <GenericDrawer
+                  title="Update Menu"
+                  trigger={<IconEdit size={25} />}
+                >
                   <MenuForm initialValues={row.original!} />
                 </GenericDrawer>
               </ActionIcon>
@@ -112,7 +115,7 @@ export const MenuesList = () => {
       renderTopToolbarCustomActions: () => {
         if (isNonAdmin) return undefined;
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer title="Create Menu" trigger={<Button>Add New</Button>}>
             <MenuForm />
           </GenericDrawer>
         );

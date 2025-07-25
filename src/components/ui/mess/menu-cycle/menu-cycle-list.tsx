@@ -100,7 +100,10 @@ export const MenuCyclesList = () => {
                   table.setEditingRow(row);
                 }}
               >
-                <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+                <GenericDrawer
+                  title="Update Menu Cycle"
+                  trigger={<IconEdit size={25} />}
+                >
                   <MenuCycleForm initialValues={row.original!} />
                 </GenericDrawer>
               </ActionIcon>
@@ -116,7 +119,10 @@ export const MenuCyclesList = () => {
       renderTopToolbarCustomActions: () => {
         if (isNonAdmin) return undefined;
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer
+            title="Create Menu Cycle"
+            trigger={<Button>Add New</Button>}
+          >
             <MenuCycleForm />
           </GenericDrawer>
         );

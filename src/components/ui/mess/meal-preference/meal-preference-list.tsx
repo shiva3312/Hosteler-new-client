@@ -119,7 +119,10 @@ export const MealPreferencesList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+              <GenericDrawer
+                title="Update Preference"
+                trigger={<IconEdit size={25} />}
+              >
                 <MealPreferenceForm initialValues={row.original!} />
               </GenericDrawer>
             </ActionIcon>
@@ -134,7 +137,10 @@ export const MealPreferencesList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer
+            title="Create Preference"
+            trigger={<Button>Add New</Button>}
+          >
             <MealPreferenceForm />
           </GenericDrawer>
         );

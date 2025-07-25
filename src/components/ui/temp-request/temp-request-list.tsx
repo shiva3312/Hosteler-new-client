@@ -162,7 +162,7 @@ export const TempRequestsList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer title="Create " trigger={<Button>Add New</Button>}>
             <TempRequestForm />
           </GenericDrawer>
         );

@@ -136,7 +136,10 @@ export const UnitsList = () => {
                 table.setEditingRow(row);
               }}
             >
-              <GenericDrawer title="Update" trigger={<IconEdit size={25} />}>
+              <GenericDrawer
+                title="Update Unit"
+                trigger={<IconEdit size={25} />}
+              >
                 <UnitForm initialValues={row.original!} />
               </GenericDrawer>
             </ActionIcon>
@@ -151,7 +154,7 @@ export const UnitsList = () => {
 
       renderTopToolbarCustomActions: () => {
         return (
-          <GenericDrawer title="Update" trigger={<Button>Add New</Button>}>
+          <GenericDrawer title="Create Unit" trigger={<Button>Add New</Button>}>
             <UnitForm />
           </GenericDrawer>
         );
