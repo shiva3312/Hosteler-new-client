@@ -120,7 +120,7 @@ export function UnitForm({ initialValues }: Props) {
         loading={isLoading}
       />
 
-      <Button type="submit" mt="md" size="xs">
+      <Button type="submit" mt="md">
         {initialValues ? 'Update' : 'Create'}
       </Button>
     </form>

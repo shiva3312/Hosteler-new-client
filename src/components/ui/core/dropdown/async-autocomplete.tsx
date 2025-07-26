@@ -72,13 +72,12 @@ export function AsyncAutocompleteCombobox(props: AsyncAutocompleteProps) {
         props.onChange(optionValue);
         combobox.closeDropdown();
       }}
-      size="xs"
       withinPortal={false}
       store={combobox}
     >
       <Combobox.Target>
         <TextInput
-          size={props.size || 'xs'}
+          size={props.size}
           placeholder={props.placeholder || 'Search...'}
           value={
             data.find((item) => item.value === value)?.label || value // Show label if value matches, fallback to value

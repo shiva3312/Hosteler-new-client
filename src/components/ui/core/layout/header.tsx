@@ -1,5 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Container, Group, Image, Text } from '@mantine/core';
+import { Container, Flex, Group, Image, Text } from '@mantine/core';
 import { ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -36,7 +36,7 @@ export function Header() {
   return (
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
-        <Group align="flex-start">
+        <Flex align={'center'} flex={'row'} gap={'xs'} wrap={'nowrap'}>
           <Image
             src="/logo_no-background.png"
             alt="Hosteler Logo"
@@ -46,7 +46,7 @@ export function Header() {
           <Text fw={700} size="xl" c="blue">
             Hostelease
           </Text>
-        </Group>
+        </Flex>
         <Group
           gap={5}
           // visibleFrom="xs"

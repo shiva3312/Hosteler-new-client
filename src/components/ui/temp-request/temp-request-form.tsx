@@ -138,7 +138,7 @@ export function TempRequestForm({ initialValues }: Props) {
         }}
       />
 
-      <Button type="submit" mt="md" size="xs">
+      <Button type="submit" mt="md">
         {initialValues ? 'Update' : 'Create'}
       </Button>
     </form>

@@ -157,7 +157,7 @@ export function DropzoneButton(props: DropzoneButtonProps) {
             radius="xl"
             onClick={() => openRef.current?.()}
           >
-            Select file
+            Select Photo
           </Button>
         </Dropzone>
       </div>

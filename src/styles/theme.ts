@@ -21,22 +21,27 @@ export const theme = createTheme({
     // Define your extended components with default props here
     TimeInput: TimeInput.extend({
       defaultProps: {
-        size: 'xs',
         formTarget: 'time',
         placeholder: 'Select a time',
+      },
+    }),
+    Select: Button.extend({
+      defaultProps: {
+        variant: 'filled',
+        radius: 'sm',
+        size: 'md',
       },
     }),
     Button: Button.extend({
       defaultProps: {
         // color: '#00ad73',
         variant: 'filled',
-        size: 'xs',
+
         radius: 'sm',
       },
     }),
     DateInput: DateInput.extend({
       defaultProps: {
-        size: 'xs',
         clearable: true,
         valueFormat: 'DD/MM/YYYY',
         placeholder: 'Select a date',
@@ -50,13 +55,11 @@ export const theme = createTheme({
     TextInput: TextInput.extend({
       defaultProps: {
         autoComplete: 'off',
-        size: 'xs',
       },
     }),
     PasswordInput: PasswordInput.extend({
       defaultProps: {
         autoComplete: 'off',
-        size: 'xs',
       },
     }),
     Title: Title.extend({
@@ -67,7 +70,6 @@ export const theme = createTheme({
     Checkbox: Checkbox.extend({
       defaultProps: {
         labelPosition: 'right',
-        size: 'xs',
       },
     }),
     NumberFormatter: NumberFormatter.extend({
@@ -79,13 +81,11 @@ export const theme = createTheme({
     }),
     MultiSelect: MultiSelect.extend({
       defaultProps: {
-        size: 'xs',
         searchable: true,
       },
     }),
     Select: Select.extend({
       defaultProps: {
-        size: 'xs',
         comboboxProps: {
           transitionProps: {
             transition: 'pop',
