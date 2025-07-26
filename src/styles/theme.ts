@@ -25,13 +25,6 @@ export const theme = createTheme({
         placeholder: 'Select a time',
       },
     }),
-    Select: Button.extend({
-      defaultProps: {
-        variant: 'filled',
-        radius: 'sm',
-        size: 'md',
-      },
-    }),
     Button: Button.extend({
       defaultProps: {
         // color: '#00ad73',

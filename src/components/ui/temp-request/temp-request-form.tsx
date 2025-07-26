@@ -130,8 +130,8 @@ export function TempRequestForm({ initialValues }: Props) {
         minDate={new Date()}
         value={form.values.expiresAt ? new Date(form.values.expiresAt) : null}
         onChange={(date) => {
-          if (date instanceof Date) {
-            form.setFieldValue('expiresAt', date.toISOString());
+          if (date) {
+            form.setFieldValue('expiresAt', date);
           } else {
             form.setFieldValue('expiresAt', null);
           }

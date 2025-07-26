@@ -62,7 +62,7 @@ const UserProfileForm = ({ form, ...props }: { form: any } & BoxProps) => {
                   : null
               }
               onChange={(date) =>
-                form.setFieldValue('profile.dob', date?.toISOString() ?? null)
+                form.setFieldValue('profile.dob', date?.toString() ?? null)
               }
             />
           </Grid.Col>
