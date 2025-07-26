@@ -60,7 +60,7 @@ const UsernameInput = ({
     isSuccess,
   } = useUsername({
     username: debounced || '',
-    enabled: !!debounced,
+    enabled: !!debounced && debounced.length >= 3,
   });
 
   return (
