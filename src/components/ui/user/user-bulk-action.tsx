@@ -2,21 +2,22 @@
 import { Button, Group, Menu } from '@mantine/core';
 import {
   IconCheck,
-  IconTrash,
   IconUser,
   IconBan,
   IconCircle,
   IconCircleOff,
   IconCircleCheck,
+  IconDots,
 } from '@tabler/icons-react';
 import React from 'react';
 
 import { GeneralAction } from '@/data/feature';
 import { MealStatus, UserStatus } from '@/interfaces/enums';
 import { UserResponse } from '@/interfaces/user.interface';
-import { useUpdateUserBulk } from '@/lib/api/user/bulk-action';
+import { useUserBulkAction } from '@/lib/api/user/bulk-action';
 
 import { useNotifications } from '../core/notifications';
+import { DeleteUser } from './delete-user';
 
 type BulkActionsProps = {
   selectedRows: UserResponse[];
@@ -78,7 +79,7 @@ const bulkActions = [
 export const BulkActions = ({ selectedRows, ...props }: BulkActionsProps) => {
   const { addNotification } = useNotifications();
 
-  const updateProfileMutation = useUpdateUserBulk({
+  const userBulkAction = useUserBulkAction({
     mutationConfig: {
       onSuccess: () => {
         if (props?.onSuccess) {
@@ -102,7 +103,7 @@ export const BulkActions = ({ selectedRows, ...props }: BulkActionsProps) => {
       case `${UserStatus.Inactive}status`:
       case `${UserStatus.Disabled}status`:
       case `${UserStatus.Banned}status`:
-        updateProfileMutation.mutate({
+        userBulkAction.mutate({
           action: GeneralAction.UPDATE,
           data: selectedRows.map((s) => ({
             _id: s._id,
@@ -114,7 +115,7 @@ export const BulkActions = ({ selectedRows, ...props }: BulkActionsProps) => {
       case `${MealStatus.Active}meal`:
       case `${MealStatus.Inactive}meal`:
       case `${MealStatus.Disabled}meal`:
-        updateProfileMutation.mutate({
+        userBulkAction.mutate({
           action: GeneralAction.UPDATE,
           data: selectedRows.map((s) => ({
             _id: s._id,
@@ -123,16 +124,16 @@ export const BulkActions = ({ selectedRows, ...props }: BulkActionsProps) => {
         });
         break;
 
-      case 'delete':
-        updateProfileMutation.mutate({
-          action: GeneralAction.DELETE,
-          data: selectedRows.map((s) => ({
-            _id: s._id,
-          })),
-        });
-        break;
+      // case 'delete':
+      //   userBulkAction.mutate({
+      //     action: GeneralAction.DELETE,
+      //     data: selectedRows.map((s) => ({
+      //       _id: s._id,
+      //     })),
+      //   });
+      //   break;
       case 'approve':
-        updateProfileMutation.mutate({
+        userBulkAction.mutate({
           action: GeneralAction.UPDATE,
           data: selectedRows.map((s) => ({
             _id: s._id,
@@ -152,17 +153,9 @@ export const BulkActions = ({ selectedRows, ...props }: BulkActionsProps) => {
         leftSection={<IconCheck size={16} />}
         onClick={() => handleBulkAction('approve')}
       >
-        Approve
+        Approve {selectedRows.length > 0 ? `(${selectedRows.length})` : ''}
       </Button>
-      <Button
-        disabled={selectedRows.length === 0}
-        color="red"
-        variant="light"
-        leftSection={<IconTrash size={16} />}
-        onClick={() => handleBulkAction('delete')}
-      >
-        Delete
-      </Button>
+      <DeleteUser users={selectedRows} variant="default" />
       <Menu
         shadow="md"
         withArrow

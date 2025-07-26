@@ -1,4 +1,3 @@
-//Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { Button, Modal, Text, UnstyledButton } from '@mantine/core';
 import { IconBan, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -7,68 +6,113 @@ import { useNotifications } from '@/components/ui/core/notifications';
 import { UserResponse } from '@/interfaces/user.interface';
 import { useAuth } from '@/lib/api/auth/auth';
 
-import { useDeleteUser } from '../../../lib/api/user/delete-user';
+import { useUserBulkAction } from '@/lib/api/user/bulk-action';
+import { GeneralAction } from '@/data/feature';
 
 type DeleteUserProps = {
-  user?: UserResponse;
+  users: UserResponse[]; // Now expects an array of users
+  onSuccess?: () => void;
+  variant?: 'compact' | 'default';
 };
 
-export const DeleteUser = ({ user: targetedUser }: DeleteUserProps) => {
+export const DeleteUser = ({
+  users,
+  onSuccess,
+  variant = 'compact',
+}: DeleteUserProps) => {
   const user = useAuth();
   const { addNotification } = useNotifications();
   const [opened, setOpened] = useState(false);
+  // Prevent deleting yourself
+  const filteredUsers = users?.filter((u) => u._id !== user.data?._id);
 
-  const deleteUserMutation = useDeleteUser({
+  const userBulkAction = useUserBulkAction({
     mutationConfig: {
       onSuccess: () => {
+        if (onSuccess) {
+          onSuccess();
+        }
         addNotification({
           type: 'success',
-          title: 'User deleted',
-        });
-        setOpened(false);
-      },
-      onError: () => {
-        addNotification({
-          type: 'error',
-          title: 'Failed to delete user',
+          title: 'Updated successfully',
         });
       },
     },
   });
+
+  const handelDeleteUsers = () => {
+    userBulkAction.mutate({
+      action: GeneralAction.DELETE,
+      data: filteredUsers.map((s) => ({
+        _id: s._id,
+      })),
+    });
+    setOpened(false);
+  };
 
   return (
     <>
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
-        title="Delete User"
+        title="Delete Users"
         centered
       >
-        <Text>{`Are you sure you want to delete ${targetedUser?.username} user?`}</Text>
-        <Button
-          mt="md"
-          color="red"
-          loading={deleteUserMutation.isPending}
-          onClick={() =>
-            targetedUser?._id &&
-            deleteUserMutation.mutate({ userId: targetedUser?._id })
-          }
-          fullWidth
-        >
-          Confirm Delete
-        </Button>
+        {filteredUsers.length === 0 ? (
+          <Text color="red">You cannot delete yourself.</Text>
+        ) : (
+          <>
+            <Text>Are you sure you want to delete the following user(s)?</Text>
+            {/* <ul style={{ margin: '12px 0' }}>
+              {filteredUsers.map((u) => (
+                <li key={u._id}>
+                  <Text span fw={500}>
+                    {u.username}
+                  </Text>
+                </li>
+              ))}
+            </ul> */}
+            <Button
+              mt="md"
+              color="red"
+              loading={userBulkAction.isPending}
+              onClick={handelDeleteUsers}
+              fullWidth
+              disabled={filteredUsers.length === 0}
+            >
+              Confirm Delete
+            </Button>
+          </>
+        )}
       </Modal>
 
-      <UnstyledButton
-        disabled={user.data?._id === targetedUser?._id}
-        onClick={() => setOpened(true)}
-      >
-        {user.data?._id === targetedUser?._id ? (
-          <IconBan size={25} />
-        ) : (
-          <IconTrash size={25} />
-        )}
-      </UnstyledButton>
+      {variant === 'compact' ? (
+        <UnstyledButton
+          disabled={filteredUsers.length === 0}
+          onClick={() => setOpened(true)}
+          title={
+            filteredUsers.length === 0
+              ? 'You cannot delete yourself'
+              : 'Delete selected users'
+          }
+        >
+          {filteredUsers.length === 0 ? (
+            <IconBan size={25} />
+          ) : (
+            <IconTrash size={25} />
+          )}
+        </UnstyledButton>
+      ) : (
+        <Button
+          disabled={users.length === 0}
+          color="red"
+          variant="light"
+          leftSection={<IconTrash size={16} />}
+          onClick={() => setOpened(true)}
+        >
+          Delete {users.length > 0 ? `(${users.length})` : ''}
+        </Button>
+      )}
     </>
   );
 };

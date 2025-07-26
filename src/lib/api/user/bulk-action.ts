@@ -27,13 +27,13 @@ export const updateUserBulk = ({
   return api.post(`/user/bulk/${action}`, data);
 };
 
-type UseUpdateUserBulkOptions = {
+type useUserBulkActionOptions = {
   mutationConfig?: MutationConfig<typeof updateUserBulk>;
 };
 
-export const useUpdateUserBulk = ({
+export const useUserBulkAction = ({
   mutationConfig,
-}: UseUpdateUserBulkOptions = {}) => {
+}: useUserBulkActionOptions = {}) => {
   const { refetch: refetchUserBulk } = useUsers({
     params: SearchQuery.userSearchQuery({}),
   });

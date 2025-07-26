@@ -353,7 +353,7 @@ export const UsersList = () => {
       rowCount: users?.data?.length ?? 0,
       editDisplayMode: 'custom',
       enableRowSelection: (row) => row.original._id !== me?.data._id,
-
+      positionToolbarAlertBanner: 'none',
       renderRowActions: ({ row, table }) => (
         <Flex gap="md">
           <Tooltip label="Edit">
@@ -370,7 +370,7 @@ export const UsersList = () => {
           </Tooltip>
           <Tooltip label="Delete">
             <ActionIcon color="red">
-              <DeleteUser user={row.original} />
+              <DeleteUser users={[row.original]} />
             </ActionIcon>
           </Tooltip>
         </Flex>
