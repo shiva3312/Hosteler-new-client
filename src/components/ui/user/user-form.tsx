@@ -272,8 +272,8 @@ export const UserForm = ({ initialValues = {} }: Props) => {
 
         <Select
           required
-          label="Status"
-          description="User status indicates if the user is active or not"
+          label="Membership Status"
+          description="Membership status indicates if the user is a member of the hostel"
           key={form.key('status')}
           placeholder={
             form.values.mealStatus === MealStatus.Disabled

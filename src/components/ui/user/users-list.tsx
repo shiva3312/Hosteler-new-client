@@ -136,7 +136,7 @@ export const UsersList = () => {
       {
         accessorFn: (row) => row.status,
         accessorKey: 'status',
-        header: 'Status',
+        header: 'Membership',
         size: 80,
         id: 'status',
         Cell: ({ row }) => (

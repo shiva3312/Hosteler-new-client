@@ -2,6 +2,9 @@
 import { nanoid } from 'nanoid';
 import { create } from 'zustand';
 
+import { env } from '@/config/env';
+import { Environment } from '@/data/feature';
+
 export type Notification = {
   id: string;
   type: 'info' | 'warning' | 'success' | 'error';
@@ -27,12 +30,15 @@ export const useNotifications = create<NotificationsStore>((set) => ({
     }));
 
     // remove notification after 5 seconds
-    if (autoRemove && notification.type !== 'error') {
+    if (
+      autoRemove &&
+      !(notification.type !== 'error' && env.ENVIRONMENT === Environment.DEV)
+    ) {
       setTimeout(() => {
         set((state) => ({
           notifications: state.notifications.filter((n) => n.id !== id),
         }));
-      }, 5000);
+      }, 3000);
     }
   },
   dismissNotification: (id) =>

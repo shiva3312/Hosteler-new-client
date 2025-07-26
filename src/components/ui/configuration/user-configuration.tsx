@@ -17,10 +17,10 @@ const data = [
   },
   {
     id: 'user-status',
-    title: 'User Status',
+    title: 'Stay Status',
     type: 'checkBox',
     description:
-      'On/Off user status will mark user as active/inactive in the hostel',
+      'On/Off stay status will mark user as active/inactive in the hostel',
   },
 ];
 

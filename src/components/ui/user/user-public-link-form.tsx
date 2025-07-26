@@ -50,6 +50,7 @@ export const RegisterUserByLink = () => {
   const unitName = encodedUnitName ? decodeURIComponent(encodedUnitName) : null;
   const navigate = useNavigate();
   const [celebrate, setCelebrate] = useState(false);
+  const timeout = 5000;
 
   const form = useForm<Partial<UserRequest>>({
     validate: zodResolver(UserRequestZodSchema),
@@ -76,7 +77,7 @@ export const RegisterUserByLink = () => {
         setTimeout(() => {
           setCelebrate(false);
           navigate(paths.auth.login.getHref(), { replace: true });
-        }, 7000);
+        }, timeout);
       },
     },
   });
@@ -190,8 +191,9 @@ export const RegisterUserByLink = () => {
       </Card>
       <CelebrationModal
         open={celebrate}
-        text="Registration successful!"
+        text="Registration Successful!"
         onClose={() => setCelebrate(false)}
+        duration={timeout}
       />
     </Paper>
   );

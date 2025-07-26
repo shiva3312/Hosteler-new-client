@@ -6,6 +6,7 @@ import { env } from '@/config/env';
 import logger from '@/config/log';
 import { paths } from '@/config/paths';
 import { LocalStorage } from '@/utils/local-storage.class';
+import { clearToken } from './auth/auth';
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   if (config.headers) {
@@ -50,6 +51,7 @@ api.interceptors.response.use(
     }
     // 🔒 Unauthorized (force redirect)
     if (status === 401) {
+      clearToken();
       const searchParams = new URLSearchParams();
       const redirectTo =
         searchParams.get('redirectTo') || window.location.pathname;
