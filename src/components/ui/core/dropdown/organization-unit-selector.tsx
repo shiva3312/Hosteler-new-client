@@ -175,6 +175,7 @@ const OrganizationUnitDropdown = ({
                 />
               </Grid.Col>
             )}
+            <Grid.Col></Grid.Col>
           </Grid>
         </LoaderWrapper>
       )}

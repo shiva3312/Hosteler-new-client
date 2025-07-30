@@ -97,6 +97,12 @@ export function MessForm({ initialValues = {} }: Props) {
           {...form.getInputProps('status')}
         />
 
+        <TextInput
+          label="Extra Meal Count"
+          placeholder="Enter Extra Meal Count"
+          {...form.getInputProps('extraMealCount')}
+        />
+
         <OrganizationUnitDropdown form={form} />
       </GenericFieldset>
 
