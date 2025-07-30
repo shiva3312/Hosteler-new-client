@@ -12,9 +12,10 @@ import { useUsers } from '@/lib/api/user/get-users';
 
 import { ChartUserList } from './chart/chart-user-list';
 
-const MealChartDetails: React.FC<{ mealChart: MealChartResponse }> = ({
-  mealChart,
-}) => {
+const MealChartDetails: React.FC<{
+  mealChart: MealChartResponse;
+  viewOnly?: boolean;
+}> = ({ mealChart, viewOnly = false }) => {
   const {
     extraMealCount = 0,
     userWithMealPreference = [],
@@ -140,7 +141,8 @@ const MealChartDetails: React.FC<{ mealChart: MealChartResponse }> = ({
 
       <Divider variant="dashed" my={'md'} />
       <ChartUserList
-        userWithMealPreference={userWithMealPreference}
+        viewOnly={viewOnly}
+        mealChart={mealChart}
         users={users?.data}
         isLoading={userLoading}
       />

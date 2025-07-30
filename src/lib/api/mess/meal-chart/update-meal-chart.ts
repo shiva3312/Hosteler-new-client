@@ -8,13 +8,13 @@ import { MutationConfig } from '@/lib/api/react-query';
 import { useMealCharts } from './get-all-meal-charts';
 
 export const updateMealChart = ({
-  mealChartId,
+  id,
   data,
 }: {
-  mealChartId: string;
-  data: UpdateMealChartRequest;
+  id: string;
+  data: Partial<UpdateMealChartRequest>;
 }) => {
-  return api.put(`/meal-chart/${mealChartId}`, data);
+  return api.put(`/meal-chart/${id}`, data);
 };
 
 type UseUpdateMealChartOptions = {

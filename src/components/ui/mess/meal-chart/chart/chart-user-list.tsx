@@ -1,55 +1,51 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 
-import { Badge, Text } from '@mantine/core';
+import { Badge, Group, Text } from '@mantine/core';
 import {
   MRT_ColumnDef,
+  MRT_TableInstance,
   MRT_TableOptions,
   MRT_TableState,
 } from 'mantine-react-table';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 
 import MealTypeBadge from '@/components/ui/core/badge/meal-type';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import UserAvatar from '@/components/ui/user/user-list-avatar';
 import { UserRole } from '@/data/feature';
 import { MealType } from '@/interfaces/enums';
+import { MealChartResponse } from '@/interfaces/mess/meal-chart.interface';
 import { UserResponse } from '@/interfaces/user.interface';
 import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useMe } from '@/lib/api/user/get-me';
 
+import { MealChartUserBulkActions } from './chart-user-bulk-action';
+
 interface ChartUserListProps {
   users?: UserResponse[];
   isLoading?: boolean;
-  userWithMealPreference: {
-    user: string;
-    verify: boolean;
-    items: string[];
-    mealType?: MealType | null | undefined;
-  }[];
+  mealChart: MealChartResponse;
+  viewOnly?: boolean;
 }
 
 export const ChartUserList = ({
+  viewOnly = false,
   users = [],
   isLoading = false,
-  userWithMealPreference,
+  mealChart,
 }: ChartUserListProps) => {
   const { data: me } = useMe();
+  const tableRef = useRef<MRT_TableInstance<UserResponse>>(null);
 
-  const userIdPreferenceMap: Record<
-    string,
-    ChartUserListProps['userWithMealPreference'][number]
-  > = useMemo(() => {
-    return userWithMealPreference.reduce(
-      (acc, preference) => {
-        acc[preference.user] = preference;
-        return acc;
-      },
-      {} as Record<
-        string,
-        ChartUserListProps['userWithMealPreference'][number]
-      >,
-    );
-  }, [userWithMealPreference]);
+  const userIdPreferenceMap = useMemo(() => {
+    const userWithMealPreference = mealChart.userWithMealPreference ?? [];
+    return userWithMealPreference.reduce<
+      Record<string, (typeof userWithMealPreference)[number]>
+    >((acc, preference) => {
+      acc[preference.user] = preference;
+      return acc;
+    }, {});
+  }, [mealChart.userWithMealPreference]);
 
   const columns = useMemo<MRT_ColumnDef<UserResponse>[]>(
     () => [
@@ -145,10 +141,12 @@ export const ChartUserList = ({
       data: users ?? [],
       getRowId: (row) => row._id ?? '',
       rowCount: users?.length ?? 0,
-      enableRowSelection: AuthorizationService.hasEqualOrHigherRole(
-        me?.data?.roles ?? [],
-        UserRole.ADMIN,
-      ),
+      enableRowSelection:
+        !viewOnly &&
+        AuthorizationService.hasEqualOrHigherRole(
+          me?.data?.roles ?? [],
+          UserRole.ADMIN,
+        ),
       enableRowActions: false,
       enableEditing: false,
       enableColumnFilters: false,
@@ -167,9 +165,34 @@ export const ChartUserList = ({
       enableGlobalFilter: true,
 
       renderRowActionMenuItems: undefined,
+
+      renderTopToolbarCustomActions: () => {
+        if (viewOnly) return null;
+
+        return (
+          <Group>
+            {AuthorizationService.hasEqualOrHigherRole(
+              me?.data.roles ?? [],
+              UserRole.ADMIN,
+            ) && (
+              <MealChartUserBulkActions
+                onSuccess={() => {
+                  tableRef.current?.resetRowSelection();
+                }}
+                selectedRows={
+                  tableRef.current
+                    ?.getSelectedRowModel()
+                    .flatRows.map((row) => row.original) ?? []
+                }
+                mealChart={mealChart}
+              />
+            )}
+          </Group>
+        );
+      },
     }),
 
-    [columns, me?.data?.roles, users],
+    [columns, me?.data.roles, mealChart, users, viewOnly],
   );
 
   const state: Partial<MRT_TableState<UserResponse>> = useMemo(
@@ -189,6 +212,9 @@ export const ChartUserList = ({
       columns={columns}
       options={options}
       state={state}
+      setTable={(table) => {
+        (tableRef as any).current = table;
+      }}
     />
   );
 };

@@ -7,6 +7,7 @@ import {
   IconCircle,
   IconCircleOff,
   IconCircleCheck,
+  IconDots,
 } from '@tabler/icons-react';
 import React from 'react';
 

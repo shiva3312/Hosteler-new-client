@@ -113,7 +113,7 @@ export function MealChartForm({ initialValues, viewOnly }: Props) {
       logger.info('Creating mealChart with values:', values);
     } else {
       updateMealChartMutation.mutate({
-        mealChartId: (initialValues as MealChartResponse)?._id,
+        id: (initialValues as MealChartResponse)?._id,
         data: values as Partial<MealChartRequest>,
       });
 
@@ -151,7 +151,10 @@ export function MealChartForm({ initialValues, viewOnly }: Props) {
           isLoading={isLoading}
           loadingText="Hold a minute, Getting you meal chart..."
         >
-          <MealChartDetails mealChart={targetMealChart as MealChartResponse} />
+          <MealChartDetails
+            mealChart={targetMealChart as MealChartResponse}
+            viewOnly
+          />
         </LoaderWrapper>
       ) : (
         <Center h="100%" p="xl">
