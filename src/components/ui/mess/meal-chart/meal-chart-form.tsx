@@ -4,6 +4,7 @@ import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 import { useMemo } from 'react';
 
+import { LoaderWrapper } from '@/components/layouts/loader-wrapper';
 import logger from '@/config/log';
 import { MealChartType, MenuType, ScheduleFor } from '@/interfaces/enums';
 import {
@@ -11,6 +12,7 @@ import {
   MealChartResponse,
 } from '@/interfaces/mess/meal-chart.interface';
 import { useCreateMealChart } from '@/lib/api/mess/meal-chart/create-meal-chart';
+import { useMealChartsToView } from '@/lib/api/mess/meal-chart/create-to-view-meal-chart';
 import { useUpdateMealChart } from '@/lib/api/mess/meal-chart/update-meal-chart';
 import { useSchedules } from '@/lib/api/schedule/get-all-schedules';
 
@@ -20,8 +22,9 @@ import { useNotifications } from '../../core/notifications';
 
 interface Props {
   initialValues?: Partial<MealChartResponse>;
+  viewOnly?: boolean;
 }
-export function MealChartForm({ initialValues }: Props) {
+export function MealChartForm({ initialValues, viewOnly }: Props) {
   const form = useForm({
     initialValues: { menuType: MenuType.Dinner, ...initialValues },
     // validate : MealChartRequestZodSchema
@@ -32,6 +35,19 @@ export function MealChartForm({ initialValues }: Props) {
       enabled: !!form.values.unit && !!form.values.organization,
     },
   });
+
+  const { data: mealChart, isLoading } = useMealChartsToView({
+    params: {
+      unit: form.values.unit ?? '',
+      organization: form.values.organization ?? '',
+      menuType: form.values.menuType ?? MenuType.Dinner,
+      mealChartType: initialValues?.type ?? MealChartType.Main,
+    },
+    enabled:
+      !!form.values.unit && !!form.values.organization && !form.values._id,
+  });
+
+  const targetMealChart = initialValues?._id ? initialValues : mealChart?.data;
 
   // remove option from menuTypeOptions according to schedules
   const filteredMenuTypeOptions = useMemo(() => {
@@ -108,35 +124,35 @@ export function MealChartForm({ initialValues }: Props) {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <OrganizationUnitDropdown form={form} />
-      {/* <Button type="submit" mt="md">
-        {initialValues ? 'Update' : 'Create'}
-      </Button> */}
+      {!viewOnly && (
+        <>
+          <OrganizationUnitDropdown form={form} />
 
-      {/** Only show scheduled menu's */}
-      <Select
-        required={false}
-        label="Select Menu Type"
-        key={form.key('menuType')}
-        placeholder={'Select your menu type'}
-        nothingFoundMessage={
-          Object.keys(filteredMenuTypeOptions).length > 0
-            ? 'Select your menu type'
-            : 'No menu types available'
-        }
-        data={filteredMenuTypeOptions}
-        {...form.getInputProps('menuType')}
-      />
+          {/** Only show scheduled menu's */}
+          <Select
+            required={false}
+            label="Select Menu Type"
+            key={form.key('menuType')}
+            placeholder={'Select your menu type'}
+            nothingFoundMessage={
+              Object.keys(filteredMenuTypeOptions).length > 0
+                ? 'Select your menu type'
+                : 'No menu types available'
+            }
+            data={filteredMenuTypeOptions}
+            {...form.getInputProps('menuType')}
+          />
 
-      <Divider label="MealChart Details" labelPosition="center" my="lg" />
-
+          <Divider label="MealChart Details" labelPosition="center" my="lg" />
+        </>
+      )}
       {Object.keys(filteredMenuTypeOptions).length > 0 ? (
-        <MealChartDetails
-          unit={form.values.unit ?? ''}
-          organization={form.values.organization ?? ''}
-          menuType={form.values.menuType ?? filteredMenuTypeOptions[0].value}
-          mealChartType={MealChartType.Main}
-        />
+        <LoaderWrapper
+          isLoading={isLoading}
+          loadingText="Hold a minute, Getting you meal chart..."
+        >
+          <MealChartDetails mealChart={targetMealChart as MealChartResponse} />
+        </LoaderWrapper>
       ) : (
         <Center h="100%" p="xl">
           <Text c="red" size="sm">

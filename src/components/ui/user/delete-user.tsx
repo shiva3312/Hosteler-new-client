@@ -1,13 +1,13 @@
+//Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { Button, Modal, Text, UnstyledButton } from '@mantine/core';
 import { IconBan, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 
 import { useNotifications } from '@/components/ui/core/notifications';
+import { GeneralAction } from '@/data/feature';
 import { UserResponse } from '@/interfaces/user.interface';
 import { useAuth } from '@/lib/api/auth/auth';
-
 import { useUserBulkAction } from '@/lib/api/user/bulk-action';
-import { GeneralAction } from '@/data/feature';
 
 type DeleteUserProps = {
   users: UserResponse[]; // Now expects an array of users

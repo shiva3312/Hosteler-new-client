@@ -93,6 +93,18 @@ const GenericTable = <TData extends object>({
 
     initialState: {
       density: 'xs',
+
+      // default column sorting
+      sorting: [
+        {
+          id: 'createdAt',
+          desc: true,
+        },
+        {
+          id: 'updatedAt',
+          desc: true,
+        },
+      ],
     },
 
     state: {

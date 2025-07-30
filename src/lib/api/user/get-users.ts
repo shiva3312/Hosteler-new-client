@@ -11,9 +11,12 @@ export const getUsers = (
   return api.get(`/users`, { params });
 };
 
-export const getUsersQueryOptions = (params?: Record<string, any>) => {
+export const getUsersQueryOptions = (
+  params?: Record<string, any>,
+  customKey?: string,
+) => {
   return queryOptions({
-    queryKey: ['users', params], // include params in key for caching
+    queryKey: ['users', params, customKey], // include params and customKeys in key for caching
     queryFn: () => getUsers(params),
     staleTime: 1000 * 60 * 5,
   });
@@ -23,15 +26,17 @@ type UseUsersOptions = {
   queryConfig?: QueryConfig<typeof getUsersQueryOptions>;
   params?: Record<string, any>;
   enabled?: boolean;
+  customKey?: string;
 };
 
 export const useUsers = ({
   queryConfig,
   params,
   enabled,
+  customKey,
 }: UseUsersOptions = {}) => {
   return useQuery({
-    ...getUsersQueryOptions(params),
+    ...getUsersQueryOptions(params, customKey),
     ...queryConfig,
     enabled,
   });

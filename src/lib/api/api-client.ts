@@ -6,6 +6,7 @@ import { env } from '@/config/env';
 import logger from '@/config/log';
 import { paths } from '@/config/paths';
 import { LocalStorage } from '@/utils/local-storage.class';
+
 import { clearToken } from './auth/auth';
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {

@@ -6,11 +6,11 @@ import { api } from '@/lib/api/api-client';
 import { QueryConfig } from '@/lib/api/react-query';
 
 export const getMealChartById = (
-  mealChart: string,
+  id: string,
 ): Promise<{
   data: MealChartResponse[];
 }> => {
-  return api.get(`/meal-chart/${mealChart}`);
+  return api.get(`/meal-chart/${id}`);
 };
 
 export const getMealChartQueryOptions = (mealChart: string) => {
@@ -22,18 +22,18 @@ export const getMealChartQueryOptions = (mealChart: string) => {
 };
 
 type UseMealChartOptions = {
-  mealChart: string;
+  id: string;
   queryConfig?: QueryConfig<typeof getMealChartQueryOptions>;
   enabled?: boolean;
 };
 
 export const useMealChart = ({
-  mealChart,
+  id,
   queryConfig,
   enabled,
 }: UseMealChartOptions) => {
   return useQuery({
-    ...getMealChartQueryOptions(mealChart),
+    ...getMealChartQueryOptions(id),
     ...queryConfig,
     enabled,
   });

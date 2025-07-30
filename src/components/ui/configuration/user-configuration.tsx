@@ -2,6 +2,7 @@
 import { Box, Card, Divider, Flex, Group, Switch, Text } from '@mantine/core';
 
 import { MealStatus, UserStatus } from '@/interfaces/enums';
+import { UserResponse } from '@/interfaces/user.interface';
 import { useMe } from '@/lib/api/user/get-me';
 import { useUpdateUser } from '@/lib/api/user/update-profile';
 
@@ -71,9 +72,18 @@ export function SwitchesCard() {
       return;
     }
 
+    // if user status is not active, then meal status should be inactive
+    const data: Partial<UserResponse> = {
+      status,
+    };
+
+    if (status !== UserStatus.Active) {
+      data.mealStatus = MealStatus.Inactive;
+    }
+
     updateProfileMutation.mutate({
       userId: user?.data?._id ?? '',
-      data: { status },
+      data,
     });
   };
 

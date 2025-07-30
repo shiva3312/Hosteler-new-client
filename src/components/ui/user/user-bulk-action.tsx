@@ -7,7 +7,6 @@ import {
   IconCircle,
   IconCircleOff,
   IconCircleCheck,
-  IconDots,
 } from '@tabler/icons-react';
 import React from 'react';
 
@@ -16,8 +15,8 @@ import { MealStatus, UserStatus } from '@/interfaces/enums';
 import { UserResponse } from '@/interfaces/user.interface';
 import { useUserBulkAction } from '@/lib/api/user/bulk-action';
 
-import { useNotifications } from '../core/notifications';
 import { DeleteUser } from './delete-user';
+import { useNotifications } from '../core/notifications';
 
 type BulkActionsProps = {
   selectedRows: UserResponse[];

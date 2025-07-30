@@ -165,7 +165,7 @@ export class SearchQuery {
       query.roles = { in: args?.anyRoles };
     }
 
-    if (args?.usersId && args?.usersId.length > 0) {
+    if (args?.usersId) {
       query._id = { in: args?.usersId };
     }
 

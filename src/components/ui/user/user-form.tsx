@@ -15,7 +15,12 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useNotifications } from '@/components/ui/core/notifications';
 import { UserRole } from '@/data/feature';
-import { ImageSize, MealStatus, UserStatus } from '@/interfaces/enums';
+import {
+  ImageSize,
+  MealStatus,
+  MealType,
+  UserStatus,
+} from '@/interfaces/enums';
 import { UserRequest, UserResponse } from '@/interfaces/user.interface';
 import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useMe } from '@/lib/api/user/get-me';
@@ -47,7 +52,9 @@ const defaultInitialValues: Partial<UserRequest> = {
   profile: {
     address: {},
     contacts: {},
-    preferences: {},
+    preferences: {
+      mealType: MealType.AllEater,
+    },
     medical: {},
     finance: {},
     identity: {},

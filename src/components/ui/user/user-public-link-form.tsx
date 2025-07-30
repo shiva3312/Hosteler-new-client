@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { paths } from '@/config/paths';
-import { ImageSize } from '@/interfaces/enums';
+import { ImageSize, MealType } from '@/interfaces/enums';
 import {
   UserRequest,
   UserRequestZodSchema,
@@ -36,7 +36,9 @@ const defaultInitialValues: Partial<UserRequest> = {
   profile: {
     address: {},
     contacts: {},
-    preferences: {},
+    preferences: {
+      mealType: MealType.AllEater,
+    },
     medical: {},
     finance: {},
     identity: {},
