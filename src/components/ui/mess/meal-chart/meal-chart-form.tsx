@@ -124,7 +124,7 @@ export function MealChartForm({ initialValues, viewOnly }: Props) {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      {!viewOnly && (
+      {viewOnly && (
         <>
           <OrganizationUnitDropdown form={form} />
 
@@ -153,7 +153,7 @@ export function MealChartForm({ initialValues, viewOnly }: Props) {
         >
           <MealChartDetails
             mealChart={targetMealChart as MealChartResponse}
-            viewOnly
+            viewOnly={viewOnly}
           />
         </LoaderWrapper>
       ) : (

@@ -173,7 +173,7 @@ export const MealChartsList = () => {
                   title: `${row.original.menuType} - Meal Chart`,
                   children: (
                     <Box mt={'lg'}>
-                      <MealChartForm initialValues={row.original!} viewOnly />
+                      <MealChartForm initialValues={row.original!} />
                     </Box>
                   ),
                   size: '80%',
@@ -200,7 +200,7 @@ export const MealChartsList = () => {
                 title: 'Meal Chart',
                 children: (
                   <Box mt={'lg'}>
-                    <MealChartForm />,
+                    <MealChartForm viewOnly />
                   </Box>
                 ),
                 size: '80%',
