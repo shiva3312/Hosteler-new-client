@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import { TimeInput } from '@mantine/dates';
 import { useForm, zodResolver } from '@mantine/form';
+import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 
 import { LoaderWrapper } from '@/components/layouts/loader-wrapper';
@@ -36,9 +37,17 @@ interface ScheduleJobFormProps {
   unit: string;
   organization: string;
   scheduleFor: ScheduleFor;
-  time?: string; // Default time for the schedule
 }
 
+// Helper to make friendly labels, e.g. "Asia/Kolkata (UTC+05:30)"
+const timezoneOptions = moment.tz.names().map((tz) => {
+  const offset = moment.tz(tz).format('Z'); // e.g. "+05:30"
+  const label = `(UTC${offset}) - ${tz.replace('_', ' ')} `;
+  return {
+    value: tz,
+    label,
+  };
+});
 export function ScheduleJobForm(props: ScheduleJobFormProps) {
   const { addNotification } = useNotifications();
 
@@ -52,7 +61,9 @@ export function ScheduleJobForm(props: ScheduleJobFormProps) {
       unit: props.unit || '',
       organization: props.organization || '',
       type: ScheduleType.Daily, // Add the 'type' property to initialValues
-      time: props.time ?? '08:00', // Default time
+      time: '',
+      timezone: moment.tz.guess(),
+      isActive: true,
     },
   });
 
@@ -144,6 +155,13 @@ export function ScheduleJobForm(props: ScheduleJobFormProps) {
         break;
       case 'yearly':
         form.setFieldValue('type', ScheduleType.Yearly);
+        break;
+      case 'custom':
+        form.setFieldValue('type', ScheduleType.Custom);
+        break;
+      default:
+        form.setFieldValue('type', ScheduleType.Daily);
+        setShowCronInput(false);
         break;
     }
   };
@@ -277,6 +295,16 @@ export function ScheduleJobForm(props: ScheduleJobFormProps) {
                   {...form.getInputProps('cronTime')}
                 />
               )}
+
+              <Select
+                label="Select Timezone"
+                description="Timezone determines when the schedule runs based on local time"
+                withAsterisk
+                required
+                data={timezoneOptions}
+                key={form.key('timezone')}
+                {...form.getInputProps('timezone')}
+              />
             </Stack>
 
             {/* Additional Settings Section */}
@@ -290,7 +318,7 @@ export function ScheduleJobForm(props: ScheduleJobFormProps) {
               {/* <Select
                 label="Schedule For"
                 placeholder="Select purpose"
-                data={Object.values(ScheduleFor).map((v) => ({
+                data={Object.values(scheduleFor).map((v) => ({
                   label: v,
                   value: v,
                 }))}

@@ -1,4 +1,5 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
+import moment from 'moment-timezone';
 import { z } from 'zod';
 
 import { MetaZodSchema, UserActionResponseZodSchema } from './common.interface';
@@ -21,6 +22,10 @@ export const ScheduleRequestZodSchema = z.object({
   type: z.nativeEnum(ScheduleType), // Type of the schedule, e.g., 'daily', 'weekly', etc.
   scheduleFor: z.nativeEnum(ScheduleFor), // Specific schedule for meals or other purposes
   data: z.any().optional(), // Additional data related to the schedule
+  timezone: Primitive.safeString().refine(
+    (val) => moment.tz.names().includes(val),
+    { message: 'Invalid timezone' },
+  ),
 
   // reference fields
   unit: Primitive.safeID().optional(),
