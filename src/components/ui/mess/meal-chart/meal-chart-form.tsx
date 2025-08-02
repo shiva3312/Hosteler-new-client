@@ -1,12 +1,11 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Center, Divider, Select, Text } from '@mantine/core';
+import { Center, Divider, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
-import { useMemo } from 'react';
 
 import { LoaderWrapper } from '@/components/layouts/loader-wrapper';
 import logger from '@/config/log';
-import { MealChartType, MenuType, ScheduleFor } from '@/interfaces/enums';
+import { MealChartType, MenuType } from '@/interfaces/enums';
 import {
   MealChartRequest,
   MealChartResponse,
@@ -14,7 +13,6 @@ import {
 import { useCreateMealChart } from '@/lib/api/mess/meal-chart/create-meal-chart';
 import { useMealChartsToView } from '@/lib/api/mess/meal-chart/create-to-view-meal-chart';
 import { useUpdateMealChart } from '@/lib/api/mess/meal-chart/update-meal-chart';
-import { useSchedules } from '@/lib/api/schedule/get-all-schedules';
 
 import MealChartDetails from './meal-chart-view';
 import MenuTypeDropdown from '../../core/dropdown/menu-type';
@@ -31,11 +29,6 @@ export function MealChartForm({ initialValues, viewOnly }: Props) {
     // validate : MealChartRequestZodSchema
   });
   const { addNotification } = useNotifications();
-  const { data: schedules } = useSchedules({
-    queryConfig: {
-      enabled: !!form.values.unit && !!form.values.organization,
-    },
-  });
 
   const { data: mealChart, isLoading } = useMealChartsToView({
     params: {
@@ -49,37 +42,6 @@ export function MealChartForm({ initialValues, viewOnly }: Props) {
   });
 
   const targetMealChart = initialValues?._id ? initialValues : mealChart?.data;
-
-  // remove option from menuTypeOptions according to schedules
-  const filteredMenuTypeOptions = useMemo(() => {
-    const menuTypeOptions: MenuType[] = [];
-    if (schedules?.data) {
-      schedules.data
-        .filter(
-          (s) =>
-            s.unit === form.values.unit &&
-            s.organization === form.values.organization,
-        )
-        .forEach((schedule) => {
-          if (schedule.scheduleFor === ScheduleFor.MEAL_BREAKFAST_CHART) {
-            menuTypeOptions.push(MenuType.Breakfast);
-          } else if (schedule.scheduleFor === ScheduleFor.MEAL_LUNCH_CHART) {
-            menuTypeOptions.push(MenuType.Lunch);
-          } else if (schedule.scheduleFor === ScheduleFor.MEAL_DINNER_CHART) {
-            menuTypeOptions.push(MenuType.Dinner);
-          } else if (schedule.scheduleFor === ScheduleFor.MEAL_SNACK_CHART) {
-            menuTypeOptions.push(MenuType.Snack);
-          }
-        });
-    }
-
-    return Object.values(MenuType)
-      .map((value) => ({
-        value,
-        label: value,
-      }))
-      .filter((option) => menuTypeOptions.includes(option.value));
-  }, [form.values.organization, form.values.unit, schedules?.data]);
 
   const updateMealChartMutation = useUpdateMealChart({
     mutationConfig: {

@@ -4,7 +4,6 @@ import {
   IconUsers,
   IconGauge,
   IconSettings,
-  IconUser,
   IconSettingsCog,
   IconToolsKitchen3,
   IconBed,
@@ -51,35 +50,36 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       label: 'Member',
     },
     {
-      link: paths.app.mess.getHref(),
+      link: paths.app.mess.mealChart.getHref(),
       icon: IconToolsKitchen3,
       label: 'Mess',
       subLinks: [
-        {
-          link: paths.app.mess.getHref(),
-          icon: IconToolsKitchen3,
-          label: 'Mess',
-        },
-        {
-          link: paths.app.mess.mealItem.getHref(),
-          icon: IconToolsKitchen3,
-          label: 'Item',
-        },
-        {
-          link: paths.app.mess.menu.getHref(),
-          icon: IconToolsKitchen3,
-          label: 'Menu',
-        },
-        {
-          link: paths.app.mess.menuCycle.getHref(),
-          icon: IconToolsKitchen3,
-          label: 'Cycle',
-        },
         {
           link: paths.app.mess.mealChart.getHref(),
           icon: IconToolsKitchen3,
           label: 'Chart',
         },
+        {
+          link: paths.app.mess.getHref(),
+          icon: IconToolsKitchen3,
+          label: 'Mess',
+        },
+        // {
+        //   link: paths.app.mess.mealItem.getHref(),
+        //   icon: IconToolsKitchen3,
+        //   label: 'Item',
+        // },
+        // {
+        //   link: paths.app.mess.menu.getHref(),
+        //   icon: IconToolsKitchen3,
+        //   label: 'Menu',
+        // },
+        // {
+        //   link: paths.app.mess.menuCycle.getHref(),
+        //   icon: IconToolsKitchen3,
+        //   label: 'Cycle',
+        // },
+
         {
           link: paths.app.mess.mealPreference.getHref(),
           icon: IconToolsKitchen3,
@@ -93,35 +93,35 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       label: 'Settings',
     },
     {
-      link: paths.app.systemSettings.user.getHref(),
+      link: paths.app.systemSettings.tempLink.getHref(),
       icon: IconSettingsCog,
       label: 'System Settings',
       subLinks: [
-        {
-          link: paths.app.systemSettings.user.getHref(),
-          icon: IconUser,
-          label: 'User',
-        },
-        {
-          link: paths.app.systemSettings.group.getHref(),
-          icon: IconUser,
-          label: 'Group',
-        },
-        {
-          link: paths.app.systemSettings.feature.getHref(),
-          icon: IconUser,
-          label: 'Feature',
-        },
         {
           link: paths.app.systemSettings.tempLink.getHref(),
           icon: IconLink,
           label: 'Link',
         },
-        {
-          link: paths.app.systemSettings.system.getHref(),
-          icon: IconUser,
-          label: 'System',
-        },
+        // {
+        //   link: paths.app.systemSettings.user.getHref(),
+        //   icon: IconUser,
+        //   label: 'User',
+        // },
+        // {
+        //   link: paths.app.systemSettings.group.getHref(),
+        //   icon: IconUser,
+        //   label: 'Group',
+        // },
+        // {
+        //   link: paths.app.systemSettings.feature.getHref(),
+        //   icon: IconUser,
+        //   label: 'Feature',
+        // },
+        // {
+        //   link: paths.app.systemSettings.system.getHref(),
+        //   icon: IconUser,
+        //   label: 'System',
+        // },
       ],
     },
   ].filter(Boolean) as Link[];

@@ -3,7 +3,6 @@ import z from 'zod';
 
 import { UserRole } from '@/data/feature';
 
-import { UserActionZodSchema } from '../common.interface';
 import { UserStatus } from '../enums';
 import { Primitive } from '../primitive.class';
 import { ProfileZodSchema, UserRequestZodSchema } from '../user.interface';
@@ -27,7 +26,6 @@ export const SupplierResponseZodSchema = z
     scope: Primitive.safeString('Scope').optional(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    // array of user actions on this menu
   })
   .merge(UserRequestZodSchema)
   .omit({ password: true })

@@ -25,7 +25,6 @@ export const UnitResponseZodSchema = z
     _id: Primitive.safeID(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    // array of user actions on this menu
   })
   .extend({
     meta: MetaZodSchema.optional(),

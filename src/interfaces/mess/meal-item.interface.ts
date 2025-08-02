@@ -38,7 +38,6 @@ export const MealItemResponseZodSchema = z
     _id: Primitive.safeID(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    // array of user actions on this menu
   })
   .merge(MealItemRequestZodSchema)
   .extend({

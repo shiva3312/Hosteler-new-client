@@ -6,7 +6,7 @@ import { SwitchesCard } from '@/components/ui/configuration/user-configuration';
 import { UserCardImage } from '@/components/ui/user/user-profile-card';
 import { Action, Authorization } from '@/lib/api/auth/authorization-wrapper';
 
-import SummaryDashboard from './summary-dashboard';
+// import SummaryDashboard from './summary-dashboard';
 
 function Dashboard() {
   return (
@@ -27,11 +27,11 @@ function Dashboard() {
           <SwitchesCard />
         </Box>
       </Authorization>
-      <Authorization action={Action.summary_dashboard}>
+      {/* <Authorization action={Action.summary_dashboard}>
         <Box w={{ base: '100%', sm: '80%' }}>
           <SummaryDashboard />
         </Box>
-      </Authorization>
+      </Authorization> */}
     </Flex>
   );
 }

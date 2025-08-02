@@ -22,6 +22,7 @@ import DateBadge from '@/components/ui/core/badge/date-badge';
 import RoleBadge from '@/components/ui/core/badge/role-badge';
 import GenericTable from '@/components/ui/core/table/GenericTable';
 import { UserRole } from '@/data/feature';
+import { Gender } from '@/interfaces/enums';
 import { UserResponse } from '@/interfaces/user.interface';
 import { AuthorizationService } from '@/lib/api/auth/authorization';
 import { useGroups } from '@/lib/api/group/get-all-groups';
@@ -36,7 +37,7 @@ import { BulkActions } from './user-bulk-action';
 import { UserForm } from './user-form';
 import UserProfileImage from './user-list-avatar';
 import { MealStatusBadge, MealTypeBadge } from '../core/badge/enum-badage';
-import EnumBadge from '../core/badge/generic-badge';
+import GenderBadge from '../core/badge/gender-badge';
 import { GenericDrawer } from '../core/drawer/drawer';
 
 export const UsersList = () => {
@@ -210,7 +211,9 @@ export const UsersList = () => {
         header: 'Gender',
         size: 80,
         id: 'profile.gender',
-        Cell: ({ row }) => <EnumBadge value={row.original.profile?.gender} />,
+        Cell: ({ row }) => (
+          <GenderBadge value={row.original.profile?.gender as Gender} />
+        ),
         enableEditing: true,
         enableColumnFilter: true,
         mantineEditTextInputProps: {

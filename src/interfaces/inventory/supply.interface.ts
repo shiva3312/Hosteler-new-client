@@ -1,7 +1,6 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
 
-import { UserActionZodSchema } from '../common.interface';
 import { Unit } from '../enums';
 import { Primitive } from '../primitive.class';
 
@@ -25,7 +24,6 @@ export const SupplyResponseZodSchema = z.object({
   _id: Primitive.safeID(),
   createdAt: Primitive.safeDate(),
   updatedAt: Primitive.safeDate(),
-  // array of user actions on this menu
 });
 
 export const UpdateSupplyRequestZodSchema = SupplyRequestZodSchema.partial();

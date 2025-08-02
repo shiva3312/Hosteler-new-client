@@ -20,7 +20,6 @@ import { useUnits } from '@/lib/api/unit/get-all-units';
 import { useMe } from '@/lib/api/user/get-me';
 import { useMesses } from '@lib/api/mess/mess/get-all-messes';
 
-import { DeleteMess } from './mess-delete';
 import { MessForm } from './mess-form';
 import MessProfileImage from './mess-view';
 import { GenericDrawer } from '../../core/drawer/drawer';

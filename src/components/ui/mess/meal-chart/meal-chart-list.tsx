@@ -22,7 +22,7 @@ import { useMealCharts } from '@lib/api/mess/meal-chart/get-all-meal-charts';
 
 import { DeleteMealChart } from './meal-chart-delete';
 import { MealChartForm } from './meal-chart-form';
-import EnumBadge from '../../core/badge/generic-badge';
+import { MenuTypeBadge } from '../../core/badge/enum-badage';
 
 export const MealChartsList = () => {
   const mealChartsQuery = useMealCharts();
@@ -99,17 +99,17 @@ export const MealChartsList = () => {
         accessorKey: 'menuType',
         header: 'Menu Type',
         id: 'menuType',
-        Cell: ({ row }) => <EnumBadge value={row.original.menuType} />,
+        Cell: ({ row }) => <MenuTypeBadge value={row.original.menuType} />,
         enableEditing: false,
       },
-      {
-        accessorFn: (row) => row.type,
-        accessorKey: 'type',
-        header: 'Type',
-        id: 'type',
-        Cell: ({ row }) => <EnumBadge value={row.original.type} />,
-        enableEditing: false,
-      },
+      // {
+      //   accessorFn: (row) => row.type,
+      //   accessorKey: 'type',
+      //   header: 'Type',
+      //   id: 'type',
+      //   Cell: ({ row }) => <EnumBadge value={row.original.type} />,
+      //   enableEditing: false,
+      // },
       {
         accessorFn: (row) => new Date(row.updatedAt).getTime(),
         accessorKey: 'updatedAt',

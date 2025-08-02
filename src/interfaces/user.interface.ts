@@ -6,7 +6,6 @@ import { UserRole } from '@/data/feature';
 import {
   MetaZodSchema,
   PasswordZodSchema,
-  UserActionZodSchema,
   UsernameZodSchema,
 } from './common.interface';
 import {

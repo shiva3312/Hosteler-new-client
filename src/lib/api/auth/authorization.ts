@@ -38,8 +38,8 @@ export class AuthorizationService {
       roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.mess.getHref()]: {
-      access: 'authenticated',
-      // roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
+      access: 'role-based',
+      roles: [UserRole.MASTER_ADMIN, UserRole.SUPER_ADMIN, UserRole.ADMIN],
     },
     [paths.app.mess.mealItem.getHref()]: {
       access: 'authenticated',
