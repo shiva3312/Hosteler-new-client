@@ -1,5 +1,14 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
-import { Card, Text, Badge, Title, Flex, Divider, Box } from '@mantine/core';
+import {
+  Card,
+  Text,
+  Badge,
+  Title,
+  Flex,
+  Divider,
+  Box,
+  Table,
+} from '@mantine/core';
 import React from 'react';
 
 import { MenuType } from '@/interfaces/enums';
@@ -75,9 +84,39 @@ const MealChartDetails: React.FC<{
 
   const serveTime = `${serveTimeObj?.startTime ?? 'N/A'} - ${serveTimeObj?.endTime ?? 'N/A'}`;
 
+  // group student by mealType
+  const groupUsersByMealType = (
+    userWithMealPreference: Array<{
+      mealType?: string | null;
+      [key: string]: any;
+    }>,
+  ) => {
+    return userWithMealPreference.reduce(
+      (acc, user) => {
+        const mealType = user.mealType ? String(user.mealType) : 'Unknown'; // Always convert to string
+        if (!acc[mealType]) {
+          acc[mealType] = [];
+        }
+        acc[mealType].push(user);
+        return acc;
+      },
+      {} as Record<
+        string,
+        Array<{ mealType?: string | null; [key: string]: any }>
+      >,
+    );
+  };
+
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       {/* Header */}
+      {viewOnly && (
+        <Flex>
+          <Badge tt={'capitalize'} variant="white" c={'violet'}>
+            Live chart
+          </Badge>
+        </Flex>
+      )}
       <Flex direction={'column'} justify={'center'} align={'center'} mb="lg">
         <Title order={3} mb={'xs'}>
           {messName}
@@ -107,39 +146,95 @@ const MealChartDetails: React.FC<{
       <Divider variant="dashed" my={'md'} />
 
       {/* Summary */}
-      <Flex justify={'space-between'} align={'center'} px={'md'}>
+      <Flex
+        justify={'space-between'}
+        align={'center'}
+        px={'md'}
+        wrap={'wrap'}
+        gap={'md'}
+      >
         <Box>
-          <Text size="sm" fw={500} m={'xs'}>
-            Total Active: {totalUsers}
-          </Text>
-
-          <Text size="sm" fw={500} m={'xs'}>
-            Total Guest: {totalGuests}
-          </Text>
-
-          <Text size="sm" fw={500} m={'xs'}>
-            Extra Meal: {extraMealCount}
-          </Text>
-
-          {/* <Text size="sm" fw={500} m={'xs'}>
-            Total InActive: {totalGuests}
-          </Text> */}
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>User Type</Table.Th>
+                <Table.Th>Count</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td>Regular</Table.Td>
+                <Table.Td>{totalUsers - totalGuests}</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>Guest</Table.Td>
+                <Table.Td>{totalGuests}</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>Total Active</Table.Td>
+                <Table.Td>{totalUsers}</Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
         </Box>
-
         <Box>
-          <Text size="sm" fw={500} m={'xs'}>
-            Menu Type: {mealChart.menuType}
-          </Text>
-          <Text size="sm" fw={500} m={'xs'}>
-            Serve Time: {serveTime}
-          </Text>
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Category Type</Table.Th>
+                <Table.Th>Count</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              <Table.Tr>
+                {Object.keys(groupUsersByMealType(userWithMealPreference)).map(
+                  (mealType) => (
+                    <>
+                      <Table.Td>{mealType}</Table.Td>
+                      <Table.Td>
+                        {
+                          groupUsersByMealType(userWithMealPreference)[mealType]
+                            .length
+                        }
+                      </Table.Td>
+                    </>
+                  ),
+                )}
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
+        </Box>
+        <Box>
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th colSpan={2}>Other Information</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              <Table.Tr>
+                <Table.Td>Menu Type</Table.Td>
+                <Table.Td>{mealChart.menuType}</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>Serve Time</Table.Td>
+                <Table.Td> {serveTime}</Table.Td>
+              </Table.Tr>
+              <Table.Tr>
+                <Table.Td>Extra Meal</Table.Td>
+                <Table.Td>{extraMealCount}</Table.Td>
+              </Table.Tr>
+            </Table.Tbody>
+          </Table>
         </Box>
       </Flex>
 
       {/* User List */}
-      <Divider variant="solid" my={'md'} />
-
       <Divider variant="dashed" my={'md'} />
+
+      <Text c="blue">Total meal - {totalUsers + extraMealCount}</Text>
+
+      <Divider variant="solid" my={'md'} />
       <ChartUserList
         viewOnly={viewOnly}
         mealChart={mealChart}

@@ -4,7 +4,7 @@ import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
 import logger from '@/config/log';
-import { MealType, MenuType } from '@/interfaces/enums';
+import { MealType } from '@/interfaces/enums';
 import {
   MealPreferenceRequest,
   MealPreferenceResponse,
@@ -12,6 +12,7 @@ import {
 import { useCreateMealPreference } from '@/lib/api/mess/meal-preference/create-meal-preference';
 import { useUpdateMealPreference } from '@/lib/api/mess/meal-preference/update-meal-preference';
 
+import MenuTypeDropdown from '../../core/dropdown/menu-type';
 import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
 import UserDropdown from '../../core/dropdown/user-selector';
 import { useNotifications } from '../../core/notifications';
@@ -74,7 +75,7 @@ export function MealPreferenceForm({ initialValues }: Props) {
       <UserDropdown form={form} />
       <Grid>
         <Grid.Col span={{ base: 12, md: 6 }}>
-          <Select
+          {/* <Select
             required={false}
             label="Menu Type"
             key={form.key('menuType')}
@@ -84,7 +85,8 @@ export function MealPreferenceForm({ initialValues }: Props) {
               label: value,
             }))}
             {...form.getInputProps('menuType')}
-          />
+          /> */}
+          <MenuTypeDropdown form={form} />
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6 }}>
           <Select

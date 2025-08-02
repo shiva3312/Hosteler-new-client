@@ -271,3 +271,11 @@ export enum TempRequestType {
   LoginAttempt = 'Login attempt',
   ResetPassword = 'Reset Password',
 }
+
+export enum AuditLevel {
+  Info = 'info',
+  Error = 'error',
+  Debug = 'debug',
+  Crud = 'crud',
+  Warn = 'warn',
+}

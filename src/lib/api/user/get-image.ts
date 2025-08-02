@@ -2,7 +2,7 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { ImageSize } from '@/interfaces/enums';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 import { api } from '../api-client';
 
@@ -20,7 +20,7 @@ export const getUserProfileImageQueryOptions = (
   size: ImageSize = ImageSize.Medium,
 ) => {
   return queryOptions({
-    queryKey: ['user-profile-image', userId, size],
+    queryKey: [...commonQueryKey(), 'user-profile-image', userId, size],
     queryFn: () => getUserProfileImage(userId, size),
     staleTime: 1000 * 60 * 10, // 10 minutes
   });

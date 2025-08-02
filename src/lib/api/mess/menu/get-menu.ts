@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { MenuResponse } from '@/interfaces/mess/menu.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getMenuById = (
   menu: string,
@@ -15,7 +15,7 @@ export const getMenuById = (
 
 export const getMenuQueryOptions = (menu: string) => {
   return queryOptions({
-    queryKey: ['menu', menu],
+    queryKey: [...commonQueryKey(), 'menu', menu],
     queryFn: () => getMenuById(menu),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

@@ -29,21 +29,18 @@ export const MetaZodSchema = z.object({
 
 export const UserActionZodSchema = z.object({
   user: Primitive.safeID().nullish(),
-  success: z.boolean().nullish(),
   action: z.nativeEnum(GeneralAction).nullish(),
-  oldValue: z.any().nullish(),
-  newValue: z.any().nullish(),
+  changes: z.array(
+    z
+      .object({
+        field: z.string(),
+        oldValue: z.any(),
+        newValue: z.any(),
+      })
+      .nullish(),
+  ),
   comment: Primitive.safeString().nullish(),
   timestamp: Primitive.safeDate('Action Date').nullish(),
-});
-
-export const UserActionResponseZodSchema = UserActionZodSchema.extend({
-  user: z.lazy(() => {
-    const UserResponseZodSchema =
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('./user.interface').UserResponseZodSchema;
-    return UserResponseZodSchema.optional();
-  }),
 });
 
 export const UsernameZodSchema = z.union([
@@ -60,17 +57,35 @@ export const PasswordZodSchema = Primitive.safeString('Password', [], 8, 20)
   .transform((val) => val.trim())
   .refine(
     (val) =>
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/.test(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#^()_.])[A-Za-z\d@$!%*?&#^()_.]{8,20}$/.test(
         val,
       ),
     {
       message:
-        'Password must be 8-20 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character',
+        'Password must be 8-20 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character (including ^, #, (, ), and _).',
     },
   );
+
+export const historyFilterOptionsSchema = z.object({
+  fields: z.array(z.string()).optional(),
+  user: z.string().optional(),
+  action: z.string().optional(),
+  startDate: z.coerce.date().optional(), // coercing in case ISO string is passed
+  endDate: z.coerce.date().optional(),
+});
+
+export const filterLogicSchema = z.enum(['AND', 'OR']);
+
+export const filterHistoryParamsSchema = z.object({
+  filters: historyFilterOptionsSchema.optional(),
+  limit: z.number().int().positive().max(100).optional(), // max 100 to prevent abuse
+  logic: filterLogicSchema.optional().default('AND'),
+});
 
 /* ---------- TypeScript Types ---------- */
 export type ResponseData<T> = z.infer<ReturnType<typeof ResponseDataSchema<T>>>;
 export type Meta = z.infer<typeof MetaZodSchema>;
 export type UserAction = z.infer<typeof UserActionZodSchema>;
-export type UserActionResponse = z.infer<typeof UserActionResponseZodSchema>;
+export type HistoryFilterOptions = z.infer<typeof historyFilterOptionsSchema>;
+export type FilterLogic = z.infer<typeof filterLogicSchema>;
+export type FilterHistoryParams = z.infer<typeof filterHistoryParamsSchema>;

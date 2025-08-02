@@ -2,10 +2,7 @@
 import { z } from 'zod';
 
 import { MenuResponseZodSchema } from './menu.interface';
-import {
-  MetaZodSchema,
-  UserActionResponseZodSchema,
-} from '../common.interface';
+import { MetaZodSchema } from '../common.interface';
 import { MenuType } from '../enums';
 import { Primitive } from '../primitive.class';
 
@@ -32,7 +29,7 @@ export const MenuCycleResponseZodSchema = z
     _id: Primitive.safeID(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    history: z.array(UserActionResponseZodSchema).optional(), // array of user actions on this menuCycle
+    // array of user actions on this menuCycle
   })
   .merge(MenuCycleRequestZodSchema)
   .extend({

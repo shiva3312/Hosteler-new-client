@@ -2,7 +2,7 @@
 import moment from 'moment-timezone';
 import { z } from 'zod';
 
-import { MetaZodSchema, UserActionResponseZodSchema } from './common.interface';
+import { MetaZodSchema } from './common.interface';
 import { ScheduleFor, ScheduleStatus, ScheduleType } from './enums';
 import { Primitive } from './primitive.class';
 
@@ -37,7 +37,7 @@ export const ScheduleResponseZodSchema = z
     _id: Primitive.safeID(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    history: z.array(UserActionResponseZodSchema).optional(), // array of user actions on this menu
+    // array of user actions on this menu
   })
   .extend({
     meta: MetaZodSchema.optional(),

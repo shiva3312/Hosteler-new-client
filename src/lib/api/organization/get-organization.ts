@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { OrganizationResponse } from '@/interfaces/organization.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getOrganizationById = (
   organization: string,
@@ -15,7 +15,7 @@ export const getOrganizationById = (
 
 export const getOrganizationQueryOptions = (organization: string) => {
   return queryOptions({
-    queryKey: ['organization', organization],
+    queryKey: [...commonQueryKey(), 'organization', organization],
     queryFn: () => getOrganizationById(organization),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

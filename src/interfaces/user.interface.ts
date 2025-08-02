@@ -6,7 +6,7 @@ import { UserRole } from '@/data/feature';
 import {
   MetaZodSchema,
   PasswordZodSchema,
-  UserActionResponseZodSchema,
+  UserActionZodSchema,
   UsernameZodSchema,
 } from './common.interface';
 import {
@@ -223,7 +223,6 @@ export const UserResponseZodSchema = z
     scope: Primitive.safeString('Scope').nullish(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    history: z.array(UserActionResponseZodSchema).optional(),
   })
   .merge(UserRequestZodSchema)
   .omit({ password: true })

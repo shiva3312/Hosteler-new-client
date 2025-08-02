@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { UserResponse } from '@/interfaces/user.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getUsers = (
   params?: Record<string, any>,
@@ -16,7 +16,7 @@ export const getUsersQueryOptions = (
   customKey?: string,
 ) => {
   return queryOptions({
-    queryKey: ['users', params, customKey], // include params and customKeys in key for caching
+    queryKey: [...commonQueryKey(), 'users', params, customKey], // include params and customKeys in key for caching
     queryFn: () => getUsers(params),
     staleTime: 1000 * 60 * 5,
   });

@@ -23,7 +23,16 @@ export const getUserName = (user?: UserResponse) => {
   return user.username || user.profile?.firstName || 'No Name';
 };
 
-function UserAvatar({ user }: UserAvatarProps) {
+function UserAvatar(
+  { user }: UserAvatarProps,
+  options: { showGroup?: boolean; showImage?: boolean },
+) {
+  // Default options
+  options = {
+    showGroup: options?.showGroup ?? false,
+    showImage: options?.showImage ?? true,
+  };
+
   const { data: userData, isLoading } = useUser({
     user: typeof user === 'string' ? user : user._id,
     queryConfig: {
@@ -46,20 +55,24 @@ function UserAvatar({ user }: UserAvatarProps) {
   return (
     <LoaderWrapper isLoading={isLoading} loaderType="avatar">
       <Group gap="sm" wrap="nowrap">
-        <UserProfileImage
-          url={data.imageUrl}
-          type={data.imageType}
-          dicebearImage={{
-            id: data.username,
-            gender: data.gender,
-          }}
-        />
+        {options.showImage && (
+          <UserProfileImage
+            url={data.imageUrl}
+            type={data.imageType}
+            dicebearImage={{
+              id: data.username,
+              gender: data.gender,
+            }}
+          />
+        )}
 
         <Text fz="sm" fw={500}>
           {getUserName(currUser)}
-          <Text fz="xs" c="dimmed" ml={5}>
-            {data.group ?? 'No Group'}
-          </Text>
+          {options.showGroup && (
+            <Text fz="xs" c="dimmed" ml={5}>
+              {data.group ?? 'No Group'}
+            </Text>
+          )}
         </Text>
       </Group>
     </LoaderWrapper>

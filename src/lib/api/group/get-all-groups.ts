@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { GroupResponse } from '@/interfaces/group.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getGroups = (
   params?: Record<string, any>,
@@ -15,7 +15,7 @@ export const getGroups = (
 
 export const getGroupQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['groups', params],
+    queryKey: [...commonQueryKey(), 'groups', params],
     queryFn: getGroups,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

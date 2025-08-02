@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { ScheduleResponse } from '@/interfaces/schedule.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getScheduleById = (
   schedule: string,
@@ -15,7 +15,7 @@ export const getScheduleById = (
 
 export const getScheduleQueryOptions = (schedule: string) => {
   return queryOptions({
-    queryKey: ['schedule', schedule],
+    queryKey: [...commonQueryKey(), 'schedule', schedule],
     queryFn: () => getScheduleById(schedule),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

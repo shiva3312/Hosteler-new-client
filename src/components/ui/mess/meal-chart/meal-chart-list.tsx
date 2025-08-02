@@ -151,7 +151,8 @@ export const MealChartsList = () => {
       editDisplayMode: 'custom',
       // onEditingRowSave: handleSaveMealChart,
       renderRowActions: ({ row }) => {
-        return isNonAdmin ? undefined : (
+        // return isNonAdmin ? undefined : (
+        return (
           <Flex gap="md">
             {/* <Tooltip label="Edit">
               <ActionIcon
@@ -165,7 +166,6 @@ export const MealChartsList = () => {
                 </GenericDrawer>
               </ActionIcon>
             </Tooltip> */}
-            <Tooltip label="Edit"></Tooltip>
             <ActionIcon
               color="blue"
               onClick={() => {
@@ -183,13 +183,16 @@ export const MealChartsList = () => {
             >
               <IconInfoCircle size={25} />
             </ActionIcon>
-            <Tooltip label="Delete">
-              <ActionIcon color="red">
-                <DeleteMealChart mealChart={row.original} />
-              </ActionIcon>
-            </Tooltip>
+            {!isNonAdmin && (
+              <Tooltip label="Delete">
+                <ActionIcon color="red">
+                  <DeleteMealChart mealChart={row.original} />
+                </ActionIcon>
+              </Tooltip>
+            )}
           </Flex>
         );
+        // );
       },
 
       renderTopToolbarCustomActions: () => {
@@ -208,7 +211,7 @@ export const MealChartsList = () => {
               });
             }}
           >
-            View Chart
+            View Live Chart
           </Button>
         );
       },

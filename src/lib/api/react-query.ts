@@ -1,6 +1,8 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { UseMutationOptions, DefaultOptions } from '@tanstack/react-query';
 
+import { store } from '../store';
+
 export const queryConfig = {
   queries: {
     // throwOnError: true,
@@ -25,3 +27,8 @@ export type MutationConfig<
   Error,
   Parameters<MutationFnType>[0]
 >;
+
+export const commonQueryKey = () => {
+  const userId = store.getState().context.user?._id;
+  return [userId];
+};

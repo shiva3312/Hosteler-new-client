@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { MenuCycleResponse } from '@/interfaces/mess/menu-cycle.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getMenuCycleById = (
   menuCycle: string,
@@ -15,7 +15,7 @@ export const getMenuCycleById = (
 
 export const getMenuCycleQueryOptions = (menuCycle: string) => {
   return queryOptions({
-    queryKey: ['menu-cycle', menuCycle],
+    queryKey: [...commonQueryKey(), 'menu-cycle', menuCycle],
     queryFn: () => getMenuCycleById(menuCycle),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

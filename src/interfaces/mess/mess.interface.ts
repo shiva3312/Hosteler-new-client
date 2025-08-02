@@ -1,10 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
 
-import {
-  MetaZodSchema,
-  UserActionResponseZodSchema,
-} from '../common.interface';
+import { MetaZodSchema } from '../common.interface';
 import { MessStatus } from '../enums';
 import { Primitive } from '../primitive.class';
 
@@ -188,7 +185,7 @@ export const MessResponseZodSchema = z
     _id: Primitive.safeID(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    history: z.array(UserActionResponseZodSchema).optional(), // array of user actions on this menuCycle
+    // array of user actions on this menuCycle
   })
   .merge(MessRequestZodSchema)
   .extend({

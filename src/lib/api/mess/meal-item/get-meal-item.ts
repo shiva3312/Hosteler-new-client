@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { MealItemResponse } from '@/interfaces/mess/meal-item.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getMealItemById = (
   mealItem: string,
@@ -15,7 +15,7 @@ export const getMealItemById = (
 
 export const getMealItemQueryOptions = (mealItem: string) => {
   return queryOptions({
-    queryKey: ['meal-item', mealItem],
+    queryKey: [...commonQueryKey(), 'meal-item', mealItem],
     queryFn: () => getMealItemById(mealItem),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

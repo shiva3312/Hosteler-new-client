@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { UnitResponse } from '@/interfaces/unit.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getUnits = (
   params?: Record<string, any>,
@@ -15,7 +15,7 @@ export const getUnits = (
 
 export const getUnitQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['units', params],
+    queryKey: [...commonQueryKey(), 'units', params],
     queryFn: getUnits,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

@@ -17,6 +17,7 @@ import { useUpdateMealChart } from '@/lib/api/mess/meal-chart/update-meal-chart'
 import { useSchedules } from '@/lib/api/schedule/get-all-schedules';
 
 import MealChartDetails from './meal-chart-view';
+import MenuTypeDropdown from '../../core/dropdown/menu-type';
 import OrganizationUnitDropdown from '../../core/dropdown/organization-unit-selector';
 import { useNotifications } from '../../core/notifications';
 
@@ -26,7 +27,7 @@ interface Props {
 }
 export function MealChartForm({ initialValues, viewOnly }: Props) {
   const form = useForm({
-    initialValues: { menuType: MenuType.Dinner, ...initialValues },
+    initialValues: { ...initialValues },
     // validate : MealChartRequestZodSchema
   });
   const { addNotification } = useNotifications();
@@ -129,24 +130,12 @@ export function MealChartForm({ initialValues, viewOnly }: Props) {
           <OrganizationUnitDropdown form={form} />
 
           {/** Only show scheduled menu's */}
-          <Select
-            required={false}
-            label="Select Menu Type"
-            key={form.key('menuType')}
-            placeholder={'Select your menu type'}
-            nothingFoundMessage={
-              Object.keys(filteredMenuTypeOptions).length > 0
-                ? 'Select your menu type'
-                : 'No menu types available'
-            }
-            data={filteredMenuTypeOptions}
-            {...form.getInputProps('menuType')}
-          />
+          <MenuTypeDropdown form={form} />
 
           <Divider label="MealChart Details" labelPosition="center" my="lg" />
         </>
       )}
-      {Object.keys(filteredMenuTypeOptions).length > 0 ? (
+      {form.values.menuType ? (
         <LoaderWrapper
           isLoading={isLoading}
           loadingText="Hold a minute, Getting you meal chart..."

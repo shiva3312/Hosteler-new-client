@@ -1,9 +1,12 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { Box, Card, Divider, Flex, Group, Switch, Text } from '@mantine/core';
+import moment from 'moment';
 
+import { UserAction } from '@/interfaces/common.interface';
 import { MealStatus, UserStatus } from '@/interfaces/enums';
 import { UserResponse } from '@/interfaces/user.interface';
 import { useMe } from '@/lib/api/user/get-me';
+import { useUserHistory } from '@/lib/api/user/get-user-history';
 import { useUpdateUser } from '@/lib/api/user/update-profile';
 
 import RoleBadge from '../core/badge/role-badge';
@@ -28,6 +31,33 @@ const data = [
 export function SwitchesCard() {
   const { data: user, refetch } = useMe();
   const { addNotification } = useNotifications();
+
+  const { data: userStatusHistory } = useUserHistory({
+    id: user?.data?._id ?? '',
+    params: {
+      logic: 'AND',
+      filters: {
+        fields: ['status'],
+        action: 'update',
+      },
+      limit: 3,
+    },
+  });
+
+  const { data: userMealStatusHistory } = useUserHistory({
+    id: user?.data?._id ?? '',
+    params: {
+      logic: 'AND',
+      filters: {
+        fields: ['mealStatus'],
+        action: 'update',
+      },
+      limit: 3,
+    },
+  });
+
+  // console.log('User Status History:', userStatusHistory);
+  // console.log('User Meal Status History:', userMealStatusHistory);
 
   const updateProfileMutation = useUpdateUser({
     mutationConfig: {
@@ -77,7 +107,10 @@ export function SwitchesCard() {
       status,
     };
 
-    if (status !== UserStatus.Active) {
+    if (
+      status !== UserStatus.Active &&
+      user?.data.mealStatus === MealStatus.Active
+    ) {
       data.mealStatus = MealStatus.Inactive;
     }
 
@@ -85,6 +118,36 @@ export function SwitchesCard() {
       userId: user?.data?._id ?? '',
       data,
     });
+  };
+
+  const LastUpdated = ({ history }: { history: UserAction[] }) => {
+    if (!history || history.length === 0) return null;
+
+    // sort by timestamp in descending order
+    history.sort((a, b) => {
+      return (
+        new Date(b.timestamp!).getTime() - new Date(a.timestamp!).getTime()
+      );
+    });
+
+    const lastUpdate = history[0];
+    const formattedDate = moment(lastUpdate.timestamp).format(
+      'MMM DD, YYYY [at] h:mm A',
+    );
+
+    if (user?.data?._id === lastUpdate.user) {
+      return (
+        <Text size="xs" c="yellow">
+          Last updated by You on {formattedDate}
+        </Text>
+      );
+    }
+
+    return (
+      <Text size="xs" c="yellow">
+        Last updated: {lastUpdate.comment}
+      </Text>
+    );
   };
 
   const items = data.map((item) => (
@@ -100,6 +163,12 @@ export function SwitchesCard() {
         <Text size="xs" c="dimmed">
           {item.description}
         </Text>
+        {item.id === 'meal-status' && userMealStatusHistory && (
+          <LastUpdated history={userMealStatusHistory?.data} />
+        )}
+        {item.id === 'user-status' && userStatusHistory && (
+          <LastUpdated history={userStatusHistory?.data} />
+        )}
       </div>
       <Switch
         onLabel={

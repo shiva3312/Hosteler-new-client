@@ -4,7 +4,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 import { MealChartType, MenuType } from '@/interfaces/enums';
 import { MealChartResponse } from '@/interfaces/mess/meal-chart.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export interface CreateToViewMealChart {
   unit: string;
@@ -23,7 +23,7 @@ export const getMealChartsToView = (
 
 export const getMealChartQueryOptions = (params?: CreateToViewMealChart) => {
   return queryOptions({
-    queryKey: ['/meal-chart/view', params],
+    queryKey: [...commonQueryKey(), '/meal-chart/view', params],
     queryFn: getMealChartsToView,
     // staleTime: 1000 * 60 * 5, // 5 minutes
   });

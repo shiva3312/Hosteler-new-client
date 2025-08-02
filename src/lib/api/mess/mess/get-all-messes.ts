@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { MessResponse } from '@/interfaces/mess/mess.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getMesses = (
   params?: Record<string, any>,
@@ -15,7 +15,7 @@ export const getMesses = (
 
 export const getMessQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['messes', params],
+    queryKey: [...commonQueryKey(), 'messes', params],
     queryFn: getMesses,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

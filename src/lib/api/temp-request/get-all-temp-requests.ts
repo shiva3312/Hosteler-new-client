@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { TempRequestResponse } from '@/interfaces/temp-request.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getTempRequests = (
   params?: Record<string, any>,
@@ -15,7 +15,7 @@ export const getTempRequests = (
 
 export const getTempRequestQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['temp-requests', params],
+    queryKey: [...commonQueryKey(), 'temp-requests', params],
     queryFn: getTempRequests,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

@@ -1,7 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
 
-import { MetaZodSchema, UserActionResponseZodSchema } from './common.interface';
+import { MetaZodSchema } from './common.interface';
 import { Primitive } from './primitive.class';
 import { AddressZodSchema, ContactZodSchema } from './user.interface';
 
@@ -22,7 +22,6 @@ export const OrganizationResponseZodSchema = z
     _id: Primitive.safeID(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    history: z.array(UserActionResponseZodSchema).optional(),
   })
   .extend({
     meta: MetaZodSchema.optional(),

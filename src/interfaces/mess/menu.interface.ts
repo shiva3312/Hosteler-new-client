@@ -1,10 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
 
-import {
-  MetaZodSchema,
-  UserActionResponseZodSchema,
-} from '../common.interface';
+import { MetaZodSchema } from '../common.interface';
 import { MenuCategory } from '../enums';
 import { Primitive } from '../primitive.class';
 
@@ -40,7 +37,7 @@ export const MenuResponseZodSchema = z
     _id: Primitive.safeID(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    history: z.array(UserActionResponseZodSchema).optional(), // array of user actions on this menu
+    // array of user actions on this menu
   })
   .merge(MenuRequestZodSchema)
   .extend({

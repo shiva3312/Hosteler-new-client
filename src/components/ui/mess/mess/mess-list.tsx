@@ -157,11 +157,11 @@ export const MessesList = () => {
                 </GenericDrawer>
               </ActionIcon>
             </Tooltip>
-            <Tooltip label="Delete">
+            {/* <Tooltip label="Delete">
               <ActionIcon color="red">
                 <DeleteMess mess={row.original} />
               </ActionIcon>
-            </Tooltip>
+            </Tooltip> */}
           </Flex>
         ),
 

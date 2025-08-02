@@ -175,6 +175,15 @@ export const UserForm = ({ initialValues = {} }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (
+      form.values.status !== UserStatus.Active &&
+      form.values.mealStatus === MealStatus.Active
+    ) {
+      form.setFieldValue('mealStatus', MealStatus.Inactive);
+    }
+  }, [newUser, form]);
+
   return (
     <Box component="form" onSubmit={form.onSubmit(onSubmit)}>
       {/* Basic Info */}
@@ -259,6 +268,7 @@ export const UserForm = ({ initialValues = {} }: Props) => {
           description="Meal status indicates if the user is allowed to have meals"
           key={form.key('mealStatus')}
           placeholder={
+            me?.data._id === (form.values as UserResponse)?._id &&
             form.values.mealStatus === MealStatus.Disabled
               ? 'Disabled'
               : 'Select meal status'
@@ -283,16 +293,18 @@ export const UserForm = ({ initialValues = {} }: Props) => {
           description="Membership status indicates if the user is a member of the hostel"
           key={form.key('status')}
           placeholder={
-            form.values.mealStatus === MealStatus.Disabled
+            me?.data._id === (form.values as UserResponse)?._id &&
+            form.values.status === UserStatus.Disabled
               ? 'Disabled'
-              : form.values.status === UserStatus.Banned
+              : me?.data._id === (form.values as UserResponse)?._id &&
+                  form.values.status === UserStatus.Banned
                 ? 'Banned'
                 : 'Select status'
           }
           disabled={
-            (me?.data._id === (form.values as UserResponse)?._id &&
-              form.values.status === UserStatus.Disabled) ||
-            form.values.status === UserStatus.Banned
+            me?.data._id === (form.values as UserResponse)?._id &&
+            (form.values.status === UserStatus.Disabled ||
+              form.values.status === UserStatus.Banned)
           }
           data={userStatus.filter(
             (m) =>

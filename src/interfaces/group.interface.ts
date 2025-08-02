@@ -1,7 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import { z } from 'zod';
 
-import { MetaZodSchema, UserActionResponseZodSchema } from './common.interface';
+import { MetaZodSchema } from './common.interface';
 import { Primitive } from './primitive.class';
 
 export const GroupRequestZodSchema = z.object({
@@ -20,7 +20,7 @@ export const GroupResponseZodSchema = z
     _id: Primitive.safeID(),
     createdAt: Primitive.safeDate(),
     updatedAt: Primitive.safeDate(),
-    history: z.array(UserActionResponseZodSchema).optional(), // array of user actions on this menu
+    // array of user actions on this menu
   })
   .extend({
     // permission: Primitive.safeString().optional(),

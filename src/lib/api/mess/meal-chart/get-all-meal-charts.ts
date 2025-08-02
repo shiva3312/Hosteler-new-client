@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { MealChartResponse } from '@/interfaces/mess/meal-chart.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getMealCharts = (
   params?: Record<string, any>,
@@ -15,7 +15,7 @@ export const getMealCharts = (
 
 export const getMealChartQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['meal-charts', params],
+    queryKey: [...commonQueryKey(), 'meal-charts', params],
     queryFn: getMealCharts,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

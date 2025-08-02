@@ -2,7 +2,7 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const validateTempRequestLink = (
   unitName: string,
@@ -15,7 +15,12 @@ export const validateTempRequestLink = (
 
 export const getTempRequestQueryOptions = (unitName: string, token: string) => {
   return queryOptions({
-    queryKey: ['validate-temp-request-link', unitName, token],
+    queryKey: [
+      ...commonQueryKey(),
+      'validate-temp-request-link',
+      unitName,
+      token,
+    ],
     queryFn: () => validateTempRequestLink(unitName, token),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

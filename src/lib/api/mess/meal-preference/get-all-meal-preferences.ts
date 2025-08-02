@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { MealPreferenceResponse } from '@/interfaces/mess/meal-preference.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getMealPreferences = (
   params?: Record<string, any>,
@@ -15,7 +15,7 @@ export const getMealPreferences = (
 
 export const getMealPreferenceQueryOptions = (params?: Record<string, any>) => {
   return queryOptions({
-    queryKey: ['meal-preferences', params],
+    queryKey: [...commonQueryKey(), 'meal-preferences', params],
     queryFn: getMealPreferences,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

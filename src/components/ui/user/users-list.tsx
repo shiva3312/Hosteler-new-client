@@ -354,6 +354,7 @@ export const UsersList = () => {
       editDisplayMode: 'custom',
       enableRowSelection: (row) => row.original._id !== me?.data._id,
       positionToolbarAlertBanner: 'none',
+      enableGrouping: true,
       renderRowActions: ({ row, table }) => (
         <Flex gap="md">
           <Tooltip label="Edit">

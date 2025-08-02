@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { UserResponse } from '@/interfaces/user.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getUserById = (
   user: string,
@@ -15,7 +15,7 @@ export const getUserById = (
 
 export const getUserQueryOptions = (user: string) => {
   return queryOptions({
-    queryKey: ['user', user],
+    queryKey: [...commonQueryKey(), 'user', user],
     queryFn: () => getUserById(user),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

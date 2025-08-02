@@ -84,10 +84,10 @@ export const ChartUserList = ({
       },
       {
         accessorFn: (row) => userIdPreferenceMap[row._id]?.verify,
-        accessorKey: 'present',
-        header: 'Present',
+        accessorKey: 'verify',
+        header: 'Taken',
         size: 80,
-        id: 'Present',
+        id: 'verify',
         Cell: ({ row }) => (
           <Badge
             variant="light"
@@ -163,6 +163,7 @@ export const ChartUserList = ({
       enableHiding: false,
       enableColumnPinning: false,
       enableGlobalFilter: true,
+      positionToolbarAlertBanner: 'none',
 
       renderRowActionMenuItems: undefined,
 

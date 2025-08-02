@@ -3,7 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query';
 
 import { TempRequestResponse } from '@/interfaces/temp-request.interface';
 import { api } from '@/lib/api/api-client';
-import { QueryConfig } from '@/lib/api/react-query';
+import { commonQueryKey, QueryConfig } from '@/lib/api/react-query';
 
 export const getTempRequestById = (
   tempRequest: string,
@@ -15,7 +15,7 @@ export const getTempRequestById = (
 
 export const getTempRequestQueryOptions = (tempRequest: string) => {
   return queryOptions({
-    queryKey: ['temp-request', tempRequest],
+    queryKey: [...commonQueryKey(), 'temp-request', tempRequest],
     queryFn: () => getTempRequestById(tempRequest),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
