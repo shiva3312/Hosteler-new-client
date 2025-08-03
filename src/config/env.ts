@@ -58,7 +58,7 @@ const createEnv = () => {
 
   const env = parsedEnv.data;
 
-  console.log('Environment Variables:', env.DEPLOYED, typeof env.DEPLOYED);
+  // console.log('Environment Variables:', env.DEPLOYED, typeof env.DEPLOYED);
 
   return env;
 };

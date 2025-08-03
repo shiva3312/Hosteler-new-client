@@ -25,7 +25,9 @@ const getUser = async (): Promise<UserResponse> => {
 
 const logout = (): Promise<void> => {
   return api.post('/logout').then(() => {
-    clearToken();
+    setTimeout(() => {
+      clearToken();
+    }, 1000);
   });
 };
 

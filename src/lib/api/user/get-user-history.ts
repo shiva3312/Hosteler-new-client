@@ -11,7 +11,7 @@ export const getUserHistoryById = (
 ): Promise<{
   data: UserAction[];
 }> => {
-  console.log('Fetching user history for ID:', id, 'with params:', params);
+  // console.log('Fetching user history for ID:', id, 'with params:', params);
   return api.get(`/user/${id}/history`, { params });
 };
 

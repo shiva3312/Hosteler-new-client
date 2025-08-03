@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNotifications } from '@/components/ui/core/notifications';
 import { UserRole } from '@/data/feature';
 import {
+  Gender,
   ImageSize,
   MealStatus,
   MealType,
@@ -55,6 +56,7 @@ const defaultInitialValues: Partial<UserRequest> = {
     preferences: {
       mealType: MealType.AllEater,
     },
+    gender: Gender.Male,
     medical: {},
     finance: {},
     identity: {},

@@ -2,7 +2,6 @@
 import { z } from 'zod';
 
 import { PasswordZodSchema, UsernameZodSchema } from './common.interface';
-import { Primitive } from './primitive.class';
 import { UserRequestZodSchema } from './user.interface';
 
 export const DataStoredInTokenZodSchema = z.object({
@@ -22,9 +21,9 @@ export const UserLoginRequestZodSchema = z.object({
 
 export const ChangePasswordRequestZodSchema = z
   .object({
-    oldPassword: Primitive.safeString('Old Password', [], 2, 20),
-    newPassword: Primitive.safeString('New Password', [], 2, 20),
-    confirmNewPassword: Primitive.safeString('Confirm New Password', [], 2, 20),
+    oldPassword: PasswordZodSchema.nullish(),
+    newPassword: PasswordZodSchema,
+    confirmNewPassword: PasswordZodSchema,
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: 'New password and confirm password must match',

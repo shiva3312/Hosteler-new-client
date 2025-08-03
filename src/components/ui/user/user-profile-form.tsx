@@ -68,7 +68,7 @@ const UserProfileForm = ({ form, ...props }: { form: any } & BoxProps) => {
           </Grid.Col>
           <Grid.Col span={{ base: 6, md: 4 }}>
             <Select
-              required={false}
+              required={true}
               label="Gender"
               clearable={true}
               key={form.key('profile.gender')}

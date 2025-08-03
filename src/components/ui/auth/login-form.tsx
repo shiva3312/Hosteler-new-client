@@ -16,6 +16,8 @@ import { paths } from '@/config/paths';
 import { UserLoginRequestZodSchema } from '@/interfaces/auth.interface';
 import { useLogin } from '@/lib/api/auth/auth';
 
+import { useNotifications } from '../core/notifications';
+
 type LoginFormProps = {
   onSuccess: () => void;
 };
@@ -24,6 +26,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const login = useLogin({ onSuccess });
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get('redirectTo');
+  const { addNotification } = useNotifications();
 
   const form = useForm({
     validate: zodResolver(UserLoginRequestZodSchema),
@@ -69,6 +72,13 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           color="blue"
           underline="always"
           to={''}
+          onClick={() => {
+            addNotification({
+              type: 'warning',
+              title: 'Forgot Password is disabled',
+              message: 'Please contact Admin to reset your password.',
+            });
+          }}
         >
           Forgot password?
         </Anchor>

@@ -113,7 +113,7 @@ export function ScheduleJobForm(props: ScheduleJobFormProps) {
   const [showCronInput, setShowCronInput] = useState(false);
 
   const onSubmit = (values: Partial<ScheduleRequest | ScheduleResponse>) => {
-    console.log('Form submitted with values:', values);
+    // console.log('Form submitted with values:', values);
     // Handle form submission logic here
     if (!(values as ScheduleResponse)._id) {
       // Create new schedule

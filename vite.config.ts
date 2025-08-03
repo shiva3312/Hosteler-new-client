@@ -19,16 +19,16 @@ export default defineConfig(({ mode }) => {
     VITE_APP_PORT,
     VITE_APP_ALLOWED_HOSTS,
     VITE_APP_ENVIRONMENT,
-    VITE_APP_API_URL,
-    VITE_APP_DEPLOYED,
+    // VITE_APP_API_URL,
+    // VITE_APP_DEPLOYED,
   } = process.env;
 
   // Log the current environment to the system console
-  console.log('========================================');
-  console.log(`Running in ${VITE_APP_ENVIRONMENT} environment`);
-  console.log(`API URL: ${VITE_APP_API_URL}`);
-  console.log(`Local : ${!VITE_APP_DEPLOYED}`);
-  console.log('========================================');
+  // console.log('========================================');
+  // console.log(`Running in ${VITE_APP_ENVIRONMENT} environment`);
+  // console.log(`API URL: ${VITE_APP_API_URL}`);
+  // console.log(`Local : ${!VITE_APP_DEPLOYED}`);
+  // console.log('========================================');
 
   const isProd = mode === 'prod' && VITE_APP_ENVIRONMENT === 'prod';
 

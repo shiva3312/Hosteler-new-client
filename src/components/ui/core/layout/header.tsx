@@ -39,7 +39,7 @@ export function Header() {
         <Flex align={'center'} flex={'row'} gap={'xs'} wrap={'nowrap'}>
           <Image
             src="/logo_no-background.png"
-            alt="Hosteler Logo"
+            alt="Logo"
             radius="md"
             style={{ width: '48px', height: '48px', objectFit: 'cover' }}
           />
