@@ -3,7 +3,6 @@ import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
-import logger from '@/config/log';
 import {
   MenuCycleRequest,
   MenuCycleResponse,
@@ -54,14 +53,11 @@ export function MenuCycleForm({ initialValues }: Props) {
       createMenuCycleMutation.mutate({
         data: values as MenuCycleRequest,
       });
-      logger.info('Creating menuCycle with values:', values);
     } else {
       updateMenuCycleMutation.mutate({
         menuCycleId: (initialValues as MenuCycleResponse)?._id,
         data: values as Partial<MenuCycleRequest>,
       });
-
-      logger.info('Updating menuCycle with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

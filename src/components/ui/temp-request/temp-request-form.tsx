@@ -5,7 +5,6 @@ import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 import { useMemo } from 'react';
 
-import logger from '@/config/log';
 import { UserRole } from '@/data/feature';
 import { TempRequestType } from '@/interfaces/enums';
 import {
@@ -89,14 +88,11 @@ export function TempRequestForm({ initialValues }: Props) {
       createTempRequestMutation.mutate({
         data: values as TempRequestRequest,
       });
-      logger.info('Creating tempRequest with values:', values);
     } else {
       updateTempRequestMutation.mutate({
         tempRequestId: (initialValues as TempRequestResponse)?._id,
         data: values,
       });
-
-      logger.info('Updating tempRequest with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

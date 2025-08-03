@@ -3,7 +3,6 @@ import { TextInput, Button, Select, Grid } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
-import logger from '@/config/log';
 import { MealCategory, MealType, Unit } from '@/interfaces/enums';
 import {
   MealItemRequest,
@@ -79,14 +78,11 @@ export function MealItemForm({ initialValues }: Props) {
       createMealItemMutation.mutate({
         data: values as MealItemRequest,
       });
-      logger.info('Creating mealItem with values:', values);
     } else {
       updateMealItemMutation.mutate({
         mealItemId: (initialValues as MealItemResponse)?._id,
         data: values as Partial<MealItemRequest>,
       });
-
-      logger.info('Updating mealItem with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

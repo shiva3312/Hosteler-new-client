@@ -17,7 +17,6 @@ import moment from 'moment-timezone';
 import { useEffect, useState } from 'react';
 
 import { LoaderWrapper } from '@/components/layouts/loader-wrapper';
-import logger from '@/config/log';
 import { ScheduleFor, ScheduleType } from '@/interfaces/enums';
 import {
   ScheduleRequest,
@@ -120,14 +119,12 @@ export function ScheduleJobForm(props: ScheduleJobFormProps) {
       createScheduleMutation.mutate({
         data: values as ScheduleRequest,
       });
-      logger.info('Creating schedule with values:', values);
     } else {
       // Update existing schedule
       updateScheduleMutation.mutate({
         scheduleId: (values as ScheduleResponse)._id,
         data: values as ScheduleRequest,
       });
-      logger.info('Updating schedule with values:', values);
     }
   };
 

@@ -22,10 +22,6 @@ const AppRoot = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // if (storedContext && !_.isEqual(initialContextState, storedContext)) {
-    //   logger.info('Restoring context from local storage:', storedContext);
-    //   dispatch(setContext({ data: storedContext ?? {} }));
-    // } else if (userData) {
     dispatch(
       setContext({
         data: {

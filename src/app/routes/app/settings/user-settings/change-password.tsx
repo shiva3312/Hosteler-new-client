@@ -7,7 +7,6 @@ import UserDropdown from '@/components/ui/core/dropdown/user-selector';
 import { GenericFieldset } from '@/components/ui/core/fieldset/fieldset';
 import { useNotifications } from '@/components/ui/core/notifications';
 // import { ChangePasswordRequestZodSchema } from '@/interfaces/auth.interface';
-import logger from '@/config/log';
 import { UserRole } from '@/data/feature';
 import { useLogout } from '@/lib/api/auth/auth';
 import { AuthorizationService } from '@/lib/api/auth/authorization';
@@ -59,7 +58,6 @@ const ChangePasswordForm: React.FC = () => {
   });
 
   const handleSubmit = (values: typeof form.values) => {
-    logger.info('Form submitted:', values);
     // Add your API call or logic here
 
     changePasswordMutation.mutate({

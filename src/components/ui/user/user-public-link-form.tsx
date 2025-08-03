@@ -88,7 +88,6 @@ export const RegisterUserByLink = () => {
     const dirtyFields = form.getDirty();
     const dirtyValues = UtilHelper.removeUnchangedValues(values, dirtyFields);
 
-    // logger.info('Dirty Values:', dirtyValues, dirtyFields);
     createProfileMutation.mutate({
       data: dirtyValues as UserRequest,
       token: encodedToken as string,

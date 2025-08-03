@@ -235,9 +235,6 @@ export class AuthorizationService {
       return false;
     }
     const highestRole = this.getHightest(roles); // Use highestRole instead of loggedUser.roles[0]
-    logger.info(
-      `Highest role: ${this.rolePriority[highestRole]}, Required role: ${this.rolePriority[requiredRole]}`,
-    );
     return this.rolePriority[highestRole] < this.rolePriority[requiredRole];
   }
 
@@ -254,30 +251,30 @@ export class AuthorizationService {
     return AuthorizationService.hasLowerRole([highestRole], UserRole.ADMIN);
   }
 
-  public static authorizeUser(
-    loggedUser: UserResponse,
-    resource: string,
-  ): boolean {
-    logger.info(
-      `Authorizing loggedUser ${loggedUser?._id} for resource ${resource}`,
-    );
-    return true;
-  }
+  // public static authorizeUser(
+  //   loggedUser: UserResponse,
+  //   resource: string,
+  // ): boolean {
+  //   logger
+  //     .info
+  //     // `Authorizing loggedUser ${loggedUser?._id} for resource ${resource}`,
+  //     ();
+  //   return true;
+  // }
 
-  public static getUserPermissions(loggedUser: UserResponse): string[] {
-    // This should return a list of permissions for the loggedUser
-    // For now, returning an empty array
-    logger.info(`Fetching permissions for loggedUser ${loggedUser?._id}`);
-    return [];
-  }
+  // public static getUserPermissions(loggedUser: UserResponse): string[] {
+  //   // This should return a list of permissions for the loggedUser
+  //   // For now, returning an empty array
+  //   return [];
+  // }
 
-  public hasPermission(
-    loggedUser: UserResponse,
-    permission: string[],
-  ): boolean {
-    const userPermissions = AuthorizationService.getUserPermissions(loggedUser);
-    return userPermissions.some((per) => permission.includes(per));
-  }
+  // public hasPermission(
+  //   loggedUser: UserResponse,
+  //   permission: string[],
+  // ): boolean {
+  //   const userPermissions = AuthorizationService.getUserPermissions(loggedUser);
+  //   return userPermissions.some((per) => permission.includes(per));
+  // }
 
   public static hasAccessToCreateUser(
     loggedUser: UserResponse,

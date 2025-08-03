@@ -2,7 +2,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import logger from '@/config/log';
 import { UserResponse } from '@/interfaces/user.interface';
 import { LocalStorage } from '@/utils/local-storage.class';
 
@@ -46,7 +45,6 @@ const contextSlice = createSlice({
 
       // save state in localStorage
       if (action.payload.updateLocalStorage) {
-        logger.info('Setting selected in context slice:', state);
         LocalStorage.set(LocalStorage.KEY.CONTEXT, _.cloneDeep(state));
       }
     },

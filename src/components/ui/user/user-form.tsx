@@ -162,9 +162,6 @@ export const UserForm = ({ initialValues = {} }: Props) => {
   const onSubmit = (values: Partial<UserRequest>): void => {
     const dirtyFields = form.getDirty();
     const dirtyValues = UtilHelper.removeUnchangedValues(values, dirtyFields);
-
-    // logger.info('Dirty Values:', dirtyValues, dirtyFields);
-
     if (isEditing) {
       // Update existing user
       updateProfileMutation.mutate({

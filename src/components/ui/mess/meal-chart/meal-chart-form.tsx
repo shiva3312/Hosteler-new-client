@@ -4,7 +4,6 @@ import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
 import { LoaderWrapper } from '@/components/layouts/loader-wrapper';
-import logger from '@/config/log';
 import { MealChartType, MenuType } from '@/interfaces/enums';
 import {
   MealChartRequest,
@@ -73,14 +72,11 @@ export function MealChartForm({ initialValues, viewOnly }: Props) {
       createMealChartMutation.mutate({
         data: values as MealChartRequest,
       });
-      logger.info('Creating mealChart with values:', values);
     } else {
       updateMealChartMutation.mutate({
         id: (initialValues as MealChartResponse)?._id,
         data: values as Partial<MealChartRequest>,
       });
-
-      logger.info('Updating mealChart with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };

@@ -60,7 +60,6 @@ export class SearchQuery {
       query.organization = { in: organizations };
     }
 
-    // logger.info('organizationSearchQuery', query);
     return query;
   }
 
@@ -93,7 +92,6 @@ export class SearchQuery {
       query._id = { in: args?.units };
     }
 
-    // logger.info('unitSearchQuery', query);
     return query;
   }
 
@@ -121,7 +119,6 @@ export class SearchQuery {
     if (args?.unit) {
       query.unit = args?.unit;
     }
-    // logger.info('groupSearchQuery', query);
     return query;
   }
 

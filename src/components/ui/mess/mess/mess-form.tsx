@@ -6,7 +6,6 @@ import { modals } from '@mantine/modals';
 import { IconClock } from '@tabler/icons-react';
 import { isEmpty } from 'lodash';
 
-import logger from '@/config/log';
 import { useScreenType } from '@/hooks/use-scree-type';
 import { MessStatus, ScheduleFor } from '@/interfaces/enums';
 import { MessRequest, MessResponse } from '@/interfaces/mess/mess.interface';
@@ -58,14 +57,11 @@ export function MessForm({ initialValues = {} }: Props) {
       createMessMutation.mutate({
         data: values as MessRequest,
       });
-      logger.info('Creating mess with values:', values);
     } else {
       updateMessMutation.mutate({
         messId: (initialValues as MessResponse)?._id,
         data: values,
       });
-
-      logger.info('Updating mess with values:', values);
     }
   };
 

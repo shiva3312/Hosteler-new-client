@@ -3,7 +3,6 @@ import { TextInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { isEmpty } from 'lodash';
 
-import logger from '@/config/log';
 import { UserRole } from '@/data/feature';
 import { UnitRequest, UnitResponse } from '@/interfaces/unit.interface';
 import { useOrganizations } from '@/lib/api/organization/get-all-organizations';
@@ -61,14 +60,11 @@ export function UnitForm({ initialValues }: Props) {
       createUnitMutation.mutate({
         data: values as UnitRequest,
       });
-      logger.info('Creating unit with values:', values);
     } else {
       updateUnitMutation.mutate({
         unitId: (initialValues as UnitResponse)?._id,
         data: values,
       });
-
-      logger.info('Updating unit with values:', values);
     }
     // Add logic to handle form submission, e.g., API call
   };
