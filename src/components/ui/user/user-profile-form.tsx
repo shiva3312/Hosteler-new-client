@@ -10,10 +10,10 @@ import {
   Grid,
   BoxProps,
 } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
 
 import { Gender, MealType } from '@/interfaces/enums';
 
+import { CustomDateInput } from '../core/custome-date-input';
 import { GenericFieldset } from '../core/fieldset/fieldset';
 
 const genderOptions = Object.entries(Gender).map(([key, value]) => ({
@@ -50,7 +50,7 @@ const UserProfileForm = ({ form, ...props }: { form: any } & BoxProps) => {
 
         <Grid mt="md">
           <Grid.Col span={{ base: 6, md: 4 }}>
-            <DateInput
+            {/* <DateInput
               label="Date of Birth"
               key={form.key('profile.dob')}
               valueFormat="DD/MM/YYYY"
@@ -64,6 +64,11 @@ const UserProfileForm = ({ form, ...props }: { form: any } & BoxProps) => {
               onChange={(date) =>
                 form.setFieldValue('profile.dob', date?.toString() ?? null)
               }
+            /> */}
+            <CustomDateInput
+              label="Date of Birth"
+              value={form.values.profile.dob}
+              onChange={(date) => form.setFieldValue('profile.dob', date)}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 6, md: 4 }}>
