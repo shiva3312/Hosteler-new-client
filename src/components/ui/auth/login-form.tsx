@@ -58,6 +58,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         placeholder="Enter your password"
         withAsterisk
         {...form.getInputProps('password')}
+        error={undefined}
       />
       <Group justify="space-between" mt="xs">
         <Checkbox
