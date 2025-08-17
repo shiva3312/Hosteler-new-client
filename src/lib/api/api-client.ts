@@ -1,7 +1,7 @@
 //Copyright (c) Shivam Chaurasia - All rights reserved. Confidential and proprietary.
 import Axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-import { useNotifications } from '@/components/ui/core/notifications';
+import { showNotification } from '@/components/ui/core/notifications';
 import { env } from '@/config/env';
 import logger from '@/config/log';
 import { paths } from '@/config/paths';
@@ -44,9 +44,9 @@ api.interceptors.response.use(
 
     // 🔔 Notify user
     if (!data.silentError) {
-      useNotifications.getState().addNotification({
+      showNotification({
         type: 'error',
-        title: getTitleByStatus(status),
+        title: 'Error', // getTitleByStatus(status),
         message,
       });
     }
